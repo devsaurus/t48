@@ -1,7 +1,7 @@
 
 Compile list for the T48 uController project
 ============================================
-Version: $Date: 2004-09-16 20:45:00 $
+Version: $Date: 2004-12-02 07:14:33 $
 
 bench/vhdl/if_timing.vhd
 bench/vhdl/if_timing-c.vhd
@@ -56,6 +56,9 @@ bench/vhdl/tb-c.vhd
 rtl/vhdl/system/syn_rom-e.vhd
 rtl/vhdl/system/syn_rom-lpm-a.vhd
 rtl/vhdl/system/syn_rom-lpm-c.vhd
+rtl/vhdl/system/t8048_notri.vhd
+rtl/vhdl/system/t8048_notri-c.vhd
+rtl/vhdl/system/t48_system_comp_pack-p.vhd
 rtl/vhdl/system/t8048.vhd
 rtl/vhdl/system/t8048-c.vhd
 bench/vhdl/tb_t8048.vhd
