@@ -1,5 +1,5 @@
 	;; *******************************************************************
-	;; $Id: test.asm,v 1.1.1.1 2004-03-25 22:29:16 arniml Exp $
+	;; $Id: test.asm,v 1.2 2004-03-26 22:34:14 arniml Exp $
 	;;
 	;; Test JZ instruction.
 	;; *******************************************************************
@@ -10,32 +10,32 @@
 	ORG	0
 
 	;; Start of test
-	mov	a, #0x00
+	mov	a, #000H
 	jz	ok_0
 	jmp	fail
 
-ok_0:	mov	a, #0x01
+ok_0:	mov	a, #001H
 	jz	fail
 
-	mov	a, #0x02
+	mov	a, #002H
 	jz	fail
 
-	mov	a, #0x04
+	mov	a, #004H
 	jz	fail
 
-	mov	a, #0x08
+	mov	a, #008H
 	jz	fail
 
-	mov	a, #0x10
+	mov	a, #010H
 	jz	fail
 
-	mov	a, #0x20
+	mov	a, #020H
 	jz	fail
 
-	mov	a, #0x40
+	mov	a, #040H
 	jz	fail
 
-	mov	a, #0x80
+	mov	a, #080H
 	jz	fail
 
 pass:	PASS

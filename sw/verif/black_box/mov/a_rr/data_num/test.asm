@@ -1,5 +1,5 @@
 	;; *******************************************************************
-	;; $Id: test.asm,v 1.1.1.1 2004-03-25 22:29:16 arniml Exp $
+	;; $Id: test.asm,v 1.2 2004-03-26 22:37:27 arniml Exp $
 	;;
 	;; Test MOV A, Rr for RB0 with 2*r.
 	;; *******************************************************************
@@ -10,15 +10,15 @@
 	ORG	0
 
 	;; Start of test
-	mov	a, #0x00
-	mov	r0, #0xfe
-	mov	r1, #0xfd
-	mov	r2, #0xfb
-	mov	r3, #0xf7
-	mov	r4, #0xef
-	mov	r5, #0xdf
-	mov	r6, #0xbf
-	mov	r7, #0x7f
+	mov	a, #000H
+	mov	r0, #0FEH
+	mov	r1, #0FDH
+	mov	r2, #0FBH
+	mov	r3, #0F7H
+	mov	r4, #0EFH
+	mov	r5, #0DFH
+	mov	r6, #0BFH
+	mov	r7, #07FH
 
 	mov	a, r0
 	jz	fail
