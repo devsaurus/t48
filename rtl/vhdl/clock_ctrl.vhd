@@ -3,7 +3,7 @@
 -- The Clock Control unit.
 -- Clock States and Machine Cycles are generated here.
 --
--- $Id: clock_ctrl.vhd,v 1.2 2004-03-28 12:55:06 arniml Exp $
+-- $Id: clock_ctrl.vhd,v 1.3 2004-04-18 18:56:23 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -269,7 +269,11 @@ begin
   states: process (res_i, clk_i)
   begin
     if res_i = res_active_c then
-      mstate_q <= MSTATE1;
+      -- Reset machine state to MSTATE3
+      -- This allows a proper instruction fetch for the first real instruction
+      -- after reset.
+      -- The MSTATE3 is part of a virtual NOP that has no MSTATE1 and MSTATE2.
+      mstate_q <= MSTATE3;
 
     elsif clk_i'event and clk_i = clk_active_c then
       if en_clk_i then
@@ -343,8 +347,7 @@ begin
 
         -- reset at end of second machine cycle
         if state5_v and
-          (not multi_cycle_q or
-           (multi_cycle_q and second_cycle_q)) then
+           (multi_cycle_q and second_cycle_q) then
           multi_cycle_q  <= false;
           second_cycle_q <= false;
         end if;
@@ -377,6 +380,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.2  2004/03/28 12:55:06  arniml
+-- move code for PROG out of if-branch for xtal3_s
+--
 -- Revision 1.1  2004/03/23 21:31:52  arniml
 -- initial check-in
 --
