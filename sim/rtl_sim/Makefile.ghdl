@@ -16,9 +16,9 @@ LIB_WORK  = ghdl-work
 
 CLEAN     = ghdl --clean --std=87 --workdir=$(LIB_WORK); rm -f tb_*_c0
 
-ANALYZE   = ghdl -a --ieee=synopsys --std=87 --workdir=$(LIB_WORK)
+ANALYZE   = ghdl -a --std=87 --workdir=$(LIB_WORK)
 
-ELABORATE = ghdl -e --ieee=synopsys --std=87 --workdir=$(LIB_WORK)
+ELABORATE = ghdl -e --std=87 --workdir=$(LIB_WORK)
 
 MAKE_LIB  = mkdir -p $(LIB_WORK)
 

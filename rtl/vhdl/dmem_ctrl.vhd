@@ -3,7 +3,7 @@
 -- The Data Memory control unit.
 -- All accesses to the Data Memory are managed here.
 --
--- $Id: dmem_ctrl.vhd,v 1.2 2004-04-18 18:58:29 arniml Exp $
+-- $Id: dmem_ctrl.vhd,v 1.3 2004-04-24 23:44:25 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -77,7 +77,7 @@ end dmem_ctrl;
 
 
 library ieee;
-use ieee.std_logic_arith.all;
+use ieee.numeric_std.all;
 
 use work.t48_pack.clk_active_c;
 use work.t48_pack.res_active_c;
@@ -105,7 +105,8 @@ begin
     variable stack_addr_v : unsigned(5 downto 0);
   begin
     -- default assignment
-    dmem_addr_s <= dmem_addr_q;
+    dmem_addr_s  <= dmem_addr_q;
+    stack_addr_v := (others => '0');
 
     case addr_type_i is
       when DM_PLAIN =>
@@ -121,14 +122,13 @@ begin
         end if;
 
       when DM_STACK =>
-        stack_addr_v              := (others => '0');
         -- build address from stack pointer
         stack_addr_v(3 downto 1)  := unsigned(data_i(2 downto 0));
         -- dmem address 8 - 23
         stack_addr_v              := stack_addr_v + 8;
 
         dmem_addr_s <= (others => '0');
-        dmem_addr_s(5 downto 0) <= conv_std_logic_vector(stack_addr_v, 6);
+        dmem_addr_s(5 downto 0) <= std_logic_vector(stack_addr_v);
 
       when DM_STACK_HIGH =>
         dmem_addr_s(0) <= '1';
@@ -204,6 +204,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.2  2004/04/18 18:58:29  arniml
+-- clean up sensitivity list
+--
 -- Revision 1.1  2004/03/23 21:31:52  arniml
 -- initial check-in
 --

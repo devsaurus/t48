@@ -3,7 +3,7 @@
 -- The Clock Control unit.
 -- Clock States and Machine Cycles are generated here.
 --
--- $Id: clock_ctrl.vhd,v 1.3 2004-04-18 18:56:23 arniml Exp $
+-- $Id: clock_ctrl.vhd,v 1.4 2004-04-24 23:44:25 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -80,7 +80,7 @@ end clock_ctrl;
 
 
 library ieee;
-use ieee.std_logic_arith.all;
+use ieee.numeric_std.all;
 
 architecture rtl of clock_ctrl is
 
@@ -131,13 +131,13 @@ begin
     xtal: process (res_i, xtal_i)
     begin
       if res_i = res_active_c then
-        xtal_q <= CONV_UNSIGNED(0, 2);
+        xtal_q <= TO_UNSIGNED(0, 2);
 
       elsif xtal_i'event and xtal_i = clk_active_c then
         if xtal_q < 2 then
           xtal_q <= xtal_q + 1;
         else
-          xtal_q <= CONV_UNSIGNED(0, 2);
+          xtal_q <= TO_UNSIGNED(0, 2);
         end if;
 
       end if;
@@ -160,7 +160,7 @@ begin
   -- XTAL1 is used directly for Clock States.
   -----------------------------------------------------------------------------
   no_xtal_div: if xtal_div_3_g = 0 generate
-    xtal_q <= CONV_UNSIGNED(0, 2);
+    xtal_q <= TO_UNSIGNED(0, 2);
 
     x1_s <= '1';
     x2_s <= '1';
@@ -380,6 +380,10 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.3  2004/04/18 18:56:23  arniml
+-- reset machine state to MSTATE3 to allow proper instruction fetch
+-- after reset
+--
 -- Revision 1.2  2004/03/28 12:55:06  arniml
 -- move code for PROG out of if-branch for xtal3_s
 --

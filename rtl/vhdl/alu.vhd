@@ -3,7 +3,7 @@
 -- The Arithmetic Logic Unit (ALU).
 -- It contains the ALU core plus the Accumulator and the Temp Reg.
 --
--- $Id: alu.vhd,v 1.7 2004-04-07 22:09:03 arniml Exp $
+-- $Id: alu.vhd,v 1.8 2004-04-24 23:43:56 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -81,7 +81,7 @@ end alu;
 
 
 library ieee;
-use ieee.std_logic_arith.all;
+use ieee.numeric_std.all;
 
 use work.t48_pack.clk_active_c;
 use work.t48_pack.res_active_c;
@@ -297,16 +297,15 @@ begin
                   use_carry_i)
 
     variable add_a_v, add_b_v : alu_operand_t;
-    variable result_v         : alu_operand_t;
-    variable c_v              : std_logic;
+    variable c_v              : alu_operand_t;
+    variable result_v         : UNSIGNED(alu_operand_t'range);
     variable aux_c_v          : std_logic_vector(1 downto 0);
 
   begin
     -- Carry Selection --------------------------------------------------------
-    if use_carry_i then
-      c_v := carry_i;
-    else
-      c_v := '0';
+    c_v      := (others => '0');
+    if use_carry_i and carry_i = '1' then
+      c_v(0) := '1';
     end if;
 
     -- Operand Selection ------------------------------------------------------
@@ -316,9 +315,10 @@ begin
 
     case alu_op_i is
       when ALU_INC =>
-        add_b_v := "000000001";
+        add_b_v    := (others => '0');
+        add_b_v(0) := '1';
       when ALU_DEC =>
-        add_b_v := "111111111";
+        add_b_v    := (others => '1');
       when others =>
         null;
     end case;
@@ -326,9 +326,9 @@ begin
     -- The Adder --------------------------------------------------------------
     result_v := UNSIGNED(add_a_v) +
                 UNSIGNED(add_b_v) +
-                CONV_UNSIGNED(c_v, alu_operand_t'length);
+                UNSIGNED(c_v);
 
-    add_result_s <= result_v;
+    add_result_s <= std_logic_vector(result_v);
 
     -- Auxiliary Carry --------------------------------------------------------
     aux_c_v           := in_a_s(4) & in_b_s(4);
@@ -419,6 +419,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.7  2004/04/07 22:09:03  arniml
+-- remove unused signals
+--
 -- Revision 1.6  2004/04/07 20:56:23  arniml
 -- default assignment for aux_carry_o
 --

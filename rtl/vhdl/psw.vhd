@@ -3,7 +3,7 @@
 -- The Program Status Word (PSW).
 -- Implements the PSW with its special bits.
 --
--- $Id: psw.vhd,v 1.5 2004-04-24 11:25:39 arniml Exp $
+-- $Id: psw.vhd,v 1.6 2004-04-24 23:44:25 arniml Exp $
 --
 -- All rights reserved
 --
@@ -80,7 +80,7 @@ end psw;
 
 
 library ieee;
-use ieee.std_logic_arith.all;
+use ieee.numeric_std.all;
 
 use work.t48_pack.clk_active_c;
 use work.t48_pack.res_active_c;
@@ -182,7 +182,7 @@ begin
     end if;
 
     if read_sp_i then
-      data_o(3 downto 0) <= '1' & conv_std_logic_vector(sp_q, 3);
+      data_o(3 downto 0) <= '1' & std_logic_vector(sp_q);
     end if;
 
   end process data_out;
@@ -195,7 +195,7 @@ begin
   begin
     psw_s(7 downto 4) <= psw_q;
     psw_s(3)          <= '1';
-    psw_s(2 downto 0) <= conv_std_logic_vector(sp_q, 3);
+    psw_s(2 downto 0) <= std_logic_vector(sp_q);
   end process tb;
   -- pragma translate_on
 
@@ -214,6 +214,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.5  2004/04/24 11:25:39  arniml
+-- removed dummy_s - workaround not longer needed for GHDL 0.11.1
+--
 -- Revision 1.4  2004/04/18 18:59:01  arniml
 -- add temporary workaround for GHDL 0.11
 --

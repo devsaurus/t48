@@ -3,7 +3,7 @@
 -- The Conditional Branch Logic unit.
 -- Decisions whether to take a jump or not are made here.
 --
--- $Id: cond_branch.vhd,v 1.1 2004-03-23 21:31:52 arniml Exp $
+-- $Id: cond_branch.vhd,v 1.2 2004-04-24 23:44:25 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -77,7 +77,7 @@ end cond_branch;
 
 
 library ieee;
-use ieee.std_logic_arith.all;
+use ieee.numeric_std.all;
 
 use work.t48_pack.res_active_c;
 use work.t48_pack.clk_active_c;
@@ -108,17 +108,17 @@ begin
   begin
     -- default assignment
     take_branch_s <= false;
+    or_v          := '0';
 
     case branch_cond_i is
       -- Branch On: Accumulator Bit -------------------------------------------
       when COND_ON_BIT =>
-        if accu_i(CONV_INTEGER(UNSIGNED(comp_value_i))) = '1' then
+        if accu_i(TO_INTEGER(UNSIGNED(comp_value_i))) = '1' then
           take_branch_s <= true;
         end if;
 
       -- Branch On: Accumulator Zero ------------------------------------------
       when COND_Z =>
-        or_v := '0';
         for i in accu_i'range loop
           or_v := or_v or accu_i(i);
         end loop;
@@ -205,5 +205,8 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2004/03/23 21:31:52  arniml
+-- initial check-in
+--
 --
 -------------------------------------------------------------------------------

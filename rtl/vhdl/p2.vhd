@@ -3,7 +3,7 @@
 -- The Port 2 unit.
 -- Implements the Port 2 logic.
 --
--- $Id: p2.vhd,v 1.3 2004-03-29 19:39:58 arniml Exp $
+-- $Id: p2.vhd,v 1.4 2004-04-24 23:44:25 arniml Exp $
 --
 -- All rights reserved
 --
@@ -74,10 +74,6 @@ entity p2 is
 
 end p2;
 
-
-library ieee;
-use ieee.std_logic_arith.conv_integer;
-use ieee.std_logic_arith.unsigned;
 
 use work.t48_pack.clk_active_c;
 use work.t48_pack.res_active_c;
@@ -198,6 +194,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.3  2004/03/29 19:39:58  arniml
+-- rename pX_limp to pX_low_imp
+--
 -- Revision 1.2  2004/03/28 13:11:43  arniml
 -- rework Port 2 expander handling
 --

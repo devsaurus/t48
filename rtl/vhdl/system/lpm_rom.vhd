@@ -97,8 +97,7 @@
 
 library IEEE;
 use IEEE.std_logic_1164.all;
-use IEEE.std_logic_arith.all;
-use IEEE.std_logic_unsigned.all;
+use IEEE.numeric_std.all;
 --use work.LPM_COMPONENTS.all;
 use std.textio.all;
 
@@ -265,7 +264,7 @@ begin
 
 	input_reg: process (inclock)
 	begin
-		if inclock'event and inclock = '1' then
+    if inclock'event and inclock = '1' then
 			address_reg <= address;
 		end if;
 	end process;
@@ -290,7 +289,7 @@ begin
 	variable ibase: integer := 0;
 	variable ibyte: integer := 0;
 	variable istartadd: integer := 0;
-	variable check_sum_vec, check_sum_vec_tmp: std_logic_vector(7 downto 0);
+	variable check_sum_vec, check_sum_vec_tmp: unsigned(7 downto 0);
 	begin
 		-- INITIALIZE --
 		if NOT(mem_init) then
@@ -319,7 +318,7 @@ begin
 							SEVERITY ERROR;
 						end if;
 						ibyte := hex_str_to_int(byte);
-						check_sum_vec := unsigned(check_sum_vec) + unsigned(CONV_STD_LOGIC_VECTOR(ibyte, 8));
+						check_sum_vec := unsigned(check_sum_vec) + to_unsigned(ibyte, 8);
 						READ(L=>buf, VALUE=>startadd, good=>booval);
 						if not (booval) then
 							ASSERT FALSE
@@ -329,17 +328,17 @@ begin
 						istartadd := hex_str_to_int(startadd);
 						addr(2) := startadd(4);
 						addr(1) := startadd(3);
-						check_sum_vec := unsigned(check_sum_vec) + unsigned(CONV_STD_LOGIC_VECTOR(hex_str_to_int(addr), 8));
+						check_sum_vec := unsigned(check_sum_vec) + to_unsigned(hex_str_to_int(addr), check_sum_vec'length);
 						addr(2) := startadd(2);
 						addr(1) := startadd(1);
-						check_sum_vec := unsigned(check_sum_vec) + unsigned(CONV_STD_LOGIC_VECTOR(hex_str_to_int(addr), 8));
+						check_sum_vec := unsigned(check_sum_vec) + to_unsigned(hex_str_to_int(addr), check_sum_vec'length);
 						READ(L=>buf, VALUE=>rec_type, good=>booval);
 						if not (booval) then
 							ASSERT FALSE
 							REPORT "[Line "& int_to_str(lineno) & "]:Illegal Intel Hex Format! "
 							SEVERITY ERROR;
 						end if;
-						check_sum_vec := unsigned(check_sum_vec) + unsigned(CONV_STD_LOGIC_VECTOR(hex_str_to_int(rec_type), 8));
+						check_sum_vec := unsigned(check_sum_vec) + to_unsigned(hex_str_to_int(rec_type), check_sum_vec'length);
 					else
 						ASSERT FALSE
 						REPORT "[Line "& int_to_str(lineno) & "]:Illegal Intel Hex Format! "
@@ -362,11 +361,11 @@ begin
 										REPORT "[Line "& int_to_str(lineno) & "]:Illegal Intel Hex Format! "
 										SEVERITY ERROR;
 									end if;
-									check_sum_vec := unsigned(check_sum_vec) + unsigned(CONV_STD_LOGIC_VECTOR(hex_str_to_int(datain), 8));
+									check_sum_vec := unsigned(check_sum_vec) + to_unsigned(hex_str_to_int(datain), check_sum_vec'length);
 									mem_data_tmp := mem_data_tmp * 256 + hex_str_to_int(datain);
 								end loop;
 								i := i + k;
-								mem_data(ibase + istartadd) := CONV_STD_LOGIC_VECTOR(mem_data_tmp, lpm_width);
+								mem_data(ibase + istartadd) := STD_LOGIC_VECTOR(to_unsigned(mem_data_tmp, lpm_width));
 								istartadd := istartadd + 1;
 							end loop;
 						when "01"=>
@@ -386,7 +385,7 @@ begin
 									REPORT "[Line "& int_to_str(lineno) & "]:Illegal Intel Hex Format! "
 									SEVERITY ERROR;
 								end if;
-								check_sum_vec := unsigned(check_sum_vec) + unsigned(CONV_STD_LOGIC_VECTOR(hex_str_to_int(base), 8));
+								check_sum_vec := unsigned(check_sum_vec) + to_unsigned(hex_str_to_int(base), check_sum_vec'length);
 							end loop;
 							ibase := ibase * 16;
 						when OTHERS =>
@@ -402,7 +401,7 @@ begin
 					end if;
 
 					check_sum_vec := unsigned(not (check_sum_vec)) + 1 ;
-					check_sum_vec_tmp := CONV_STD_LOGIC_VECTOR(hex_str_to_int(checksum),8);
+					check_sum_vec_tmp := to_unsigned(hex_str_to_int(checksum),8);
 
 					if (unsigned(check_sum_vec) /= unsigned(check_sum_vec_tmp)) then
 						ASSERT FALSE
@@ -416,7 +415,7 @@ begin
 
 		-- MEMORY FUNCTION --
 		--if memenab = '1' then
-			q_tmp <= mem_data(conv_integer(address_tmp));
+			q_tmp <= mem_data(to_integer(UNSIGNED(address_tmp)));
 		--else
 		--    q_tmp <= (OTHERS => 'Z');
 		--end if;

@@ -3,7 +3,7 @@
 -- The Program Memory control unit.
 -- All operations related to the Program Memory are managed here.
 --
--- $Id: pmem_ctrl.vhd,v 1.1 2004-03-23 21:31:53 arniml Exp $
+-- $Id: pmem_ctrl.vhd,v 1.2 2004-04-24 23:44:25 arniml Exp $
 --
 -- All rights reserved
 --
@@ -76,7 +76,7 @@ end pmem_ctrl;
 
 
 library ieee;
-use ieee.std_logic_arith.all;
+use ieee.numeric_std.all;
 
 use work.pmem_ctrl_pack.all;
 use work.t48_pack.res_active_c;
@@ -149,8 +149,7 @@ begin
                       data_i)
   begin
     -- default assignment
-    pmem_addr_s <= CONV_STD_LOGIC_VECTOR(program_counter_q,
-                                         pmem_addr_s'length);
+    pmem_addr_s <= STD_LOGIC_VECTOR(program_counter_q);
  
     case addr_type_i is
       when PM_PC =>
@@ -195,9 +194,9 @@ begin
     if read_pmem_i then
       data_o <= pmem_data_i;
     elsif read_pcl_i then
-      data_o <= CONV_STD_LOGIC_VECTOR(program_counter_q(data_o'range), data_o'length);
+      data_o <= STD_LOGIC_VECTOR(program_counter_q(data_o'range));
     elsif read_pch_i then
-      data_o(3 downto 0) <= CONV_STD_LOGIC_VECTOR(program_counter_q(pmem_addr_width_c-1 downto data_o'high+1), 4);
+      data_o(3 downto 0) <= STD_LOGIC_VECTOR(program_counter_q(pmem_addr_width_c-1 downto data_o'high+1));
     end if;
 
   end process data_output;
@@ -217,5 +216,8 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2004/03/23 21:31:53  arniml
+-- initial check-in
+--
 --
 -------------------------------------------------------------------------------
