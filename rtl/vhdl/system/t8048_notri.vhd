@@ -3,7 +3,7 @@
 -- T8048 Microcontroller System
 -- 8048 toplevel without tri-states
 --
--- $Id: t8048_notri.vhd,v 1.1 2004-12-01 23:07:21 arniml Exp $
+-- $Id: t8048_notri.vhd,v 1.2 2004-12-01 23:08:08 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -204,4 +204,6 @@ end struct;
 
 -------------------------------------------------------------------------------
 -- File History:
+--
+-- $Log: not supported by cvs2svn $
 -------------------------------------------------------------------------------
