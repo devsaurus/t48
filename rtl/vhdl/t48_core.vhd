@@ -2,7 +2,7 @@
 --
 -- T48 Microcontroller Core
 --
--- $Id: t48_core.vhd,v 1.1 2004-03-23 21:31:53 arniml Exp $
+-- $Id: t48_core.vhd,v 1.2 2004-03-28 13:13:20 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -203,6 +203,7 @@ architecture struct of t48_core is
   signal p2_write_exp_s  : boolean;
   signal p2_read_p2_s    : boolean;
   signal p2_read_reg_s   : boolean;
+  signal p2_read_exp_s   : boolean;
   signal p2_output_pch_s : boolean;
   signal p2_output_exp_s : boolean;
   signal p2_data_s       : word_t;
@@ -439,6 +440,7 @@ begin
       tim_stop_tcnt_o        => tim_stop_tcnt_s,
       p1_read_reg_o          => p1_read_reg_s,
       p2_read_reg_o          => p2_read_reg_s,
+      p2_read_exp_o          => p2_read_exp_s,
       p2_output_pch_o        => p2_output_pch_s,
       p2_output_exp_o        => p2_output_exp_s,
       pm_inc_pc_o            => pm_inc_pc_s,
@@ -538,6 +540,7 @@ begin
         write_exp_i  => p2_write_exp_s,
         read_p2_i    => p2_read_p2_s,
         read_reg_i   => p2_read_reg_s,
+        read_exp_i   => p2_read_exp_s,
         output_pch_i => p2_output_pch_s,
         output_exp_i => p2_output_exp_s,
         pch_i        => pmem_addr_s(11 downto 8),
@@ -616,5 +619,7 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2004/03/23 21:31:53  arniml
+-- initial check-in
 --
 -------------------------------------------------------------------------------

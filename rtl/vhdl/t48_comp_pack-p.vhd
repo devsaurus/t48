@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 --
--- $Id: t48_comp_pack-p.vhd,v 1.1 2004-03-23 21:31:53 arniml Exp $
+-- $Id: t48_comp_pack-p.vhd,v 1.2 2004-03-28 13:13:20 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -188,6 +188,7 @@ package t48_comp_pack is
       tim_stop_tcnt_o        : out boolean;
       p1_read_reg_o          : out boolean;
       p2_read_reg_o          : out boolean;
+      p2_read_exp_o          : out boolean;
       p2_output_pch_o        : out boolean;
       p2_output_exp_o        : out boolean;
       pm_inc_pc_o            : out boolean;
@@ -322,6 +323,7 @@ package t48_comp_pack is
       write_exp_i  : in  boolean;
       read_p2_i    : in  boolean;
       read_reg_i   : in  boolean;
+      read_exp_i   : in  boolean;
       output_pch_i : in  boolean;
       output_exp_i : in  boolean;
       pch_i        : in  nibble_t;
