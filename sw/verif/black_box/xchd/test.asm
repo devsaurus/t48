@@ -1,5 +1,5 @@
 	;; *******************************************************************
-	;; $Id: test.asm,v 1.1 2004-04-04 14:21:35 arniml Exp $
+	;; $Id: test.asm,v 1.2 2004-04-06 18:12:57 arniml Exp $
 	;;
 	;; Test XCHD A, @ Rr.
 	;; *******************************************************************
@@ -12,12 +12,12 @@ testR0R1	MACRO	pos
 	inc	r1
 	mov	a, @r0
 	cpl	a
-	add	a, #~((1 << pos) & 00FH) & ~((1 << ((pos+7) # 8) & 0F0H)) & 0FFH
+	add	a, #((~((pos+7) # 8) << 4) & 0F0H) | (pos & 00FH)
 	cpl	a
 	jnz	fail
 	mov	a, @r1
 	cpl	a
-	add	a, #~((1 << pos) & 00FH) & ~((1 << ((pos+7) # 8) & 0F0H)) & 0FFH
+	add	a, #((~((pos+7) # 8) << 4) & 0F0H) | (pos & 00FH)
 	cpl	a
 	jnz	fail
 	ENDM
@@ -27,42 +27,42 @@ testR0R1	MACRO	pos
 	;; Start of test
 	mov	r0, #010H
 	mov	r1, #020H
-	mov	a, #0FEH
+	mov	a, #0F0H
 	mov	@r0, a
 	mov	@r1, a
 	inc	r0
 	inc	r1
-	mov	a, #0FDH
+	mov	a, #0E1H
 	mov	@r0, a
 	mov	@r1, a
 	inc	r0
 	inc	r1
-	mov	a, #0FBH
+	mov	a, #0D2H
 	mov	@r0, a
 	mov	@r1, a
 	inc	r0
 	inc	r1
-	mov	a, #0F7H
+	mov	a, #0C3H
 	mov	@r0, a
 	mov	@r1, a
 	inc	r0
 	inc	r1
-	mov	a, #0EFH
+	mov	a, #0B4H
 	mov	@r0, a
 	mov	@r1, a
 	inc	r0
 	inc	r1
-	mov	a, #0DFH
+	mov	a, #0A5H
 	mov	@r0, a
 	mov	@r1, a
 	inc	r0
 	inc	r1
-	mov	a, #0BFH
+	mov	a, #096H
 	mov	@r0, a
 	mov	@r1, a
 	inc	r0
 	inc	r1
-	mov	a, #07FH
+	mov	a, #087H
 	mov	@r0, a
 	mov	@r1, a
 
