@@ -2,7 +2,7 @@
 --
 -- The testbench for t48_core.
 --
--- $Id: tb.vhd,v 1.7 2004-04-25 16:23:21 arniml Exp $
+-- $Id: tb.vhd,v 1.8 2004-04-25 20:41:48 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -204,7 +204,7 @@ begin
       wr_n_i   => wr_n_s,
       prog_n_i => prog_n_s,
       db_bus_i => bus_s,
-      p2_i     => p2_s
+      p2_i     => t48_p2_s
     );
 
 
@@ -375,6 +375,9 @@ end behav;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.7  2004/04/25 16:23:21  arniml
+-- added if_timing
+--
 -- Revision 1.6  2004/04/14 20:57:44  arniml
 -- wait for instruction strobe after final end-of-simulation detection
 -- this ensures that the last mov instruction is part of the dump and
