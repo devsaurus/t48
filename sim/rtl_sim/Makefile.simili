@@ -1,0 +1,92 @@
+##############################################################################
+#
+# Tool-specific Makefile for the Simili compiler.
+#
+# It sets all variables needed for VHDL code compilation with Makefile.hier.
+#
+#
+# Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
+#
+# All rights reserved
+#
+##############################################################################
+
+
+LIB_WORK=work.sym
+
+CLEAN=rm -rf $(LIB_WORK); mkdir $(LIB_WORK)
+
+ANALYZE=vhdlp -87 -s
+
+ELABORATE=
+
+##############################################################################
+# The analyze targets
+#
+tb_t8039_behav_c0 = $(LIB_WORK)/tb_t8039_behav_c0/prim.dep
+tb_t8039 = $(LIB_WORK)/tb_t8039/_behav.dep
+tb_t8048_behav_c0 = $(LIB_WORK)/tb_t8048_behav_c0/prim.dep
+tb_t8048 = $(LIB_WORK)/tb_t8048/_behav.dep
+tb_behav_c0 = $(LIB_WORK)/tb_behav_c0/prim.dep
+tb = $(LIB_WORK)/tb/_behav.dep
+t8048_struct_c0 = $(LIB_WORK)/t8048_struct_c0/prim.dep
+t8048 = $(LIB_WORK)/t8048/_struct.dep
+t8039_struct_c0 = $(LIB_WORK)/t8039_struct_c0/prim.dep
+t8039 = $(LIB_WORK)/t8039/_struct.dep
+t48_tb_pack = $(LIB_WORK)/t48_tb_pack/prim.dep
+t48_pack = $(LIB_WORK)/t48_pack/prim.dep
+t48_core_struct_c0 = $(LIB_WORK)/t48_core_struct_c0/prim.dep
+t48_core = $(LIB_WORK)/t48_core/_struct.dep
+t48_core_comp_pack = $(LIB_WORK)/t48_core_comp_pack/prim.dep
+t48_comp_pack = $(LIB_WORK)/t48_comp_pack/prim.dep
+syn_rom = $(LIB_WORK)/syn_rom/prim.dep
+syn_rom-lpm-a = $(LIB_WORK)/syn_rom/_lpm.dep
+syn_rom_lpm_c0 = $(LIB_WORK)/syn_rom_lpm_c0/prim.dep
+lpm_rom = $(LIB_WORK)/lpm_rom_c0/prim.dep
+syn_ram = $(LIB_WORK)/syn_ram/prim.dep
+syn_ram-lpm-a = $(LIB_WORK)/syn_ram/_lpm.dep
+syn_ram_lpm_c0 = $(LIB_WORK)/syn_ram_lpm_c0/prim.dep
+lpm_ram_dq = $(LIB_WORK)/lpm_ram_dq_c0/prim.dep
+psw_rtl_c0 = $(LIB_WORK)/psw_rtl_c0/prim.dep
+psw = $(LIB_WORK)/psw/_rtl.dep
+pmem_ctrl_rtl_c0 = $(LIB_WORK)/pmem_ctrl_rtl_c0/prim.dep
+pmem_ctrl_pack = $(LIB_WORK)/pmem_ctrl_pack/prim.dep
+pmem_ctrl = $(LIB_WORK)/pmem_ctrl/_rtl.dep
+p2_rtl_c0 = $(LIB_WORK)/p2_rtl_c0/prim.dep
+p2 = $(LIB_WORK)/p2/_rtl.dep
+p1_rtl_c0 = $(LIB_WORK)/p1_rtl_c0/prim.dep
+p1 = $(LIB_WORK)/p1/_rtl.dep
+timer_rtl_c0 = $(LIB_WORK)/timer_rtl_c0/prim.dep
+timer = $(LIB_WORK)/timer/_rtl.dep
+opc_table_rtl_c0 = $(LIB_WORK)/opc_table_rtl_c0/prim.dep
+opc_table = $(LIB_WORK)/opc_table/_rtl.dep
+opc_decoder_rtl_c0 = $(LIB_WORK)/opc_decoder_rtl_c0/prim.dep
+opc_decoder = $(LIB_WORK)/opc_decoder/_rtl.dep
+int_rtl_c0 = $(LIB_WORK)/int_rtl_c0/prim.dep
+int = $(LIB_WORK)/int/_rtl.dep
+dmem_ctrl_rtl_c0 = $(LIB_WORK)/dmem_ctrl_rtl_c0/prim.dep
+dmem_ctrl_pack = $(LIB_WORK)/dmem_ctrl_pack/prim.dep
+dmem_ctrl = $(LIB_WORK)/dmem_ctrl/_rtl.dep
+decoder_rtl_c0 = $(LIB_WORK)/decoder_rtl_c0/prim.dep
+decoder_pack = $(LIB_WORK)/decoder_pack/prim.dep
+decoder = $(LIB_WORK)/decoder/_rtl.dep
+db_bus_rtl_c0 = $(LIB_WORK)/db_bus_rtl_c0/prim.dep
+db_bus = $(LIB_WORK)/db_bus/_rtl.dep
+cond_branch_rtl_c0 = $(LIB_WORK)/cond_branch_rtl_c0/prim.dep
+cond_branch_pack = $(LIB_WORK)/cond_branch_pack/prim.dep
+cond_branch = $(LIB_WORK)/cond_branch/_rtl.dep
+clock_ctrl_rtl_c0 = $(LIB_WORK)/clock_ctrl_rtl_c0/prim.dep
+clock_ctrl = $(LIB_WORK)/clock_ctrl/_rtl.dep
+bus_mux_rtl_c0 = $(LIB_WORK)/bus_mux_rtl_c0/prim.dep
+bus_mux = $(LIB_WORK)/bus_mux/_rtl.dep
+alu_rtl_c0 = $(LIB_WORK)/alu_rtl_c0/prim.dep
+alu_pack = $(LIB_WORK)/alu_pack/prim.dep
+alu = $(LIB_WORK)/alu/_rtl.dep
+#
+##############################################################################
+
+
+.PHONY: all
+all: $(tb_behav_c0) $(tb_t8039_behav_c0) $(tb_t8048_behav_c0)
+
+include Makefile.hier
