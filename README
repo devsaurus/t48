@@ -1,7 +1,7 @@
 
 README for the T48 uController project
 ======================================
-Version: $Date: 2004-05-31 16:28:26 $
+Version: $Date: 2004-09-16 20:45:12 $
 
 
 Introduction
@@ -146,10 +146,14 @@ three testbench top-levels if appropriate for the chosen simulator:
   * tb_t8039_behav_c0
     The testbench for the 8039 sample system.
 
-To delete all intermediate data, each Makefile has a 'clean' target:
+Each Makefile has a 'clean' target to delete all intermediate data:
 
 $ make -f Makefile.<simulator> clean
 
+The basic simple sequence list can be found in COMPILE_LIST. This can be
+useful to quickly set up the analyze stage of any compiler or
+synthesizer. Especially when synthesizing the code, you want to skip the VHDL
+configurations in *-c.vhd and everything below the bench/ directory.
 
 Preparation of the ROM Files
 ----------------------------
