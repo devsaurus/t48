@@ -4,7 +4,7 @@
 #
 # run_regression.pl
 #
-# $Id: run_regression.pl,v 1.7 2004-07-04 12:05:55 arniml Exp $
+# $Id: run_regression.pl,v 1.8 2004-09-12 00:30:53 arniml Exp $
 #
 # Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 #
@@ -54,7 +54,7 @@ my $dump_compare_cell = 0;
 # Commands to call the different VHDL simulators.
 # 
 # GHDL
-my $ghdl_simulator     = './tb_behav_c0';
+my $ghdl_simulator     = './tb_behav_c0 --assert-level=error';
 my $ghdl_simulator_vcd = $ghdl_simulator.' --vcd=temp.vcd';
 #
 # Choose simulator:
