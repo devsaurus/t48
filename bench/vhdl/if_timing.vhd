@@ -2,7 +2,7 @@
 --
 -- Interface Timing Checker.
 --
--- $Id: if_timing.vhd,v 1.1 2004-04-25 16:24:10 arniml Exp $
+-- $Id: if_timing.vhd,v 1.2 2004-04-25 20:40:58 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -98,33 +98,29 @@ begin
   --
   rd_check: process (rd_n_i)
   begin
-    if rd_n_i'event then
+    case rd_n_i is
+      -- RD active
+      when '0' =>
+        -- tLAFC1: ALE to Control RD
+        assert (now - last_ale_fall_s) > (t_CY / 5 - 75 ns)
+          report "Timing violation of tLAFC1 on RD!"
+          severity error;
 
-      case rd_n_i is
-        -- RD active
-        when '0' =>
-          -- tLAFC1: ALE to Control RD
-          assert (now - last_ale_fall_s) > (t_CY / 5 - 75 ns)
-            report "Timing violation of tLAFC1 on RD!"
-            severity error;
-
-          -- tAFC1: Addr Float to RD
-          assert (now - last_bus_change_s) > (t_CY * 2/15 - 40 ns)
-            report "Timing violation of tAFC1 on RD!"
-            severity error;
+        -- tAFC1: Addr Float to RD
+        assert (now - last_bus_change_s) > (t_CY * 2/15 - 40 ns)
+          report "Timing violation of tAFC1 on RD!"
+          severity error;
 
         -- RD inactive
-        when '1' =>
-          -- tCC1: Control Pulse Width RD
-          assert (now - last_rd_n_fall_s) > (t_CY / 2 - 200 ns)
-            report "Timing violation of tCC1 on RD!"
-            severity error;
+      when '1' =>
+        -- tCC1: Control Pulse Width RD
+        assert (now - last_rd_n_fall_s) > (t_CY / 2 - 200 ns)
+          report "Timing violation of tCC1 on RD!"
+          severity error;
 
-        when others =>
-          null;
-      end case;
-
-    end if;
+      when others =>
+        null;
+    end case;
 
   end process rd_check;
   --
@@ -136,43 +132,39 @@ begin
   --
   wr_check: process (wr_n_i)
   begin
-    if wr_n_i'event then
+    case wr_n_i is
+      -- WR active
+      when '0' =>
+        -- tLAFC1: ALE to Control WR
+        assert (now - last_ale_fall_s) > (t_CY / 5 - 75 ns)
+          report "Timing violation of tLAFC1 on WR!"
+          severity error;
 
-      case wr_n_i is
-        -- WR active
-        when '0' =>
-          -- tLAFC1: ALE to Control WR
-          assert (now - last_ale_fall_s) > (t_CY / 5 - 75 ns)
-            report "Timing violation of tLAFC1 on WR!"
-            severity error;
+        -- tAW: Addr Setup to WR
+        assert (now - bus_change_ale_s) > (t_CY / 3 - 150 ns)
+          report "Timing violation of tAW on WR!"
+          severity error;
 
-          -- tAW: Addr Setup to WR
-          assert (now - bus_change_ale_s) > (t_CY / 3 - 150 ns)
-            report "Timing violation of tAW on WR!"
-            severity error;
-
-          -- tAW sanity check
-          assert (now - bus_change_ale_s) < t_CY
-            report "Timing relation between BUS and WR inconsistent!"
-            severity error;
+        -- tAW sanity check
+        assert (now - bus_change_ale_s) < t_CY
+          report "Timing relation between BUS and WR inconsistent!"
+          severity error;
 
         -- WR inactive
-        when '1' =>
-          -- tCC1: Control Pulse Width WR
-          assert (now - last_wr_n_fall_s) > (t_CY / 2 - 200 ns)
-            report "Timing violation of tCC1 on WR!"
-            severity error;
+      when '1' =>
+        -- tCC1: Control Pulse Width WR
+        assert (now - last_wr_n_fall_s) > (t_CY / 2 - 200 ns)
+          report "Timing violation of tCC1 on WR!"
+          severity error;
 
-          -- tDW: Data Setup before WR
-          assert (now - last_bus_change_s) > (t_CY * 13/30 - 200 ns)
-            report "Timing violation of tDW on WR!"
-            severity error;
+        -- tDW: Data Setup before WR
+        assert (now - last_bus_change_s) > (t_CY * 13/30 - 200 ns)
+          report "Timing violation of tDW on WR!"
+          severity error;
 
-        when others =>
-          null;
-      end case;
-
-    end if;
+      when others =>
+        null;
+    end case;
 
   end process wr_check;
   --
@@ -184,24 +176,152 @@ begin
   --
   bus_check: process (db_bus_i)
   begin
-    if db_bus_i'event then
+    -- RD access
+    -- tAD1 and tRD1 are not checked as they are constraints for the
+    -- external memory, not the t48!
 
-      -- RD access
-      -- tAD1 and tRD1 are not checked as they are constraints for the
-      -- external memory, not the t48!
-
-      -- WR access
-      if wr_n_i = '0' then
-        -- tDW: Data Hold after WR
-        assert (now - last_wr_n_rise_s) > (t_CY / 15 - 50 ns)
-          report "Timing violation of tDW on BUS vs. WR!"
-          severity error;
-
-      end if;
+    -- WR access
+    if wr_n_i = '0' then
+      -- tDW: Data Hold after WR
+      assert (now - last_wr_n_rise_s) > (t_CY / 15 - 50 ns)
+        report "Timing violation of tDW on BUS vs. WR!"
+        severity error;
 
     end if;
 
+    -- Address strobe
+    if ale_i = '0' then
+      -- tLA: Addr Hold from ALE
+      assert (now - last_ale_fall_s) > (t_CY / 15 - 40 ns)
+        report "Timing violation of tLA on BUS vs. ALE!"
+        severity error;
+    end if;
+
   end process bus_check;
+  --
+  -----------------------------------------------------------------------------
+
+
+  -----------------------------------------------------------------------------
+  -- Check ALE
+  --
+  ale_check: process (ale_i)
+    variable t_CA1 : time;
+    variable t_AL  : time;
+  begin
+    case ale_i is
+      when '0' =>
+        t_AL := t_CY * 2/15 - 110 ns;
+
+        -- tAL: Addr Setup to ALE
+        assert (now - last_bus_change_s) > t_AL
+          report "Timing violation of tAL on BUS vs. ALE!"
+          severity error;
+        assert (now - last_p2_change_s) > t_AL
+          report "Timing violation of tAL on P2 vs. ALE!"
+          severity error;
+
+      when '1' =>
+        -- tCA1: Control to ALE (RD, WR, PROG)
+        t_CA1 := t_CY / 15 - 40 ns;
+
+        assert (now - last_rd_n_rise_s) > t_CA1
+          report "Timing violation of tCA1 on RD vs. ALE!"
+          severity error;
+        assert (now - last_wr_n_rise_s) > t_CA1
+          report "Timing violation of tCA1 on WR vs. ALE!"
+          severity error;
+        assert (now - last_prog_n_rise_s) > t_CA1
+          report "Timing violation of tCA1 on PROG vs. ALE!"
+          severity error;
+
+        -- tCA2: Control to ALE (PSEN)
+        assert (now - last_psen_n_rise_s) > (t_CY * 4/15 - 40 ns)
+          report "Timing violation of tCA2 on PSEN vs. ALE!"
+          severity error;
+
+        -- tPL: Port 2 I/O Setup to ALE
+        assert (now - last_p2_change_s) > (t_CY * 4/15 - 200 ns)
+          report "Timing violation of tPL on P2 vs. ALE!"
+          severity error;
+
+      when others =>
+        null;
+
+    end case;
+
+  end process ale_check;
+  --
+  -----------------------------------------------------------------------------
+
+
+  -----------------------------------------------------------------------------
+  -- Check P2
+  --
+  p2_check: process (p2_i)
+  begin
+    case ale_i is
+      when '0' =>
+        -- tLA: Addr Hold from ALE
+        assert ((now - last_ale_fall_s) > (t_CY / 15 - 40 ns)) or
+               now = 0 ns
+          report "Timing violation of tLA on P2 vs. ALE!"
+          severity error;
+
+        if last_ale_fall_s < last_ale_rise_s then
+          -- tPV: Port Output from ALE
+          assert (now - last_ale_fall_s) < (t_CY * 3/10 + 100 ns)
+            report "Timing violation of tPV on P2 vs. ALE!"
+            severity error;
+        end if;
+
+        if prog_n_i = '1' then
+          -- tPD: Output Data Hold
+          assert ((now - last_prog_n_rise_s) > (t_CY / 10 - 50 ns)) or
+                 now = 0 ns
+            report "Timing violation of tPD on P2 vs. PROG!"
+            severity error;
+
+        end if;
+
+      when '1' =>
+        -- tLP: Port 2 I/O to ALE
+        assert (now - last_ale_rise_s) > (t_CY / 30 - 30 ns)
+          report "Timing violation of tLP on P2 vs. ALE!"
+          severity error;
+
+      when others =>
+        null;
+
+    end case;
+
+  end process p2_check;
+  --
+  -----------------------------------------------------------------------------
+
+
+  -----------------------------------------------------------------------------
+  -- Check PROG
+  --
+  prog_check: process (prog_n_i)
+  begin
+    case prog_n_i is
+      when '1' =>
+        -- tPP: PROG Pulse Width
+        assert (now - last_prog_n_fall_s) > (t_CY * 7/10 - 250 ns)
+          report "Timing violation of tPP!"
+          severity error;
+
+        -- tDP: Output Data Setup
+        assert (now - last_p2_change_s) > (t_CY * 2/5 - 150 ns)
+          report "Timing violation of tDP on P2 vs. PROG!"
+          severity error;
+
+      when others =>
+        null;
+    end case;
+
+  end process prog_check;
   --
   -----------------------------------------------------------------------------
 
@@ -411,4 +531,7 @@ end behav;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2004/04/25 16:24:10  arniml
+-- initial check-in
+--
 -------------------------------------------------------------------------------
