@@ -3,7 +3,7 @@
 -- The Port 1 unit.
 -- Implements the Port 1 logic.
 --
--- $Id: p1.vhd,v 1.2 2004-03-29 19:39:58 arniml Exp $
+-- $Id: p1.vhd,v 1.3 2004-05-17 14:37:53 arniml Exp $
 --
 -- All rights reserved
 --
@@ -115,15 +115,36 @@ begin
 
 
   -----------------------------------------------------------------------------
+  -- Process p1_data
+  --
+  -- Purpose:
+  --   Generates the T48 bus data.
+  --
+  p1_data: process (read_p1_i,
+                    p1_i,
+                    read_reg_i,
+                    p1_q)
+  begin
+    data_o   <= (others => bus_idle_level_c);
+
+    if read_p1_i then
+      if read_reg_i then
+        data_o <= p1_q;
+      else
+        data_o <= p1_i;
+      end if;
+    end if;
+
+  end process p1_data;
+  --
+  -----------------------------------------------------------------------------
+
+
+  -----------------------------------------------------------------------------
   -- Output Mapping.
   -----------------------------------------------------------------------------
   p1_o         <= p1_q;
   p1_low_imp_o <= low_imp_q;
-  data_o       <=   (others => bus_idle_level_c)
-                  when not read_p1_i else
-                    p1_q
-                  when read_reg_i else
-                    p1_i;
 
 end rtl;
 
@@ -132,6 +153,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.2  2004/03/29 19:39:58  arniml
+-- rename pX_limp to pX_low_imp
+--
 -- Revision 1.1  2004/03/23 21:31:52  arniml
 -- initial check-in
 --
