@@ -1,5 +1,5 @@
 	;; *******************************************************************
-	;; $Id: test.asm,v 1.1.1.1 2004-03-25 22:29:17 arniml Exp $
+	;; $Id: test.asm,v 1.2 2004-03-26 22:33:30 arniml Exp $
 	;;
 	;; Test ADDC A, @ Rr.
 	;; *******************************************************************
@@ -10,7 +10,9 @@
 testADDC	MACRO	val
 	jmp	goon
 	ALIGN	040H
-goon:	mov	a, #val
+goon:	inc	r0
+	inc	r1
+	mov	a, #val
 	addc	a, @r0
 	jnz	fail
 	jnc	fail
