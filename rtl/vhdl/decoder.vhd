@@ -3,7 +3,7 @@
 -- The Decoder unit.
 -- It decodes the instruction opcodes and executes them.
 --
--- $Id: decoder.vhd,v 1.1 2004-03-23 21:31:52 arniml Exp $
+-- $Id: decoder.vhd,v 1.2 2004-03-28 13:06:32 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -88,6 +88,7 @@ entity decoder is
     p2_write_p2_o          : out boolean;
     p2_write_exp_o         : out boolean;
     p2_read_p2_o           : out boolean;
+    p2_read_exp_o          : out boolean;
     pm_write_pcl_o         : out boolean;
     pm_read_pcl_o          : out boolean;
     pm_write_pch_o         : out boolean;
@@ -293,7 +294,6 @@ begin
     pm_read_pmem_o       <= false;
     bus_output_pcl_o     <= false;
     p2_output_pch_o      <= false;
-    p2_output_exp_o      <= false;
     opc_read_bus_s       <= false;
     opc_inj_int_s        <= false;
     bus_read_bus_s       <= false;
@@ -468,6 +468,8 @@ begin
     p2_write_exp_o         <= false;
     p2_read_p2_o           <= false;
     p2_read_reg_o          <= false;
+    p2_read_exp_o          <= false;
+    p2_output_exp_o        <= false;
     psw_special_data_o     <= '0';
     psw_inc_stackp_o       <= false;
     psw_dec_stackp_o       <= false;
@@ -1205,6 +1207,107 @@ begin
           end if;
         end if;
 
+      -- Mnemonic OUTD_PP_A ---------------------------------------------------
+      when MN_OUTD_PP_A =>
+        clk_assert_prog_o     <= true;
+
+        if not clk_second_cycle_i then
+          case clk_mstate_i is
+            -- propagate expander port number to Port 2
+            when MSTATE3 =>
+
+              data_s(7 downto 4)     <= (others => '0');
+              data_s(1 downto 0)     <= opc_opcode_s(1 downto 0);
+              -- decide which 8243 command to use
+              case opc_opcode_s(7 downto 4) is
+                when "1001" =>
+                  data_s(3 downto 2) <= "11";  -- ANLD command
+                when "1000" =>
+                  data_s(3 downto 2) <= "10";  -- ORLD command
+                when "0011" =>
+                  data_s(3 downto 2) <= "01";  -- MOVD command
+                when others =>
+                  null;
+              end case;
+                                  
+              read_dec_s      <= true;
+              p2_write_exp_o  <= true;
+
+            -- output expander port number on Port 2 while active edge of PROG
+            -- write Accumulator to expander port
+            when MSTATE4 =>
+              p2_output_exp_o <= true;
+
+              alu_read_alu_o  <= true;
+              p2_write_exp_o  <= true;
+
+            when MSTATE5 =>
+              p2_output_exp_o <= true;
+
+            when others =>
+              null;
+
+          end case;
+
+        else
+          -- hold expander port until inactive edge of PROG 
+          if clk_mstate_i = MSTATE1 or clk_mstate_i = MSTATE2 then
+            p2_output_exp_o   <= true;
+          end if;
+
+        end if;
+
+      -- Mnemonic MOVD_A_PP ---------------------------------------------------
+      when MN_MOVD_A_PP =>
+        clk_assert_prog_o            <= true;
+
+        if not clk_second_cycle_i then
+          case clk_mstate_i is
+            -- propagate expander port number to Port 2
+            when MSTATE3 =>
+              data_s                 <= "0000" &
+                                        "00"   &  -- 8243 command: read
+                                        opc_opcode_s(1 downto 0);
+              read_dec_s             <= true;
+              p2_write_exp_o         <= true;
+
+            -- output expander port number on Port 2 while active edge of PROG
+            -- write 1's to expander port to set lower nibble of Port 2 to input
+            when MSTATE4 =>
+              p2_output_exp_o        <= true;
+
+              data_s(nibble_t'range) <= (others => '1');
+              read_dec_s             <= true;
+              p2_write_exp_o         <= true;
+
+            when MSTATE5 =>
+              p2_output_exp_o        <= true;
+
+            when others =>
+              null;
+
+          end case;
+
+        else
+          case clk_mstate_i is
+            -- hold expander port until inactive edge of PROG
+            when MSTATE1 =>
+              p2_output_exp_o  <= true;
+
+            -- hold expander port until inactive edge of PROG
+            -- write Accumulator with nibble of expander port
+            when MSTATE2 =>
+              p2_output_exp_o  <= true;
+              p2_read_exp_o    <= true;
+              alu_write_accu_o <= true;
+
+            when others =>
+              null;
+
+          end case;
+
+        end if;
+
       -- Mnemonic MOVP --------------------------------------------------------
       when MN_MOVP =>
         assert_psen_s        <= true;
@@ -1656,5 +1759,6 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
---
+-- Revision 1.1  2004/03/23 21:31:52  arniml
+-- initial check-in
 -------------------------------------------------------------------------------
