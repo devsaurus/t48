@@ -3,7 +3,7 @@
 -- The Clock Control unit.
 -- Clock States and Machine Cycles are generated here.
 --
--- $Id: clock_ctrl.vhd,v 1.1 2004-03-23 21:31:52 arniml Exp $
+-- $Id: clock_ctrl.vhd,v 1.2 2004-03-28 12:55:06 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -230,12 +230,12 @@ begin
               psen_q <= true;
             end if;
 
-            -- PROG is set at the and of XTAL2
-            if xtal2_s and multi_cycle_q and not second_cycle_q and
-              assert_prog_i then
-              prog_q <= true;
-            end if;
+          end if;
 
+          -- PROG is set at the and of XTAL2
+          if xtal2_s and multi_cycle_q and not second_cycle_q and
+            assert_prog_i then
+            prog_q <= true;
           end if;
 
           -- ALE is removed at the end of XTAL2 of every machine cycle
@@ -377,5 +377,8 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2004/03/23 21:31:52  arniml
+-- initial check-in
+--
 --
 -------------------------------------------------------------------------------
