@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 --
--- $Id: decoder_pack-p.vhd,v 1.1 2004-03-23 21:31:52 arniml Exp $
+-- $Id: decoder_pack-p.vhd,v 1.2 2004-03-28 13:09:53 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -18,7 +18,6 @@ package decoder_pack is
                       MN_ANL,
                       MN_ANL_A_DATA,
                       MN_ANL_EXT,
-                      MN_ANLD,
                       MN_CALL,
                       MN_CLR_A,
                       MN_CLR_C,
@@ -51,15 +50,14 @@ package decoder_pack is
                       MN_MOV_RR,
                       MN_MOV_RR_DATA,
                       MN_MOV_T,
-                      MN_MOV_A_PP,
-                      MN_MOV_PP_A,
+                      MN_MOVD_A_PP,
                       MN_MOVP,
                       MN_MOVX,
                       MN_NOP,
                       MN_ORL,
                       MN_ORL_A_DATA,
                       MN_ORL_EXT,
-                      MN_ORLD_PP_A,
+                      MN_OUTD_PP_A,
                       MN_OUTL_EXT,
                       MN_RET,
                       MN_RL,
@@ -80,5 +78,7 @@ end decoder_pack;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2004/03/23 21:31:52  arniml
+-- initial check-in
 --
 -------------------------------------------------------------------------------

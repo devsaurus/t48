@@ -4,7 +4,7 @@
 -- Decodes the given opcode to instruction mnemonics.
 -- Also derives the multicycle information.
 --
--- $Id: opc_table.vhd,v 1.1 2004-03-23 21:31:52 arniml Exp $
+-- $Id: opc_table.vhd,v 1.2 2004-03-28 13:10:48 arniml Exp $
 --
 -- All rights reserved
 --
@@ -109,11 +109,6 @@ begin
       when "10011000" |                                         -- ANL BUS, data
            "10011001" | "10011010" =>                           -- ANL PP, data
         mnemonic_o    <= MN_ANL_EXT;
-        multi_cycle_o <= '1';
-
-      -- Mnemonic ANLD --------------------------------------------------------
-      when "10011100" | "10011101" | "10011110" | "10011111" => -- ANLD PP, A
-        mnemonic_o    <= MN_ANLD;
         multi_cycle_o <= '1';
 
       -- Mnemonic CALL --------------------------------------------------------
@@ -285,30 +280,25 @@ begin
            "01000010" =>                                        -- MOV A, T
         mnemonic_o    <= MN_MOV_T;
 
-      -- Mnemonic MOV_A_PP ----------------------------------------------------
-      when "00001100" | "00001101" | "00001110" | "00001111" =>  -- MOV A, Pp
-        mnemonic_o    <= MN_MOV_A_PP;
-        multi_cycle_o <= '1';
-
-      -- Mnemonic MOV_PP_A ----------------------------------------------------
-      when "00111100" | "00111101" | "00111110" | "00111111" =>  -- MOV Pp, A
-        mnemonic_o    <= MN_MOV_PP_A;
+      -- Mnemonic MOVD_A_PP ---------------------------------------------------
+      when "00001100" | "00001101" | "00001110" | "00001111" => -- MOVD A, Pp
+        mnemonic_o    <= MN_MOVD_A_PP;
         multi_cycle_o <= '1';
 
       -- Mnemonic MOVP --------------------------------------------------------
-      when "10100011" |                                          -- MOVP A, @ A
-           "11100011" =>                                         -- MOVP3 A, @ A
+      when "10100011" |                                         -- MOVP A, @ A
+           "11100011" =>                                        -- MOVP3 A, @ A
         mnemonic_o    <= MN_MOVP;
         multi_cycle_o <= '1';
 
       -- Mnemonic MOVX --------------------------------------------------------
-      when "10000000" | "10000001" |                             -- MOVX A, @ Rr
-           "10010000" | "10010001" =>                            -- MOVX @ Rr, A
+      when "10000000" | "10000001" |                            -- MOVX A, @ Rr
+           "10010000" | "10010001" =>                           -- MOVX @ Rr, A
         mnemonic_o    <= MN_MOVX;
         multi_cycle_o <= '1';
 
       -- Mnemonic NOP ---------------------------------------------------------
-      when "00000000" =>                                         -- NOP
+      when "00000000" =>                                        -- NOP
         mnemonic_o    <= MN_NOP;
 
       -- Mnemonic ORL ---------------------------------------------------------
@@ -328,9 +318,11 @@ begin
         mnemonic_o    <= MN_ORL_EXT;
         multi_cycle_o <= '1';
 
-      -- Mnemonic ORLD_PP_A ----------------------------------------------------
-      when "10001100" | "10001101" | "10001110" | "10001111" => -- ORLD Pp, A
-        mnemonic_o    <= MN_ORLD_PP_A;
+      -- Mnemonic OUTD_PP_A ---------------------------------------------------
+      when "00111100" | "00111101" | "00111110" | "00111111" |  -- MOVD Pp, A
+           "10011100" | "10011101" | "10011110" | "10011111" |  -- ANLD PP, A
+           "10001100" | "10001101" | "10001110" | "10001111" => -- ORLD Pp, A
+        mnemonic_o    <= MN_OUTD_PP_A;
         multi_cycle_o <= '1';
 
       -- Mnemonic OUTL_EXT ----------------------------------------------------
@@ -416,5 +408,7 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2004/03/23 21:31:52  arniml
+-- initial check-in
 --
 -------------------------------------------------------------------------------
