@@ -11,12 +11,16 @@
 #
 ##############################################################################
 
+# Generate diagnosis files for line coverage
+#GCOV = -Wc,-ftest-coverage -Wc,-fprofile-arcs
+GCOV =
+
 
 LIB_WORK  = ghdl-work
 
-CLEAN     = ghdl --clean --std=87 --workdir=$(LIB_WORK); rm -f tb_*_c0
+CLEAN     = ghdl --clean --std=87 --workdir=$(LIB_WORK); rm -f tb_*_c0 *.bb *.bbg *.da *.gcov
 
-ANALYZE   = ghdl -a --std=87 --workdir=$(LIB_WORK)
+ANALYZE   = ghdl -a --std=87 --workdir=$(LIB_WORK) $(GCOV)
 
 ELABORATE = ghdl -e --std=87 --workdir=$(LIB_WORK)
 
