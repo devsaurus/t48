@@ -4,7 +4,7 @@
 #
 # run_regression.pl
 #
-# $Id: run_regression.pl,v 1.3 2004-04-16 22:17:08 arniml Exp $
+# $Id: run_regression.pl,v 1.4 2004-04-18 19:02:25 arniml Exp $
 #
 # Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 #
@@ -96,6 +96,7 @@ while (($cell, $tag) = each(%cells)) {
         print("Processing $cell\n");
 
         system('sh', '-c', 'rm -f $SIM_DIR/t48_rom.hex');
+        system('sh', '-c', 'make -f $VERIF_DIR/include/Makefile.cell clean');
         system('sh', '-c', 'make -f $VERIF_DIR/include/Makefile.cell simu clean');
         if ($? == 0) {
             chdir($ENV{'SIM_DIR'});
