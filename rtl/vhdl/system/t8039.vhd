@@ -2,7 +2,7 @@
 --
 -- T8039 Microcontroller System
 --
--- $Id: t8039.vhd,v 1.1 2004-04-18 18:51:10 arniml Exp $
+-- $Id: t8039.vhd,v 1.2 2004-05-20 21:53:42 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -89,10 +89,13 @@ architecture struct of t8039 is
   signal dmem_data_to_s   : std_logic_vector( 7 downto 0);
   signal pmem_data_s      : std_logic_vector( 7 downto 0);
 
+  signal vdd_s            : std_logic;
+
 begin
 
   -- no Program memory available
   pmem_data_s <= (others => '0');
+  vdd_s       <= '1';
 
   t48_core_b : t48_core
     generic map (
@@ -111,7 +114,7 @@ begin
       t0_o         => t0_s,
       t0_dir_o     => t0_dir_s,
       int_n_i      => int_n_i,
-      ea_i         => ea_i,
+      ea_i         => vdd_s,
       rd_n_o       => rd_n_o,
       psen_n_o     => psen_n_o,
       wr_n_o       => wr_n_o,
@@ -220,4 +223,7 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2004/04/18 18:51:10  arniml
+-- initial check-in
+--
 -------------------------------------------------------------------------------
