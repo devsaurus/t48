@@ -1,5 +1,5 @@
 	;; *******************************************************************
-	;; $Id: test.asm,v 1.1.1.1 2004-03-25 22:29:18 arniml Exp $
+	;; $Id: test.asm,v 1.2 2004-04-15 22:01:51 arniml Exp $
 	;;
 	;; Test interrupts in conjunction with RB-switching.
 	;; *******************************************************************
@@ -123,14 +123,26 @@ check_0:
 	jnz	fail_p3
 	ret
 
+	;; synchronize on interrupt
+	;; use r7 for timeout detection
 sync_on_int:
-	jni	wait_int2
-	jmp	sync_on_int
+	mov	a, r7		; save r7
+	mov	r7, #000H
+wait_int1:
+	jni	sync_on_int2
+	djnz	r7, wait_int1
+	jmp	fail_p3
 
+sync_on_int2:
+	mov	r7, #000H
 wait_int2:
-	jni	wait_int2
+	jni	still_int
+	mov	r7, a		; restore r7
 	call	clr_int
 	retr
+still_int:
+	djnz	r7, wait_int2
+	jmp	fail_p3
 
 clr_int:
 	;; clear latched interrupt request with RETR!
