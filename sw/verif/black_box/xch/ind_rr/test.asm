@@ -1,5 +1,5 @@
 	;; *******************************************************************
-	;; $Id: test.asm,v 1.1.1.1 2004-03-25 22:29:18 arniml Exp $
+	;; $Id: test.asm,v 1.2 2004-04-04 13:28:33 arniml Exp $
 	;;
 	;; Test XCH A, @ Rr.
 	;; *******************************************************************
@@ -11,10 +11,14 @@ testR0R1	MACRO	pos
 	inc	r0
 	inc	r1
 	mov	a, @r0
-	add	a, #(~(0FFH - (1 << pos)) + 1) & 0FFH
+	cpl	a
+	add	a, #~(1 << pos) & 0FFH
+	cpl	a
 	jnz	fail
 	mov	a, @r1
-	add	a, #(~(0FFH - (1 << pos)) + 1) & 0FFH
+	cpl	a
+	add	a, #~(1 << pos) & 0FFH
+	cpl	a
 	jnz	fail
 	ENDM
 
