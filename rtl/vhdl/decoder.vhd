@@ -3,7 +3,7 @@
 -- The Decoder unit.
 -- It decodes the instruction opcodes and executes them.
 --
--- $Id: decoder.vhd,v 1.12 2004-05-17 14:40:09 arniml Exp $
+-- $Id: decoder.vhd,v 1.13 2004-05-20 21:51:40 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -347,12 +347,14 @@ begin
 
       when MSTATE3 =>
         if need_address_v then
+          -- Theory of operation:
+          -- Program Memory address is updated at end of State 3 (or end of
+          -- State 2 in case of a RET). Address information is thus available
+          -- latest with State 4.
+          -- This is the time where we need information about access target
+          -- (internal or external = EA). EA information needs to be stable
+          -- until end of State 1.
           pm_write_pmem_addr_s <= true;
-        end if;
-
-        if ea_i = '1' and
-           (need_address_v and last_cycle_s) then
-          bus_output_pcl_o   <= true;
         end if;
 
       when MSTATE4 =>
@@ -365,8 +367,7 @@ begin
 
       when MSTATE5 =>
         if ea_i = '1' and
-           (need_address_v and last_cycle_s) then
-          clk_assert_psen_o <= true;
+           (need_address_v or last_cycle_s) then
           p2_output_pch_o   <= true;
         end if;
 
@@ -1932,6 +1933,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.12  2004/05/17 14:40:09  arniml
+-- assert p2_read_p2_o when expander port is read
+--
 -- Revision 1.11  2004/05/16 15:33:39  arniml
 -- work around bug in Quartus II 4.0
 --
