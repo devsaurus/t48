@@ -3,7 +3,7 @@
 -- The Arithmetic Logic Unit (ALU).
 -- It contains the ALU core plus the Accumulator and the Temp Reg.
 --
--- $Id: alu.vhd,v 1.1 2004-03-23 21:31:52 arniml Exp $
+-- $Id: alu.vhd,v 1.2 2004-03-28 21:08:51 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -70,7 +70,12 @@ entity alu is
     aux_carry_i        : in  std_logic;
     aux_carry_o        : out std_logic;
     alu_op_i           : in  alu_op_t;
-    use_carry_i        : in  boolean
+    use_carry_i        : in  boolean;
+    da_low_i           : in  boolean;
+    da_high_i          : in  boolean;
+    da_overflow_o      : out boolean;
+    p06_temp_reg_i     : in  boolean;
+    p60_temp_reg_i     : in  boolean
   );
 
 end alu;
@@ -82,6 +87,7 @@ use ieee.std_logic_arith.all;
 use work.t48_pack.clk_active_c;
 use work.t48_pack.res_active_c;
 use work.t48_pack.bus_idle_level_c;
+use work.t48_pack.nibble_t;
 use work.alu_pack.all;
 
 -- pragma translate_off
@@ -132,8 +138,15 @@ begin
           accu_shadow_q <= accumulator_q;
         end if;
 
-        if write_temp_reg_i then
-          temp_req_q      <= data_i;
+        if p06_temp_reg_i then
+          -- low nibble of DA sequence
+          temp_req_q  <= "00000110";
+        elsif p60_temp_reg_i then
+          -- high nibble of DA sequence
+          temp_req_q  <= "01100000";
+        elsif write_temp_reg_i then
+          -- normal load from T48 bus
+          temp_req_q  <= data_i;
         end if;
 
       end if;
@@ -185,9 +198,8 @@ begin
 
   begin
     -- default assigments
-    data_s      <= (others => '0');
-    carry_o     <= '0';
-    aux_carry_o <= '0';
+    data_s     <= (others => '0');
+    carry_o    <= '0';
 
     case alu_op_i is
       -- Operation: AND -------------------------------------------------------
@@ -286,6 +298,84 @@ begin
   -----------------------------------------------------------------------------
 
 
+  -----------------------------------------------------------------------------
+  -- Process aux_carry
+  --
+  -- Purpose:
+  --  Calculates the Auxiliary Carry.
+  --
+  aux_carry: process (in_a_s,
+                      in_b_s,
+                      data_s)
+    variable aux_c_v : std_logic_vector(1 downto 0);
+  begin
+    aux_carry_o       <= '0';
+    aux_c_v           := in_a_s(4) & in_b_s(4);
+
+    case aux_c_v is
+      when "00" | "11" =>
+        if data_s(4) = '1' then
+          aux_carry_o <= '1';
+        end if;
+
+      when "01" | "10" =>
+        if data_s(4) = '0' then
+          aux_carry_o <= '1';
+        end if;
+
+      when others =>
+        null;
+
+    end case;
+
+  end process aux_carry;
+  --
+  -----------------------------------------------------------------------------
+
+
+  -----------------------------------------------------------------------------
+  -- Process da_overflow
+  --
+  -- Purpose:
+  --   Detect overflow situation during DA sequence.
+  --
+  da_overflow: process (accu_shadow_q,
+                        da_high_i)
+
+    variable da_nibble_v : nibble_t;
+
+    function da_overflow_f(data : in nibble_t) return boolean is
+      variable overflow_v : boolean;
+    begin
+      case data is
+        when "1010" |
+             "1011" |
+             "1100" |
+             "1101" |
+             "1110" |
+             "1111" =>
+          overflow_v := true;
+        when others =>
+          overflow_v := false;
+      end case;
+
+      return(overflow_v);
+    end;
+
+  begin
+    if da_high_i then
+      da_nibble_v := accu_shadow_q(7 downto 4);
+    else
+      da_nibble_v := accu_shadow_q(3 downto 0);
+    end if;
+
+    da_overflow_o <= da_overflow_f(da_nibble_v);
+
+  end process da_overflow;
+  --
+  -----------------------------------------------------------------------------
+
+
   -- pragma translate_off
   -----------------------------------------------------------------------------
   -- Testbench support.
@@ -307,5 +397,7 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2004/03/23 21:31:52  arniml
+-- initial check-in
 --
 -------------------------------------------------------------------------------
