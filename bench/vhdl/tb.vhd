@@ -2,7 +2,7 @@
 --
 -- The testbench for t48_core.
 --
--- $Id: tb.vhd,v 1.6 2004-04-14 20:57:44 arniml Exp $
+-- $Id: tb.vhd,v 1.7 2004-04-25 16:23:21 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -60,6 +60,19 @@ architecture behav of tb is
   -- clock period, 11 MHz
   constant period_c : time := 90 ns;
 
+  component if_timing
+    port(
+      xtal_i   : in std_logic;
+      ale_i    : in std_logic;
+      psen_n_i : in std_logic;
+      rd_n_i   : in std_logic;
+      wr_n_i   : in std_logic;
+      prog_n_i : in std_logic;
+      db_bus_i : in std_logic_vector(7 downto 0);
+      p2_i     : in std_logic_vector(7 downto 0)
+    );
+  end component;
+
   signal xtal_s          : std_logic;
   signal xtal_n_s        : std_logic;
   signal res_n_s         : std_logic;
@@ -79,6 +92,7 @@ architecture behav of tb is
   signal p2_s            : std_logic_vector( 7 downto 0);
   signal t48_p2_s        : std_logic_vector( 7 downto 0);
   signal p2_low_imp_s    : std_logic;
+  signal psen_n_s        : std_logic;
   signal prog_n_s        : std_logic;
 
   signal bus_s           : std_logic_vector( 7 downto 0);
@@ -156,7 +170,7 @@ begin
       int_n_i      => int_n_s,
       ea_i         => zero_s,
       rd_n_o       => rd_n_s,
-      psen_n_o     => open,
+      psen_n_o     => psen_n_s,
       wr_n_o       => wr_n_s,
       ale_o        => ale_s,
       db_i         => bus_s,
@@ -179,6 +193,18 @@ begin
       dmem_data_o  => ram_data_to_s,
       pmem_addr_o  => rom_addr_s,
       pmem_data_i  => rom_data_s
+    );
+
+  if_timing_b : if_timing
+    port map (
+      xtal_i   => xtal_s,
+      ale_i    => ale_s,
+      psen_n_i => psen_n_s,
+      rd_n_i   => rd_n_s,
+      wr_n_i   => wr_n_s,
+      prog_n_i => prog_n_s,
+      db_bus_i => bus_s,
+      p2_i     => p2_s
     );
 
 
@@ -349,6 +375,11 @@ end behav;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.6  2004/04/14 20:57:44  arniml
+-- wait for instruction strobe after final end-of-simulation detection
+-- this ensures that the last mov instruction is part of the dump and
+-- enables 100% matching with i8039 simulator
+--
 -- Revision 1.5  2004/03/29 19:45:15  arniml
 -- rename pX_limp to pX_low_imp
 --

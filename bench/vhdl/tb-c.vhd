@@ -2,7 +2,7 @@
 --
 -- The testbench for t48_core.
 --
--- $Id: tb-c.vhd,v 1.1 2004-03-24 21:42:10 arniml Exp $
+-- $Id: tb-c.vhd,v 1.2 2004-04-25 16:23:21 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -30,6 +30,10 @@ configuration tb_behav_c0 of tb is
       use configuration work.t48_core_struct_c0;
     end for;
 
+    for if_timing_b : if_timing
+      use configuration work.if_timing_behav_c0;
+    end for;
+
   end for;
 
 end tb_behav_c0;
@@ -39,4 +43,7 @@ end tb_behav_c0;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2004/03/24 21:42:10  arniml
+-- initial check-in
+--
 -------------------------------------------------------------------------------
