@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 --
--- $Id: t48_system_comp_pack-p.vhd,v 1.1 2004-12-01 23:07:20 arniml Exp $
+-- $Id: t48_system_comp_pack-p.vhd,v 1.2 2004-12-02 22:08:40 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -14,6 +14,10 @@ use ieee.std_logic_1164.all;
 package t48_system_comp_pack is
 
   component t8048_notri
+    generic (
+      gate_port_input_g : integer := 1
+    );
+
     port (
       xtal_i       : in  std_logic;
       reset_n_i    : in  std_logic;

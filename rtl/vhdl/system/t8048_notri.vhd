@@ -3,7 +3,7 @@
 -- T8048 Microcontroller System
 -- 8048 toplevel without tri-states
 --
--- $Id: t8048_notri.vhd,v 1.2 2004-12-01 23:08:08 arniml Exp $
+-- $Id: t8048_notri.vhd,v 1.3 2004-12-02 22:08:42 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -48,6 +48,10 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 entity t8048_notri is
+
+  generic (
+    gate_port_input_g : integer := 1
+  );
 
   port (
     xtal_i       : in  std_logic;
@@ -99,7 +103,22 @@ architecture struct of t8048_notri is
 
   signal ea_s             : std_logic;
 
+  signal p1_in_s,
+         p1_out_s         : std_logic_vector( 7 downto 0);
+  signal p2_in_s,
+         p2_out_s         : std_logic_vector( 7 downto 0);
+
 begin
+
+  -----------------------------------------------------------------------------
+  -- Check generics for valid values.
+  -----------------------------------------------------------------------------
+  -- pragma translate_off
+  assert gate_port_input_g = 0 or gate_port_input_g = 1
+    report "gate_port_input_g must be either 1 or 0!"
+    severity failure;
+  -- pragma translate_on
+
 
   t48_core_b : t48_core
     generic map (
@@ -127,11 +146,11 @@ begin
       db_o         => db_o,
       db_dir_o     => db_dir_o,
       t1_i         => t1_i,
-      p2_i         => p2_i,
-      p2_o         => p2_o,
+      p2_i         => p2_in_s,
+      p2_o         => p2_out_s,
       p2_low_imp_o => p2_low_imp_o,
-      p1_i         => p1_i,
-      p1_o         => p1_o,
+      p1_i         => p1_in_s,
+      p1_o         => p1_out_s,
       p1_low_imp_o => p1_low_imp_o,
       prog_n_o     => prog_n_o,
       clk_i        => xtal_i,
@@ -144,6 +163,23 @@ begin
       pmem_addr_o  => pmem_addr_s,
       pmem_data_i  => pmem_data_s
     );
+
+
+  -----------------------------------------------------------------------------
+  -- Gate port 1 and 2 input bus with respetive output value
+  -----------------------------------------------------------------------------
+  gate_ports: if gate_port_input_g = 1 generate
+    p1_in_s <= p1_i and p1_out_s;
+    p2_in_s <= p2_i and p2_out_s;
+  end generate;
+
+  pass_ports: if gate_port_input_g = 0 generate
+    p1_in_s <= p1_i;
+    p2_in_s <= p2_i;
+  end generate;  
+
+  p1_o <= p1_out_s;
+  p2_o <= p2_out_s;
 
 
   -----------------------------------------------------------------------------
@@ -206,4 +242,7 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.2  2004/12/01 23:08:08  arniml
+-- update
+--
 -------------------------------------------------------------------------------

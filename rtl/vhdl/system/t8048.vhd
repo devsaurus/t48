@@ -2,7 +2,7 @@
 --
 -- T8048 Microcontroller System
 --
--- $Id: t8048.vhd,v 1.5 2004-12-01 23:09:47 arniml Exp $
+-- $Id: t8048.vhd,v 1.6 2004-12-02 22:08:42 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -90,6 +90,12 @@ architecture struct of t8048 is
 begin
 
   t8048_notri_b : t8048_notri
+    generic map (
+      -- we don't need explicit gating of input ports
+      -- this is done implicitely by the bidirectional pads
+      gate_port_input_g => 0
+    )
+
     port map (
       xtal_i       => xtal_i,
       reset_n_i    => reset_n_i,
@@ -185,6 +191,10 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.5  2004/12/01 23:09:47  arniml
+-- intruduced hierarchy t8048_notri where all system functionality
+-- except bidirectional ports is handled
+--
 -- Revision 1.4  2004/10/24 09:10:16  arniml
 -- Fix for:
 -- P1 constantly in push-pull mode in t8048
