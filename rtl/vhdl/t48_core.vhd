@@ -2,7 +2,7 @@
 --
 -- T48 Microcontroller Core
 --
--- $Id: t48_core.vhd,v 1.4 2004-03-29 19:39:58 arniml Exp $
+-- $Id: t48_core.vhd,v 1.5 2004-04-04 14:18:53 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -151,6 +151,7 @@ architecture struct of t48_core is
   signal alu_da_low_s         : boolean;
   signal alu_da_high_s        : boolean;
   signal alu_da_overflow_s    : boolean;
+  signal alu_accu_low_s       : boolean;
   signal alu_p06_temp_reg_s   : boolean;
   signal alu_p60_temp_reg_s   : boolean;
 
@@ -296,6 +297,7 @@ begin
       da_low_i           => alu_da_low_s,
       da_high_i          => alu_da_high_s,
       da_overflow_o      => alu_da_overflow_s,
+      accu_low_i         => alu_accu_low_s,
       p06_temp_reg_i     => alu_p06_temp_reg_s,
       p60_temp_reg_i     => alu_p60_temp_reg_s
     );
@@ -426,6 +428,7 @@ begin
       alu_da_low_o           => alu_da_low_s,
       alu_da_high_o          => alu_da_high_s,
       alu_da_overflow_i      => alu_da_overflow_s,
+      alu_accu_low_o         => alu_accu_low_s,
       alu_p06_temp_reg_o     => alu_p06_temp_reg_s,
       alu_p60_temp_reg_o     => alu_p60_temp_reg_s,
       bus_output_pcl_o       => bus_output_pcl_s,
@@ -632,6 +635,9 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.4  2004/03/29 19:39:58  arniml
+-- rename pX_limp to pX_low_imp
+--
 -- Revision 1.3  2004/03/28 21:27:50  arniml
 -- update wiring for DA support
 --

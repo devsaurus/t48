@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 --
--- $Id: alu_pack-p.vhd,v 1.1 2004-03-23 21:31:52 arniml Exp $
+-- $Id: alu_pack-p.vhd,v 1.2 2004-04-04 14:18:53 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -24,7 +24,7 @@ package alu_pack is
                     ALU_SWAP,
                     ALU_DEC, ALU_INC,
                     ALU_ADD,
-                    ALU_DA,
+                    ALU_CONCAT,
                     ALU_NOP);
 
   -----------------------------------------------------------------------------
@@ -39,5 +39,8 @@ end alu_pack;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2004/03/23 21:31:52  arniml
+-- initial check-in
+--
 --
 -------------------------------------------------------------------------------

@@ -3,7 +3,7 @@
 -- The Arithmetic Logic Unit (ALU).
 -- It contains the ALU core plus the Accumulator and the Temp Reg.
 --
--- $Id: alu.vhd,v 1.2 2004-03-28 21:08:51 arniml Exp $
+-- $Id: alu.vhd,v 1.3 2004-04-04 14:18:52 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -74,6 +74,7 @@ entity alu is
     da_low_i           : in  boolean;
     da_high_i          : in  boolean;
     da_overflow_o      : out boolean;
+    accu_low_i         : in  boolean;
     p06_temp_reg_i     : in  boolean;
     p60_temp_reg_i     : in  boolean
   );
@@ -127,7 +128,11 @@ begin
       if en_clk_i then
 
         if write_accu_i then
-          accumulator_q   <= data_i;
+          if accu_low_i then
+            accumulator_q(nibble_t'range) <= data_i(nibble_t'range);
+          else
+            accumulator_q <= data_i;
+          end if;
         end if;
 
         if write_shadow_i then
@@ -272,13 +277,9 @@ begin
         add_v  := add_f("0" & in_a_s, "000000001", '0');
         data_s <= add_v(data_s'range);
 
-      -- Operation: DA --------------------------------------------------------
-      when ALU_DA =>
-        -- pragma translate_off
-        assert false
-          report "ALU Operation DA not yet implemented."
-          severity warning;
-        -- pragma translate_on
+      -- Operation CONCAT -----------------------------------------------------
+      when ALU_CONCAT =>
+        data_s <= in_b_s(7 downto 4) & in_a_s(3 downto 0);
 
       -- Operation: NOP -------------------------------------------------------
       when ALU_NOP =>
@@ -397,6 +398,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.2  2004/03/28 21:08:51  arniml
+-- support for DA instruction
+--
 -- Revision 1.1  2004/03/23 21:31:52  arniml
 -- initial check-in
 --

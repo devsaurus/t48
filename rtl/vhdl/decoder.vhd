@@ -3,7 +3,7 @@
 -- The Decoder unit.
 -- It decodes the instruction opcodes and executes them.
 --
--- $Id: decoder.vhd,v 1.3 2004-03-28 21:15:48 arniml Exp $
+-- $Id: decoder.vhd,v 1.4 2004-04-04 14:18:53 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -104,6 +104,7 @@ entity decoder is
     alu_use_carry_o        : out boolean;
     alu_da_low_o           : out boolean;
     alu_da_high_o          : out boolean;
+    alu_accu_low_o         : out boolean;
     alu_p06_temp_reg_o     : out boolean;
     alu_p60_temp_reg_o     : out boolean;
     alu_da_overflow_i      : in  boolean;
@@ -223,6 +224,10 @@ architecture rtl of decoder is
   signal retr_executed_s   : boolean;
   signal int_executed_s    : boolean;
   signal int_pending_s     : boolean;
+
+  -- pragma translate_off
+  signal istrobe_s         : std_logic;
+  -- pragma translate_on
 
 begin
 
@@ -459,6 +464,7 @@ begin
     alu_use_carry_o        <= false;
     alu_da_low_o           <= false;
     alu_da_high_o          <= false;
+    alu_accu_low_o         <= false;
     clk_assert_prog_o      <= false;
     clk_assert_rd_o        <= false;
     clk_assert_wr_o        <= false;
@@ -1665,16 +1671,27 @@ begin
           when MSTATE3 =>
             address_indirect_3_f;
 
-          -- store data from RAM in Accumulator
+          -- store data from RAM in Accumulator and Temp Reg
           -- Accumulator is already shadowed!
           when MSTATE4 =>
-            dm_read_dmem_o   <= true;
-            alu_write_accu_o <= true;
+            dm_read_dmem_o       <= true;
+            alu_write_accu_o     <= true;
+            alu_write_temp_reg_o <= true;
+            if opc_opcode_s(4) = '1' then
+              -- XCHD
+              -- only write lower nibble of Accumulator
+              alu_accu_low_o     <= true;
+            end if;
 
           -- store data from shadow (previous) Accumulator to dmem
           when MSTATE5 =>
-            dm_write_dmem_s <= true;
-            alu_read_alu_o  <= true;
+            dm_write_dmem_s      <= true;
+            alu_read_alu_o       <= true;
+            if opc_opcode_s(4) = '1' then
+              -- XCHD
+              -- concatenate shadow Accumulator and Temp Reg
+              alu_op_o           <= ALU_CONCAT;
+            end if;
 
           when others =>
             null;
@@ -1752,6 +1769,9 @@ begin
       f1_q           <= '0';
       mb_q           <= '0';
       t0_dir_q       <= '0';
+      -- pragma translate_off
+      istrobe_s      <= '0';
+      -- pragma translate_on
 
     elsif clk_i'event and clk_i = clk_active_c then
       if en_clk_i then
@@ -1785,6 +1805,15 @@ begin
 
       end if;
 
+      -- pragma translate_off
+      -- Instruction Strobe ---------------------------------------------------
+      if clk_mstate_i = MSTATE5 and last_cycle_s then
+        istrobe_s      <= '1';
+      else
+        istrobe_s      <= '0';
+      end if;
+      -- pragma translate_on
+
     end if;
 
   end process regs;
@@ -1814,6 +1843,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.3  2004/03/28 21:15:48  arniml
+-- implemented mnemonic DA
+--
 -- Revision 1.2  2004/03/28 13:06:32  arniml
 -- implement mnemonics:
 --    + MOVD_A_PP

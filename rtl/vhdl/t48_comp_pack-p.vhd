@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 --
--- $Id: t48_comp_pack-p.vhd,v 1.4 2004-03-29 19:39:58 arniml Exp $
+-- $Id: t48_comp_pack-p.vhd,v 1.5 2004-04-04 14:18:53 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -45,6 +45,7 @@ package t48_comp_pack is
       da_low_i           : in  boolean;
       da_high_i          : in  boolean;
       da_overflow_o      : out boolean;
+      accu_low_i         : in  boolean;
       p06_temp_reg_i     : in  boolean;
       p60_temp_reg_i     : in  boolean
     );
@@ -170,6 +171,7 @@ package t48_comp_pack is
       alu_op_o               : out alu_op_t;
       alu_da_low_o           : out boolean;
       alu_da_high_o          : out boolean;
+      alu_accu_low_o         : out boolean;
       alu_da_overflow_i      : in  boolean;
       alu_p06_temp_reg_o     : out boolean;
       alu_p60_temp_reg_o     : out boolean;
