@@ -3,7 +3,7 @@
 -- The Program Status Word (PSW).
 -- Implements the PSW with its special bits.
 --
--- $Id: psw.vhd,v 1.4 2004-04-18 18:59:01 arniml Exp $
+-- $Id: psw.vhd,v 1.5 2004-04-24 11:25:39 arniml Exp $
 --
 -- All rights reserved
 --
@@ -102,7 +102,6 @@ architecture rtl of psw is
 
   -- pragma translate_off
   signal psw_s : word_t;
-  signal dummy_s : std_logic;
   -- pragma translate_on
 
 begin
@@ -208,11 +207,6 @@ begin
   f0_o        <= psw_q(f0_c);
   bs_o        <= psw_q(bs_c);
 
-  -- pragma translate_off
-  -- workaround for GHDL 0.11
-  dummy_s     <= '0';
-  -- pragma translate_on
-
 end rtl;
 
 
@@ -220,6 +214,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.4  2004/04/18 18:59:01  arniml
+-- add temporary workaround for GHDL 0.11
+--
 -- Revision 1.3  2004/04/04 14:15:45  arniml
 -- add dump_compare support
 --
