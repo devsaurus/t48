@@ -234,7 +234,7 @@ end LPM_RAM_DQ;
 architecture LPM_SYN of lpm_ram_dq is
 
 --type lpm_memory is array(lpm_numwords-1 downto 0) of std_logic_vector(lpm_width-1 downto 0);
-type lpm_memory is array((2**lpm_widthad)-1 downto 0) of std_logic_vector(lpm_width-1 downto 0);
+type lpm_memory is array(integer range (2**lpm_widthad)-1 downto 0) of std_logic_vector(lpm_width-1 downto 0);
 
 signal data_tmp, data_reg : std_logic_vector(lpm_width-1 downto 0);
 signal q_tmp, q_reg : std_logic_vector(lpm_width-1 downto 0) := (others => '0');

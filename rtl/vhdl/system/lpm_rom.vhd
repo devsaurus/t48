@@ -232,7 +232,7 @@ end LPM_ROM;
 architecture LPM_SYN of lpm_rom is
 
 --type lpm_memory is array(lpm_numwords-1 downto 0) of std_logic_vector(lpm_width-1 downto 0);
-type lpm_memory is array((2**lpm_widthad)-1 downto 0) of std_logic_vector(lpm_width-1 downto 0);
+type lpm_memory is array(integer range (2**lpm_widthad)-1 downto 0) of std_logic_vector(lpm_width-1 downto 0);
 
 signal q2, q_tmp, q_reg : std_logic_vector(lpm_width-1 downto 0);
 signal address_tmp, address_reg : std_logic_vector(lpm_widthad-1 downto 0);
