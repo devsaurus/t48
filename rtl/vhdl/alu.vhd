@@ -3,7 +3,7 @@
 -- The Arithmetic Logic Unit (ALU).
 -- It contains the ALU core plus the Accumulator and the Temp Reg.
 --
--- $Id: alu.vhd,v 1.5 2004-04-06 20:21:53 arniml Exp $
+-- $Id: alu.vhd,v 1.6 2004-04-07 20:56:23 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -335,6 +335,7 @@ begin
     -- Auxiliary Carry --------------------------------------------------------
     aux_c_v           := in_a_s(4) & in_b_s(4);
 
+    aux_carry_o       <= '0';
     case aux_c_v is
       when "00" | "11" =>
         if result_v(4) = '1' then
@@ -347,7 +348,6 @@ begin
         end if;
 
       when others =>
-          aux_carry_o <= '0';
         null;
 
     end case;
@@ -421,6 +421,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.5  2004/04/06 20:21:53  arniml
+-- fix sensitivity list
+--
 -- Revision 1.4  2004/04/06 18:10:41  arniml
 -- rework adder and force resource sharing between ADD, INC and DEC
 --
