@@ -2,7 +2,7 @@
 --
 -- The Timer/Counter unit.
 --
--- $Id: timer.vhd,v 1.1 2004-03-23 21:31:53 arniml Exp $
+-- $Id: timer.vhd,v 1.2 2004-04-15 22:05:13 arniml Exp $
 --
 -- All rights reserved
 --
@@ -141,7 +141,7 @@ begin
   -----------------------------------------------------------------------------
 
 
-  pre_inc_s <= clk_mstate_i = MSTATE3 and prescaler_q = 31;
+  pre_inc_s <= clk_mstate_i = MSTATE4 and prescaler_q = 31;
 
 
   -----------------------------------------------------------------------------
@@ -208,7 +208,7 @@ begin
 
         -- T1 edge detector ---------------------------------------------------
         if (sample_t1_state_g = 3 and clk_mstate_i = MSTATE3) or
-          (sample_t1_state_g = 4 and clk_mstate_i = MSTATE4) then
+           (sample_t1_state_g = 4 and clk_mstate_i = MSTATE4) then
           t1_q <= t1_i;
         end if;
 
@@ -254,5 +254,8 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2004/03/23 21:31:53  arniml
+-- initial check-in
+--
 --
 -------------------------------------------------------------------------------
