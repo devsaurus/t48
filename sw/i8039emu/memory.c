@@ -1,5 +1,5 @@
 /*
- * $Id: memory.c,v 1.2 2004-04-14 20:50:51 arniml Exp $
+ * $Id: memory.c,v 1.3 2004-07-03 14:35:52 arniml Exp $
  *
  * Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
  *
@@ -101,7 +101,7 @@ void io_write_byte_8(UINT8 address, UINT8 data)
 }
 
 
-int read_hex_file(char *filename)
+int read_hex_file(char *filename, UINT16 file_offset)
 {
   FILE *hex_file;
   UINT16 record_len, offset, record_type;
@@ -130,7 +130,7 @@ int read_hex_file(char *filename)
         if (record_type == 0) {
           while (strlen(payload) >= 2) {
             if (sscanf(payload, "%2hx", &byte) == 1)
-              code_mem[offset++] = byte;
+              code_mem[file_offset + offset++] = byte;
 
             payload++;
             payload++;

@@ -1,5 +1,5 @@
 /*
- * $Id: main.c,v 1.2 2004-04-15 22:03:53 arniml Exp $
+ * $Id: main.c,v 1.3 2004-07-03 14:37:12 arniml Exp $
  *
  * Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
  *
@@ -24,6 +24,7 @@
 
 #include <stdio.h>
 #include <unistd.h>
+#include <string.h>
 
 #include "types.h"
 #include "memory.h"
@@ -37,8 +38,9 @@ void logerror(char *msg, UINT16 address, UINT8 opcode)
 
 void print_usage(void) {
   printf("Usage:\n");
-  printf(" i8039 -f <hex file> [-d] [-h]\n");
-  printf("  -f : Name of hex file\n");
+  printf(" i8039 -f <hex file> [-x <hex file>] [-d] [-h]\n");
+  printf("  -f : Name of hex file for internal ROM\n");
+  printf("  -x : Name of hex file for external ROM (optional)\n");
   printf("  -d : Dump machine state\n");
   printf("  -h : Print this help\n");
 }
@@ -48,11 +50,12 @@ int main(int argc, char *argv[])
 {
   int  do_cycles, real_cycles, total_cycles;
   char *hex_file = "";
+  char *ext_hex_file = "";
   int  c;
   int  dump = 0;
 
   /* process options */
-  while ((c = getopt(argc, argv, "df:h")) != -1) {
+  while ((c = getopt(argc, argv, "df:hx:")) != -1) {
     switch (c) {
       case 'd':
         dump = 1;
@@ -60,6 +63,10 @@ int main(int argc, char *argv[])
 
       case 'f':
         hex_file = optarg;
+        break;
+
+      case 'x':
+        ext_hex_file = optarg;
         break;
 
       case 'h':
@@ -78,10 +85,20 @@ int main(int argc, char *argv[])
     return(1);
   }
 
+  /* read hex file for internal ROM */
   printf("Reading %s\n", hex_file);
-  if (!read_hex_file(hex_file)) {
+  if (!read_hex_file(hex_file, 0)) {
     printf("Error reading file!\n");
     return(1);
+  }
+
+  /* read hex fiel for external ROM */
+  if (strlen(ext_hex_file) > 0) {
+    printf("Reading %s\n", ext_hex_file);
+    if (!read_hex_file(ext_hex_file, 0x800)) {
+      printf("Error reading file!\n");
+      return(1);
+    }
   }
 
   printf("Resetting 8039\n");

@@ -1,5 +1,5 @@
 /*
- * $Id: memory.h,v 1.1.1.1 2004-04-09 19:20:54 arniml Exp $
+ * $Id: memory.h,v 1.2 2004-07-03 14:35:52 arniml Exp $
  *
  */
 
@@ -21,6 +21,6 @@ UINT8 io_read_byte_8(UINT8);
 
 void io_write_byte_8(UINT8, UINT8);
 
-int read_hex_file(char *);
+int read_hex_file(char *, UINT16);
 
 #endif
