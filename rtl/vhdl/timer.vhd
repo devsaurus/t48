@@ -2,7 +2,7 @@
 --
 -- The Timer/Counter unit.
 --
--- $Id: timer.vhd,v 1.2 2004-04-15 22:05:13 arniml Exp $
+-- $Id: timer.vhd,v 1.3 2004-05-16 15:32:57 arniml Exp $
 --
 -- All rights reserved
 --
@@ -129,7 +129,7 @@ begin
     -- Old devices: sample at the beginning of state 3
     -- New devices: sample in state 4
     if (sample_t1_state_g = 3 and clk_mstate_i = MSTATE3) or
-       (sample_t1_state_g = 4 and clk_mstate_i = MSTATE3) then
+       (sample_t1_state_g = 4 and clk_mstate_i = MSTATE4) then
       -- detect falling edge
       if t1_q = '1' and t1_i = '0' then
         t1_inc_s <= true;
@@ -254,6 +254,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.2  2004/04/15 22:05:13  arniml
+-- increment prescaler with MSTATE4
+--
 -- Revision 1.1  2004/03/23 21:31:53  arniml
 -- initial check-in
 --
