@@ -9,7 +9,7 @@
  *    Adapted for the T48 uController project, 2004 by Arnim Laeuger      *
  *      See http://www.opencores.org/projects.cgi/web/t48/overview        *
  *                                                                        *
- * $Id: i8039.h,v 1.1.1.1 2004-04-09 19:20:53 arniml Exp $
+ * $Id: i8039.h,v 1.2 2004-04-15 22:03:53 arniml Exp $
  **************************************************************************/
 
 #ifndef _I8039_H
@@ -99,7 +99,8 @@ enum { I8039_PC=1, I8039_SP, I8039_PSW, I8039_A,  I8039_TC,
 int     Dasm8039(char *dst, unsigned pc);
 
 void i8039_reset(void *);
-int i8039_execute(int, int);
+int  i8039_execute(int, int);
+void set_irq_line(int, int);
 
 void logerror(char *, UINT16, UINT8);
 

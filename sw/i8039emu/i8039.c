@@ -9,7 +9,7 @@
  *    Adapted for the T48 uController project, 2004 by Arnim Laeuger        *
  *      See http://www.opencores.org/projects.cgi/web/t48/overview          *
  *                                                                          *
- * $Id: i8039.c,v 1.2 2004-04-14 20:52:01 arniml Exp $
+ * $Id: i8039.c,v 1.3 2004-04-15 22:03:53 arniml Exp $
  *                                                                          *
  *  **** Change Log ****                                                    *
  *                                                                          *
@@ -817,7 +817,7 @@ static void i8039_set_context (void *src)
 /****************************************************************************
  * Set IRQ line state
  ****************************************************************************/
-static void set_irq_line(int irqline, int state)
+void set_irq_line(int irqline, int state)
 {
     if (state != CLEAR_LINE) {
         R.irq_state = I8039_EXTERNAL_INT;

@@ -1,5 +1,5 @@
 /*
- * $Id: main.c,v 1.1.1.1 2004-04-09 19:20:54 arniml Exp $
+ * $Id: main.c,v 1.2 2004-04-15 22:03:53 arniml Exp $
  *
  * Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
  *
@@ -87,12 +87,18 @@ int main(int argc, char *argv[])
   printf("Resetting 8039\n");
   i8039_reset(NULL);
 
-  do_cycles = 128;
+  do_cycles = 52;
 
   total_cycles = 0;
 
   do {
     real_cycles = i8039_execute(do_cycles, dump);
+
+    /* activate interrupt */
+    set_irq_line(0, HOLD_LINE);
+    /* hold interrupt for 3 machine cycles */
+    real_cycles += i8039_execute(3, dump);
+    set_irq_line(0, CLEAR_LINE);
 
     if (real_cycles > 0)
       total_cycles += real_cycles;
