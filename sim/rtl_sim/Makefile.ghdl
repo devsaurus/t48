@@ -14,7 +14,7 @@
 
 LIB_WORK  = ghdl-work
 
-CLEAN     = ghdl --clean --std=87 --workdir=$(LIB_WORK)
+CLEAN     = ghdl --clean --std=87 --workdir=$(LIB_WORK); rm -f tb_*_c0
 
 ANALYZE   = ghdl -a --ieee=synopsys --std=87 --workdir=$(LIB_WORK)
 
@@ -26,12 +26,16 @@ MAKE_LIB  = mkdir -p $(LIB_WORK)
 ##############################################################################
 # The analyze targets
 #
+tb_t8039_behav_c0 = $(LIB_WORK)/tb_t8039-c.o
+tb_t8039 = $(LIB_WORK)/tb_t8039.o
 tb_t8048_behav_c0 = $(LIB_WORK)/tb_t8048-c.o
 tb_t8048 = $(LIB_WORK)/tb_t8048.o
 tb_behav_c0 = $(LIB_WORK)/tb-c.o
 tb = $(LIB_WORK)/tb.o
 t8048_struct_c0 = $(LIB_WORK)/t8048-c.o
 t8048 = $(LIB_WORK)/t8048.o
+t8039_struct_c0 = $(LIB_WORK)/t8039-c.o
+t8039 = $(LIB_WORK)/t8039.o
 t48_tb_pack = $(LIB_WORK)/t48_tb_pack-p.o
 t48_pack = $(LIB_WORK)/t48_pack-p.o
 t48_core_struct_c0 = $(LIB_WORK)/t48_core-c.o
@@ -90,8 +94,9 @@ alu = $(LIB_WORK)/alu.o
 ##############################################################################
 # The elaboration targets
 #
-tb_elab = $(LIB_WORK)/e~tb_behav_c0.o
-tb_t8048_elab = $(LIB_WORK)e~tb_t8048_behav_c0.o
+tb_elab       = tb_behav_c0
+tb_t8048_elab = tb_t8048_behav_c0
+tb_t8039_elab = tb_t8039_behav_c0
 #
 ##############################################################################
 
@@ -107,8 +112,12 @@ $(tb_t8048_elab) : $(tb_t8048_behav_c0)
 	$(ELABORATE) tb_t8048_behav_c0; \
 	strip tb_t8048_behav_c0
 
+$(tb_t8039_elab) : $(tb_t8039_behav_c0)
+	$(ELABORATE) tb_t8039_behav_c0; \
+	strip tb_t8039_behav_c0
+
 .PHONY: elaborate
-elaborate: $(LIB_WORK) $(tb_elab) $(tb_t8048_elab)
+elaborate: $(LIB_WORK) $(tb_elab) $(tb_t8048_elab) $(tb_t8039_elab)
 #
 ##############################################################################
 

@@ -41,7 +41,7 @@ $(LIB_WORK):
 .PHONY: clean
 clean:
 	$(CLEAN); \
-	rm -rf *~ tb_behav_c0 tb_t8048_behav_c0
+	rm -rf *~
 
 .PHONY: analyze
 analyze: $(LIB_WORK) $(tb_behav_c0) $(tb_t8048_behav_c0)
@@ -288,11 +288,20 @@ $(t8048_struct_c0) : $(RTL_DIR)/system/t8048-c.vhd \
 		$(t48_core_struct_c0) \
 		$(syn_ram_lpm_c0) \
 		$(syn_rom_lpm_c0) \
-		$(clk_gen_rtl_c0) \
 		$(t48_core_comp_pack) \
-		$(t8048-struct) \
 		$(t8048)
 	$(ANALYZE) $(RTL_DIR)/system/t8048-c.vhd
+
+$(t8039) : $(RTL_DIR)/system/t8039.vhd \
+		$(t48_core_comp_pack)
+	$(ANALYZE) $(RTL_DIR)/system/t8039.vhd
+
+$(t8039_struct_c0) : $(RTL_DIR)/system/t8039-c.vhd \
+		$(t48_core_struct_c0) \
+		$(syn_ram_lpm_c0) \
+		$(t48_core_comp_pack) \
+		$(t8039)
+	$(ANALYZE) $(RTL_DIR)/system/t8039-c.vhd
 
 $(tb) : $(BENCH_DIR)/tb.vhd \
 		$(t48_tb_pack) \
@@ -309,6 +318,19 @@ $(tb_behav_c0) : $(BENCH_DIR)/tb-c.vhd \
 		$(tb)
 	$(ANALYZE) $(BENCH_DIR)/tb-c.vhd
 
+$(tb_t8039) : $(BENCH_DIR)/tb_t8039.vhd \
+		$(t48_tb_pack) \
+		$(t48_core_comp_pack)
+	$(ANALYZE) $(BENCH_DIR)/tb_t8039.vhd
+
+$(tb_t8039_behav_c0) : $(BENCH_DIR)/tb_t8039-c.vhd \
+		$(t8039_struct_c0) \
+		$(syn_ram_lpm_c0) \
+		$(t48_tb_pack) \
+		$(t48_core_comp_pack) \
+		$(tb_t8039)
+	$(ANALYZE) $(BENCH_DIR)/tb_t8039-c.vhd
+
 $(tb_t8048) : $(BENCH_DIR)/tb_t8048.vhd \
 		$(t48_tb_pack) \
 		$(t48_core_comp_pack)
@@ -319,7 +341,6 @@ $(tb_t8048_behav_c0) : $(BENCH_DIR)/tb_t8048-c.vhd \
 		$(syn_ram_lpm_c0) \
 		$(t48_tb_pack) \
 		$(t48_core_comp_pack) \
-		$(tb_t8048-behav) \
 		$(tb_t8048)
 	$(ANALYZE) $(BENCH_DIR)/tb_t8048-c.vhd
 
