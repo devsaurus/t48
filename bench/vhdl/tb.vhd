@@ -2,7 +2,7 @@
 --
 -- The testbench for t48_core.
 --
--- $Id: tb.vhd,v 1.8 2004-04-25 20:41:48 arniml Exp $
+-- $Id: tb.vhd,v 1.9 2004-05-17 14:43:33 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -99,11 +99,18 @@ architecture behav of tb is
   signal t48_bus_s       : std_logic_vector( 7 downto 0);
   signal bus_dir_s       : std_logic;
 
-  signal ext_ram_addr_s      : std_logic_vector( 7 downto 0);
+  signal ext_mem_addr_s      : std_logic_vector( 7 downto 0);
   signal ext_ram_data_from_s : std_logic_vector( 7 downto 0);
   signal ext_ram_we_s        : std_logic;
   signal rd_n_s              : std_logic;
   signal wr_n_s              : std_logic;
+
+  signal tb_p1_q : std_logic_vector( 7 downto 0);
+  signal tb_p2_q : std_logic_vector( 7 downto 0);
+
+  signal ext_mem_sel_we_s : boolean;
+  signal ena_ext_ram_s    : boolean;
+  signal ena_tb_periph_s  : boolean;
 
   signal zero_s          : std_logic;
   signal one_s           : std_logic;
@@ -145,7 +152,7 @@ begin
     port map (
       clk_i      => xtal_s,
       res_i      => res_n_s,
-      ram_addr_i => ext_ram_addr_s,
+      ram_addr_i => ext_mem_addr_s,
       ram_data_i => bus_s,
       ram_we_i   => ext_ram_we_s,
       ram_data_o => ext_ram_data_from_s
@@ -253,38 +260,142 @@ begin
              (others => 'Z');
 
   bus_s <=   ext_ram_data_from_s
-           when rd_n_s = '0' else
+           when rd_n_s = '0' and ena_ext_ram_s else
              (others => 'Z');
 
 
   -----------------------------------------------------------------------------
-  -- External RAM access signals
+  -- External memory access signals
   --
-  ext_ram: process (wr_n_s,
-                    ext_ram_addr_s,
+  ext_mem: process (wr_n_s,
+                    ext_mem_addr_s,
+                    ena_ext_ram_s,
                     ale_s,
                     bus_s,
                     xtal_s)
   begin
     if ale_s'event and ale_s = '0' then
       if not is_X(bus_s) then
-        ext_ram_addr_s <= bus_s;
+        ext_mem_addr_s <= bus_s;
       else
-        ext_ram_addr_s <= (others => '0');
+        ext_mem_addr_s <= (others => '0');
       end if;
     end if;
 
     if wr_n_s'event and wr_n_s = '1' then
-      ext_ram_we_s <= '1';
+      -- write enable for external RAM
+      if ena_ext_ram_s then
+        ext_ram_we_s <= '1';
+      end if;
+
+      -- process external memory selector
+      if ext_mem_addr_s = "11111111" then
+        ext_mem_sel_we_s <= true;
+      end if;
+
     end if;
 
     if xtal_s'event and xtal_s = '1' then
-      ext_ram_we_s <= '0';
+      ext_ram_we_s     <= '0';
+      ext_mem_sel_we_s <= false;
     end if;
 
-  end process ext_ram;
+  end process ext_mem;
   --
   -----------------------------------------------------------------------------
+
+
+  -----------------------------------------------------------------------------
+  -- Process ext_mem_sel
+  --
+  -- Purpose:
+  --   Select external memory address space.
+  --   This is either
+  --     + external RAM
+  --     + testbench peripherals
+  --
+  ext_mem_sel: process (res_n_s, xtal_s)
+  begin
+    if res_n_s = '0' then
+      ena_ext_ram_s       <= true;
+      ena_tb_periph_s     <= false;
+
+    elsif xtal_s'event and xtal_s = '1' then
+      if ext_mem_sel_we_s then
+        if bus_s(0) = '1' then
+          ena_ext_ram_s   <= true;
+        else
+          ena_ext_ram_s   <= false;
+        end if;
+
+        if bus_s(1) = '1' then
+          ena_tb_periph_s <= true;
+        else
+          ena_tb_periph_s <= false;
+        end if;
+      end if;
+
+    end if;
+
+  end process ext_mem_sel;
+  --
+  -----------------------------------------------------------------------------
+
+
+  -----------------------------------------------------------------------------
+  -- Process tb_periph
+  --
+  -- Purpose:
+  --   Implements the testbenc peripherals driving P1 and P2.
+  --
+  tb_periph: process (res_n_s, wr_n_s)
+
+    function oc_f (pX : std_logic_vector) return std_logic_vector is
+      variable r_v : std_logic_vector(pX'range);
+    begin
+      for i in pX'range loop
+        if pX(i) = '0' then
+          r_v(i) := '0';
+        else
+          r_v(i) := 'H';
+        end if;
+      end loop;
+
+      return r_v;
+    end;
+
+  begin
+    if res_n_s = '0' then
+      tb_p1_q <= (others => 'H');
+      tb_p2_q <= (others => 'H');
+
+    elsif wr_n_s'event and wr_n_s = '1' then
+      if ena_tb_periph_s then
+        case ext_mem_addr_s is
+          -- P1
+          when "00000000" =>
+            tb_p1_q <= oc_f(t48_bus_s);
+
+          -- P2
+          when "00000001" =>
+            tb_p2_q <= oc_f(t48_bus_s);
+
+          when others =>
+            null;
+
+        end case;
+
+      end if;
+
+    end if;
+
+  end process tb_periph;
+  --
+  -----------------------------------------------------------------------------
+
+  p1_s <= tb_p1_q;
+  p2_s <= tb_p2_q;
+
 
   xtal_n_s <= not xtal_s;
 
@@ -375,6 +486,9 @@ end behav;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.8  2004/04/25 20:41:48  arniml
+-- connect if_timing to P2 output of T48
+--
 -- Revision 1.7  2004/04/25 16:23:21  arniml
 -- added if_timing
 --
