@@ -2,7 +2,7 @@
 --
 -- T48 Microcontroller Core
 --
--- $Id: t48_core.vhd,v 1.3 2004-03-28 21:27:50 arniml Exp $
+-- $Id: t48_core.vhd,v 1.4 2004-03-29 19:39:58 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -82,38 +82,38 @@ entity t48_core is
 
   port (
     -- T48 Interface ----------------------------------------------------------
-    xtal_i      : in  std_logic;
-    reset_i     : in  std_logic;
-    t0_i        : in  std_logic;
-    t0_o        : out std_logic;
-    t0_dir_o    : out std_logic;
-    int_n_i     : in  std_logic;
-    ea_i        : in  std_logic;
-    rd_n_o      : out std_logic;
-    psen_n_o    : out std_logic;
-    wr_n_o      : out std_logic;
-    ale_o       : out std_logic;
-    db_i        : in  std_logic_vector( 7 downto 0);
-    db_o        : out std_logic_vector( 7 downto 0);
-    db_dir_o    : out std_logic;
-    t1_i        : in  std_logic;
-    p2_i        : in  std_logic_vector( 7 downto 0);
-    p2_o        : out std_logic_vector( 7 downto 0);
-    p2_limp_o   : out std_logic;
-    p1_i        : in  std_logic_vector( 7 downto 0);
-    p1_o        : out std_logic_vector( 7 downto 0);
-    p1_limp_o   : out std_logic;
-    prog_n_o    : out std_logic;
+    xtal_i       : in  std_logic;
+    reset_i      : in  std_logic;
+    t0_i         : in  std_logic;
+    t0_o         : out std_logic;
+    t0_dir_o     : out std_logic;
+    int_n_i      : in  std_logic;
+    ea_i         : in  std_logic;
+    rd_n_o       : out std_logic;
+    psen_n_o     : out std_logic;
+    wr_n_o       : out std_logic;
+    ale_o        : out std_logic;
+    db_i         : in  std_logic_vector( 7 downto 0);
+    db_o         : out std_logic_vector( 7 downto 0);
+    db_dir_o     : out std_logic;
+    t1_i         : in  std_logic;
+    p2_i         : in  std_logic_vector( 7 downto 0);
+    p2_o         : out std_logic_vector( 7 downto 0);
+    p2_low_imp_o : out std_logic;
+    p1_i         : in  std_logic_vector( 7 downto 0);
+    p1_o         : out std_logic_vector( 7 downto 0);
+    p1_low_imp_o : out std_logic;
+    prog_n_o     : out std_logic;
     -- Core Interface ---------------------------------------------------------
-    clk_i       : in  std_logic;
-    en_clk_i    : in  std_logic;
-    xtal3_o     : out std_logic;
-    dmem_addr_o : out std_logic_vector( 7 downto 0);
-    dmem_we_o   : out std_logic;
-    dmem_data_i : in  std_logic_vector( 7 downto 0);
-    dmem_data_o : out std_logic_vector( 7 downto 0);
-    pmem_addr_o : out std_logic_vector(11 downto 0);
-    pmem_data_i : in  std_logic_vector( 7 downto 0)
+    clk_i        : in  std_logic;
+    en_clk_i     : in  std_logic;
+    xtal3_o      : out std_logic;
+    dmem_addr_o  : out std_logic_vector( 7 downto 0);
+    dmem_we_o    : out std_logic;
+    dmem_data_i  : in  std_logic_vector( 7 downto 0);
+    dmem_data_o  : out std_logic_vector( 7 downto 0);
+    pmem_addr_o  : out std_logic_vector(11 downto 0);
+    pmem_data_i  : in  std_logic_vector( 7 downto 0)
   );
 
 end t48_core;
@@ -520,24 +520,24 @@ begin
   use_p1: if include_port1_g = 1 generate
     p1_b : p1
       port map (
-        clk_i      => clk_i,
-        res_i      => reset_i,
-        en_clk_i   =>  en_clk_s,
-        data_i     => t48_data_s,
-        data_o     => p1_data_s,
-        write_p1_i => p1_write_p1_s,
-        read_p1_i  => p1_read_p1_s,
-        read_reg_i => p1_read_reg_s,
-        p1_i       => p1_i,
-        p1_o       => p1_o,
-        p1_limp_o  => p1_limp_o
+        clk_i        => clk_i,
+        res_i        => reset_i,
+        en_clk_i     => en_clk_s,
+        data_i       => t48_data_s,
+        data_o       => p1_data_s,
+        write_p1_i   => p1_write_p1_s,
+        read_p1_i    => p1_read_p1_s,
+        read_reg_i   => p1_read_reg_s,
+        p1_i         => p1_i,
+        p1_o         => p1_o,
+        p1_low_imp_o => p1_low_imp_o
       );
   end generate;
 
   skip_p1: if include_port1_g = 0 generate
-    p1_data_s <= (others => bus_idle_level_c);
-    p1_o      <= (others => '0');
-    p1_limp_o <= '0';
+    p1_data_s    <= (others => bus_idle_level_c);
+    p1_o         <= (others => '0');
+    p1_low_imp_o <= '0';
   end generate;
 
   use_p2: if include_port2_g = 1 generate
@@ -558,14 +558,14 @@ begin
         pch_i        => pmem_addr_s(11 downto 8),
         p2_i         => p2_i,
         p2_o         => p2_o,
-        p2_limp_o    => p2_limp_o
+        p2_low_imp_o => p2_low_imp_o
       );
   end generate;
 
   skip_p2: if include_port2_g = 0 generate
-    p2_data_s <= (others => bus_idle_level_c);
-    p2_o      <= (others => '0');
-    p2_limp_o <= '0';
+    p2_data_s    <= (others => bus_idle_level_c);
+    p2_o         <= (others => '0');
+    p2_low_imp_o <= '0';
   end generate;
 
   pmem_ctrl_b : pmem_ctrl
@@ -632,6 +632,9 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.3  2004/03/28 21:27:50  arniml
+-- update wiring for DA support
+--
 -- Revision 1.2  2004/03/28 13:13:20  arniml
 -- connect control signal for Port 2 expander
 --

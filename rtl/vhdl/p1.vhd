@@ -3,7 +3,7 @@
 -- The Port 1 unit.
 -- Implements the Port 1 logic.
 --
--- $Id: p1.vhd,v 1.1 2004-03-23 21:31:52 arniml Exp $
+-- $Id: p1.vhd,v 1.2 2004-03-29 19:39:58 arniml Exp $
 --
 -- All rights reserved
 --
@@ -51,19 +51,19 @@ entity p1 is
 
   port (
     -- Global Interface -------------------------------------------------------
-    clk_i      : in  std_logic;
-    res_i      : in  std_logic;
-    en_clk_i   : in  boolean;
+    clk_i        : in  std_logic;
+    res_i        : in  std_logic;
+    en_clk_i     : in  boolean;
     -- T48 Bus Interface ------------------------------------------------------
-    data_i     : in  word_t;
-    data_o     : out word_t;
-    write_p1_i : in  boolean;
-    read_p1_i  : in  boolean;
-    read_reg_i : in  boolean;
+    data_i       : in  word_t;
+    data_o       : out word_t;
+    write_p1_i   : in  boolean;
+    read_p1_i    : in  boolean;
+    read_reg_i   : in  boolean;
     -- Port 1 Interface -------------------------------------------------------
-    p1_i       : in  word_t;
-    p1_o       : out word_t;
-    p1_limp_o  : out std_logic
+    p1_i         : in  word_t;
+    p1_o         : out word_t;
+    p1_low_imp_o : out std_logic
   );
 
 end p1;
@@ -79,7 +79,7 @@ architecture rtl of p1 is
   signal p1_q   : word_t;
 
   -- the low impedance marker
-  signal limp_q : std_logic;
+  signal low_imp_q : std_logic;
 
 begin
 
@@ -92,17 +92,17 @@ begin
   p1_reg: process (res_i, clk_i)
   begin
     if res_i = res_active_c then
-      p1_q     <= (others => '1');
-      limp_q   <= '0';
+      p1_q          <= (others => '1');
+      low_imp_q     <= '0';
 
     elsif clk_i'event and clk_i = clk_active_c then
       if en_clk_i then
 
         if write_p1_i then
-          p1_q   <= data_i;
-          limp_q <= '1';
+          p1_q      <= data_i;
+          low_imp_q <= '1';
         else
-          limp_q <= '0';
+          low_imp_q <= '0';
         end if;
 
       end if;
@@ -117,13 +117,13 @@ begin
   -----------------------------------------------------------------------------
   -- Output Mapping.
   -----------------------------------------------------------------------------
-  p1_o      <= p1_q;
-  p1_limp_o <= limp_q;
-  data_o    <=   (others => bus_idle_level_c)
-               when not read_p1_i else
-                 p1_q
-               when read_reg_i else
-                 p1_i;
+  p1_o         <= p1_q;
+  p1_low_imp_o <= low_imp_q;
+  data_o       <=   (others => bus_idle_level_c)
+                  when not read_p1_i else
+                    p1_q
+                  when read_reg_i else
+                    p1_i;
 
 end rtl;
 
@@ -132,5 +132,7 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2004/03/23 21:31:52  arniml
+-- initial check-in
 --
 -------------------------------------------------------------------------------

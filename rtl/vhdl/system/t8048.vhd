@@ -2,7 +2,7 @@
 --
 -- T8048 Microcontroller System
 --
--- $Id: t8048.vhd,v 1.1 2004-03-24 21:32:27 arniml Exp $
+-- $Id: t8048.vhd,v 1.2 2004-03-29 19:40:14 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -69,7 +69,6 @@ end t8048;
 
 
 use work.t48_core_comp_pack.t48_core;
-use work.t48_core_comp_pack.clk_gen;
 use work.t48_core_comp_pack.syn_rom;
 use work.t48_core_comp_pack.syn_ram;
 
@@ -80,9 +79,9 @@ architecture struct of t8048 is
   signal db_s             : std_logic_vector( 7 downto 0);
   signal db_dir_s         : std_logic;
   signal p2_s             : std_logic_vector( 7 downto 0);
-  signal p2_limp_s        : std_logic;
+  signal p2_low_imp_s     : std_logic;
   signal p1_s             : std_logic_vector( 7 downto 0);
-  signal p1_limp_s        : std_logic;
+  signal p1_low_imp_s     : std_logic;
   signal xtal3_s          : std_logic;
   signal dmem_addr_s      : std_logic_vector( 7 downto 0);
   signal dmem_we_s        : std_logic;
@@ -104,37 +103,37 @@ begin
       sample_t1_state_g   => 4
     )
     port map (
-      xtal_i      => xtal_i,
-      reset_i     => reset_n_i,
-      t0_i        => t0_b,
-      t0_o        => t0_s,
-      t0_dir_o    => t0_dir_s,
-      int_n_i     => int_n_i,
-      ea_i        => ea_i,
-      rd_n_o      => rd_n_o,
-      psen_n_o    => psen_n_o,
-      wr_n_o      => wr_n_o,
-      ale_o       => ale_o,
-      db_i        => db_b,
-      db_o        => db_s,
-      db_dir_o    => db_dir_s,
-      t1_i        => t1_i,
-      p2_i        => p2_b,
-      p2_o        => p2_s,
-      p2_limp_o   => p2_limp_s,
-      p1_i        => p1_b,
-      p1_o        => p1_s,
-      p1_limp_o   => p1_limp_s,
-      prog_n_o    => prog_n_o,
-      clk_i       => xtal_i,
-      en_clk_i    => xtal3_s,
-      xtal3_o     => xtal3_s,
-      dmem_addr_o => dmem_addr_s,
-      dmem_we_o   => dmem_we_s,
-      dmem_data_i => dmem_data_from_s,
-      dmem_data_o => dmem_data_to_s,
-      pmem_addr_o => pmem_addr_s,
-      pmem_data_i => pmem_data_s
+      xtal_i       => xtal_i,
+      reset_i      => reset_n_i,
+      t0_i         => t0_b,
+      t0_o         => t0_s,
+      t0_dir_o     => t0_dir_s,
+      int_n_i      => int_n_i,
+      ea_i         => ea_i,
+      rd_n_o       => rd_n_o,
+      psen_n_o     => psen_n_o,
+      wr_n_o       => wr_n_o,
+      ale_o        => ale_o,
+      db_i         => db_b,
+      db_o         => db_s,
+      db_dir_o     => db_dir_s,
+      t1_i         => t1_i,
+      p2_i         => p2_b,
+      p2_o         => p2_s,
+      p2_low_imp_o => p2_low_imp_s,
+      p1_i         => p1_b,
+      p1_o         => p1_s,
+      p1_low_imp_o => p1_low_imp_s,
+      prog_n_o     => prog_n_o,
+      clk_i        => xtal_i,
+      en_clk_i     => xtal3_s,
+      xtal3_o      => xtal3_s,
+      dmem_addr_o  => dmem_addr_s,
+      dmem_we_o    => dmem_we_s,
+      dmem_data_i  => dmem_data_from_s,
+      dmem_data_o  => dmem_data_to_s,
+      pmem_addr_o  => pmem_addr_s,
+      pmem_data_i  => pmem_data_s
     );
 
   -----------------------------------------------------------------------------
@@ -145,8 +144,8 @@ begin
   --
   bidirs: process (t0_b, t0_s, t0_dir_s,
                    db_b, db_s, db_dir_s,
-                   p1_b, p1_s, p1_limp_s,
-                   p2_b, p2_s, p2_limp_s)
+                   p1_b, p1_s, p1_low_imp_s,
+                   p2_b, p2_s, p2_low_imp_s)
 
     function open_collector_f(sig : std_logic) return std_logic is
       variable sig_v : std_logic;
@@ -179,7 +178,7 @@ begin
     for i in p1_b'range loop
       p1_b(i) <= open_collector_f(p1_s(i));
     end loop;
---     if p1_limp_s = '1' then
+--     if p1_low_imp_s = '1' then
 --       p1_b <= p1_s;
 --     else
 --       p1_b <= (others => 'Z');
@@ -189,7 +188,7 @@ begin
     for i in p2_b'range loop
       p2_b(i) <= open_collector_f(p2_s(i));
     end loop;
---     if p2_limp_s = '1' then
+--     if p2_low_imp_s = '1' then
 --       p2_b <= p2_b_s;
 --     else
 --       p2_b <= (others => 'Z');
@@ -229,4 +228,7 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2004/03/24 21:32:27  arniml
+-- initial check-in
+--
 -------------------------------------------------------------------------------

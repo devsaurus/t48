@@ -3,7 +3,7 @@
 -- The Port 2 unit.
 -- Implements the Port 2 logic.
 --
--- $Id: p2.vhd,v 1.2 2004-03-28 13:11:43 arniml Exp $
+-- $Id: p2.vhd,v 1.3 2004-03-29 19:39:58 arniml Exp $
 --
 -- All rights reserved
 --
@@ -69,7 +69,7 @@ entity p2 is
     pch_i        : in  nibble_t;
     p2_i         : in  word_t;
     p2_o         : out word_t;
-    p2_limp_o    : out std_logic
+    p2_low_imp_o : out std_logic
   );
 
 end p2;
@@ -89,7 +89,7 @@ architecture rtl of p2 is
   signal p2_q   : word_t;
 
   -- the low impedance marker
-  signal limp_q : std_logic;
+  signal low_imp_q : std_logic;
 
   -- the expander register
   signal exp_q  : nibble_t;
@@ -105,22 +105,22 @@ begin
   p2_regs: process (res_i, clk_i)
   begin
     if res_i = res_active_c then
-      p2_q     <= (others => '1');
-      limp_q   <= '0';
-      exp_q    <= (others => '0');
+      p2_q          <= (others => '1');
+      low_imp_q     <= '0';
+      exp_q         <= (others => '0');
 
     elsif clk_i'event and clk_i = clk_active_c then
       if en_clk_i then
 
         if write_p2_i then
-          p2_q   <= data_i;
-          limp_q <= '1';
+          p2_q      <= data_i;
+          low_imp_q <= '1';
         else
-          limp_q <= '0';
+          low_imp_q <= '0';
         end if;
 
         if write_exp_i then
-          exp_q  <= data_i(exp_q'range);
+          exp_q     <= data_i(exp_q'range);
         end if;
 
       end if;
@@ -189,7 +189,7 @@ begin
   -----------------------------------------------------------------------------
   -- Output Mapping.
   -----------------------------------------------------------------------------
-  p2_limp_o <= limp_q;
+  p2_low_imp_o <= low_imp_q;
 
 end rtl;
 
@@ -198,6 +198,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.2  2004/03/28 13:11:43  arniml
+-- rework Port 2 expander handling
+--
 -- Revision 1.1  2004/03/23 21:31:53  arniml
 -- initial check-in
 --

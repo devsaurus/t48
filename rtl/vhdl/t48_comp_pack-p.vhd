@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 --
--- $Id: t48_comp_pack-p.vhd,v 1.3 2004-03-28 21:27:49 arniml Exp $
+-- $Id: t48_comp_pack-p.vhd,v 1.4 2004-03-29 19:39:58 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -308,17 +308,17 @@ package t48_comp_pack is
 
   component p1
     port (
-      clk_i      : in  std_logic;
-      res_i      : in  std_logic;
-      en_clk_i   : in  boolean;
-      data_i     : in  word_t;
-      data_o     : out word_t;
-      write_p1_i : in  boolean;
-      read_p1_i  : in  boolean;
-      read_reg_i : in  boolean;
-      p1_i       : in  word_t;
-      p1_o       : out word_t;
-      p1_limp_o  : out std_logic
+      clk_i        : in  std_logic;
+      res_i        : in  std_logic;
+      en_clk_i     : in  boolean;
+      data_i       : in  word_t;
+      data_o       : out word_t;
+      write_p1_i   : in  boolean;
+      read_p1_i    : in  boolean;
+      read_reg_i   : in  boolean;
+      p1_i         : in  word_t;
+      p1_o         : out word_t;
+      p1_low_imp_o : out std_logic
     );
   end component;
 
@@ -339,7 +339,7 @@ package t48_comp_pack is
       pch_i        : in  nibble_t;
       p2_i         : in  word_t;
       p2_o         : out word_t;
-      p2_limp_o    : out std_logic
+      p2_low_imp_o : out std_logic
     );
   end component;
 
