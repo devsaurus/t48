@@ -1,16 +1,19 @@
 
 .PHONY: all
-all: t48_rom.hex
+all: t48_rom.hex t48_ext_rom.hex
 
 $(MODULE).p: $(MODULE).asm
 	asl -i $(VERIF_DIR)/include -L $(MODULE).asm
 
 t48_rom.hex: $(MODULE).p
-	p2hex $(MODULE).p t48_rom.hex
+	p2hex -r 0-2047 $(MODULE).p t48_rom.hex
+
+t48_ext_rom.hex: $(MODULE).p
+	p2hex -a -r 2048-4095 $(MODULE).p t48_ext_rom.hex
 
 .PHONY: simu
 simu: all
-	cp t48_rom.hex $(SIM_DIR)
+	cp t48_rom.hex t48_ext_rom.hex $(SIM_DIR)
 
 .PHONY: clean
 clean:
