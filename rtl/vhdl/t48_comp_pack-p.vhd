@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 --
--- $Id: t48_comp_pack-p.vhd,v 1.6 2004-04-07 22:09:03 arniml Exp $
+-- $Id: t48_comp_pack-p.vhd,v 1.7 2004-06-30 21:16:21 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -237,25 +237,26 @@ package t48_comp_pack is
 
   component int
     port (
-      clk_i           : in  std_logic;
-      res_i           : in  std_logic;
-      en_clk_i        : in  boolean;
-      clk_mstate_i    : in  mstate_t;
-      jtf_executed_i  : in  boolean;
-      tim_overflow_i  : in  boolean;
-      tf_o            : out std_logic;
-      en_tcnti_i      : in  boolean;
-      dis_tcnti_i     : in  boolean;
-      int_n_i         : in  std_logic;
-      ale_i           : in  boolean;
-      last_cycle_i    : in  boolean;
-      en_i_i          : in  boolean;
-      dis_i_i         : in  boolean;
-      ext_int_o       : out boolean;
-      tim_int_o       : out boolean;
-      retr_executed_i : in  boolean;
-      int_executed_i  : in  boolean;
-      int_pending_o   : out boolean
+      clk_i             : in  std_logic;
+      res_i             : in  std_logic;
+      en_clk_i          : in  boolean;
+      clk_mstate_i      : in  mstate_t;
+      jtf_executed_i    : in  boolean;
+      tim_overflow_i    : in  boolean;
+      tf_o              : out std_logic;
+      en_tcnti_i        : in  boolean;
+      dis_tcnti_i       : in  boolean;
+      int_n_i           : in  std_logic;
+      ale_i             : in  boolean;
+      last_cycle_i      : in  boolean;
+      en_i_i            : in  boolean;
+      dis_i_i           : in  boolean;
+      ext_int_o         : out boolean;
+      tim_int_o         : out boolean;
+      retr_executed_i   : in  boolean;
+      int_executed_i    : in  boolean;
+      int_pending_o     : out boolean;
+      int_in_progress_o : out boolean
     );
   end component;
 
