@@ -1,5 +1,5 @@
 	;; *******************************************************************
-	;; $Id: test.asm,v 1.1 2004-05-16 15:31:55 arniml Exp $
+	;; $Id: test.asm,v 1.2 2004-05-16 16:25:46 arniml Exp $
 	;;
 	;; Test Counter.
 	;; *******************************************************************
@@ -33,7 +33,8 @@
 	anl	P1, #0FDH
 	jtf	goon
 	jmp	fail
-goon:	mov	a, t
+goon:	jtf	fail
+	mov	a, t
 	jnz	fail
 
 	;; apply rising edge on T1
@@ -46,6 +47,35 @@ goon:	mov	a, t
 	mov	a, t
 	dec	a
 	jnz	fail
+
+	;; check inactivity of counter
+	stop	tcnt
+	mov	a, #0FFH
+	mov	t, a
+
+	;; apply rising edge on T1
+	orl	P1, #002H
+	jtf	fail
+	;; apply falling edge on T1
+	anl	P1, #0FDH
+	jtf	fail
+	;; apply rising edge on T1
+	orl	P1, #002H
+	jtf	fail
+	;; apply falling edge on T1
+	anl	P1, #0FDH
+	jtf	fail
+
+	strt	cnt
+	;; apply rising edge on T1
+	orl	P1, #002H
+	jtf	fail
+	;; apply falling edge on T1
+	anl	P1, #0FDH
+	jtf	goon2
+	jmp	fail
+
+goon2:
 
 pass:	PASS
 
