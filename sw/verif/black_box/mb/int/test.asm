@@ -1,5 +1,5 @@
 	;; *******************************************************************
-	;; $Id: test.asm,v 1.1.1.1 2004-03-25 22:29:18 arniml Exp $
+	;; $Id: test.asm,v 1.2 2004-05-01 17:19:45 arniml Exp $
 	;;
 	;; Test Program Memory bank selector with interrupts.
 	;; *******************************************************************
@@ -27,6 +27,11 @@ poll:	jf1	pass
 pass:	PASS
 
 fail:	FAIL
+
+	ORG	0232H
+	jmp	fail
+	jmp	fail
+	jmp	fail
 
 
 	ORG	0A32H
