@@ -3,7 +3,7 @@
 -- The Port 2 unit.
 -- Implements the Port 2 logic.
 --
--- $Id: p2.vhd,v 1.4 2004-04-24 23:44:25 arniml Exp $
+-- $Id: p2.vhd,v 1.5 2004-05-17 13:52:46 arniml Exp $
 --
 -- All rights reserved
 --
@@ -170,11 +170,13 @@ begin
     data_o   <= (others => bus_idle_level_c);
 
     if read_p2_i then
-      data_o <= p2_i;
-    elsif read_reg_i then
-      data_o <= p2_q;
-    elsif read_exp_i then
-      data_o <= "0000" & p2_i(nibble_t'range);
+      if read_reg_i then
+        data_o <= p2_q;
+      elsif read_exp_i then
+        data_o <= "0000" & p2_i(nibble_t'range);
+      else
+        data_o <= p2_i;
+      end if;
     end if;
 
   end process p2_data;
@@ -194,6 +196,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.4  2004/04/24 23:44:25  arniml
+-- move from std_logic_arith to numeric_std
+--
 -- Revision 1.3  2004/03/29 19:39:58  arniml
 -- rename pX_limp to pX_low_imp
 --
