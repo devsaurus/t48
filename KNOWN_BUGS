@@ -1,11 +1,30 @@
 
 Known bugs of the T48 uController core
 ======================================
-Version: $Date: 2004-05-20 22:00:59 $
+Version: $Date: 2004-06-29 20:41:52 $
+
+
+Release 0.2 BETA
+----------------
+
+*******************************************************************************
+Program Memory bank can be switched during interrupt
+
+During an interrupt service routine (i.e. after vectoring to location 3 or 7
+of the Program Memory and befor executing the RETR instruction) the Program
+Memory bank can be switched by executing a JMP or CALL instruction. These
+instructions honour the current state of the Program Memory Bank Flag and thus
+switch the Program Memory bank upon execution.
+
 
 
 Release 0.1 BETA
 ----------------
+
+*******************************************************************************
+Program Memory bank can be switched during interrupt
+
+See above.
 
 ******************************************************************************
 External Program Memory ignored when EA = 0
