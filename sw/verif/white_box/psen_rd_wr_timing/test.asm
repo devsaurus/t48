@@ -1,5 +1,5 @@
 	;; *******************************************************************
-	;; $Id: test.asm,v 1.1 2004-09-12 00:28:27 arniml Exp $
+	;; $Id: test.asm,v 1.2 2004-09-12 00:28:58 arniml Exp $
 	;;
 	;; Test overlap of PSEN and RD/WR.
 	;; *******************************************************************
@@ -12,9 +12,9 @@
 	;; Start of test
 
 	;; access external memory
-;	mov	r0, #0FFH
-;	mov	a, #001H
-;	movx	@r0, a
+	mov	r0, #0FFH
+	mov	a, #001H
+	movx	@r0, a
 
 	;; jump to external Program Memory
 	jmp	extern_rom
