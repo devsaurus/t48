@@ -3,7 +3,7 @@
 -- The Clock Control unit.
 -- Clock States and Machine Cycles are generated here.
 --
--- $Id: clock_ctrl.vhd,v 1.5 2004-10-25 19:35:41 arniml Exp $
+-- $Id: clock_ctrl.vhd,v 1.6 2004-10-25 20:31:12 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -208,13 +208,19 @@ begin
              psen_q   <= false;
            end if;
 
-        when MSTATE2 => 
+        when MSTATE2 =>
+          if xtal2_s then
+            -- PROG is removed at the end of XTAL2 of second machine cycle
+            -- according to the user manual, PROG should be removed at the
+            -- end of XTAL3 but this would raise the need to change P2 at
+            -- XTAL1 or XTAL2 -> introduction of inter-xtal timing in
+            -- the rest of the core.
+            prog_q   <= false;
+          end if;
           if xtal3_s then
             -- RD, WR are removed at the end of XTAL3 of second machine cycle
             rd_q     <= false;
             wr_q     <= false;
-            -- PROG is removed at the and of XTAL3 of second machine cycle
-            prog_q   <= false;
           end if;
 
         when MSTATE3 => 
@@ -380,6 +386,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.5  2004/10/25 19:35:41  arniml
+-- deassert rd_q, wr_q and prog_q at end of XTAL3
+--
 -- Revision 1.4  2004/04/24 23:44:25  arniml
 -- move from std_logic_arith to numeric_std
 --
