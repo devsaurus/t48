@@ -3,7 +3,7 @@
 -- The Decoder unit.
 -- It decodes the instruction opcodes and executes them.
 --
--- $Id: decoder.vhd,v 1.2 2004-03-28 13:06:32 arniml Exp $
+-- $Id: decoder.vhd,v 1.3 2004-03-28 21:15:48 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -100,9 +100,13 @@ entity decoder is
     psw_write_sp_o         : out boolean;
     -- ALU Interface ----------------------------------------------------------
     alu_carry_i            : in  std_logic;
-    alu_aux_carry_i        : in  std_logic;
     alu_op_o               : out alu_op_t;
     alu_use_carry_o        : out boolean;
+    alu_da_low_o           : out boolean;
+    alu_da_high_o          : out boolean;
+    alu_p06_temp_reg_o     : out boolean;
+    alu_p60_temp_reg_o     : out boolean;
+    alu_da_overflow_i      : in  boolean;
     -- BUS Interface ----------------------------------------------------------
     bus_output_pcl_o       : out boolean;
     bus_bidir_bus_o        : out boolean;
@@ -136,6 +140,7 @@ entity decoder is
     -- Program Status Word Interface ------------------------------------------
     psw_special_data_o     : out std_logic;
     psw_carry_i            : in  std_logic;
+    psw_aux_carry_i        : in  std_logic;
     psw_f0_i               : in  std_logic;
     psw_inc_stackp_o       : out boolean;
     psw_dec_stackp_o       : out boolean;
@@ -368,7 +373,8 @@ begin
   --   execution sequence.
   --
   decode: process (alu_carry_i,
-                   alu_aux_carry_i,
+                   psw_aux_carry_i,
+                   alu_da_overflow_i,
                    clk_mstate_i,
                    clk_second_cycle_i,
                    cnd_take_branch_i,
@@ -432,6 +438,8 @@ begin
     alu_write_accu_o       <= false;
     alu_write_shadow_o     <= false;
     alu_write_temp_reg_o   <= false;
+    alu_p06_temp_reg_o     <= false;
+    alu_p60_temp_reg_o     <= false;
     alu_read_alu_o         <= false;
     bus_write_bus_o        <= false;
     bus_bidir_bus_o        <= false;
@@ -449,6 +457,8 @@ begin
     psw_write_sp_o         <= false;
     alu_op_o               <= ALU_NOP;
     alu_use_carry_o        <= false;
+    alu_da_low_o           <= false;
+    alu_da_high_o          <= false;
     clk_assert_prog_o      <= false;
     clk_assert_rd_o        <= false;
     clk_assert_wr_o        <= false;
@@ -520,11 +530,12 @@ begin
             and_or_xor_add_5_f(alu_op => ALU_ADD);
 
             if opc_opcode_s(4) = '1' then
-              alu_use_carry_o  <= true;
+              alu_use_carry_o     <= true;
             end if;
 
-            psw_special_data_o <= alu_carry_i;
-            psw_write_carry_o  <= true;
+            psw_special_data_o    <= alu_carry_i;
+            psw_write_carry_o     <= true;
+            psw_write_aux_carry_o <= true;
 
           when others =>
             null;
@@ -533,24 +544,25 @@ begin
 
       -- Mnemonic ADD_A_DATA --------------------------------------------------
       when MN_ADD_A_DATA =>
-        assert_psen_s              <= true;
+        assert_psen_s               <= true;
 
         if clk_second_cycle_i then
           case clk_mstate_i is
             -- write Temp Reg when contents of Program Memory is on bus
             when MSTATE1 =>
-              alu_write_temp_reg_o <= true;
+              alu_write_temp_reg_o  <= true;
 
             -- perform ADD and store in Accumulator
             when MSTATE3 =>
               and_or_xor_add_5_f(alu_op => ALU_ADD);
 
               if opc_opcode_s(4) = '1' then
-                alu_use_carry_o    <= true;
+                alu_use_carry_o     <= true;
               end if;
 
-              psw_special_data_o   <= alu_carry_i;
-              psw_write_carry_o    <= true;
+              psw_special_data_o    <= alu_carry_i;
+              psw_write_carry_o     <= true;
+              psw_write_aux_carry_o <= true;
 
             when others =>
               null;
@@ -788,6 +800,49 @@ begin
           end if;
 
         end if;
+
+      -- Mnemonic DA ----------------------------------------------------------
+      when MN_DA =>
+        alu_op_o                 <= ALU_ADD;
+
+        case clk_mstate_i is
+          -- Step 1: Preload Temp Reg with 0x06
+          when MSTATE3 =>
+            alu_p06_temp_reg_o   <= true;
+
+          -- Step 2: Check Auxiliary Carry and overflow on low nibble
+          --         Add 0x06 to shadow Accumulator if one is true
+          when MSTATE4 =>
+            alu_da_low_o         <= true;
+
+            if psw_aux_carry_i = '1' or alu_da_overflow_i then
+              alu_read_alu_o     <= true;
+              alu_write_shadow_o <= true;
+            end if;
+
+            -- preload Temp Reg with 0x60
+            alu_p60_temp_reg_o  <= true;
+
+          -- Step 3: Check overflow on high nibble
+          --         Add 0x60 to shadow Accumulator if true and store result
+          --         in Accumulator and PSW (only Carry)
+          when MSTATE5 =>
+            alu_da_high_o        <= true;
+
+            if alu_da_overflow_i then
+              psw_special_data_o <= alu_carry_i;
+            else
+              alu_op_o           <= ALU_NOP;
+              psw_special_data_o <= '0';
+            end if;
+            alu_read_alu_o       <= true;
+            alu_write_accu_o     <= true;
+            psw_write_carry_o    <= true;
+
+          when others =>
+            null;
+
+        end case;
 
       -- Mnemonic DEC ---------------------------------------------------------
       when MN_DEC =>
@@ -1759,6 +1814,12 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.2  2004/03/28 13:06:32  arniml
+-- implement mnemonics:
+--    + MOVD_A_PP
+--    + OUTD_PP_A -> ANLD PP, A; MOVD PP, A; ORLD PP, A
+--
 -- Revision 1.1  2004/03/23 21:31:52  arniml
 -- initial check-in
+--
 -------------------------------------------------------------------------------
