@@ -3,7 +3,7 @@
 -- The BUS unit.
 -- Implements the BUS port logic.
 --
--- $Id: db_bus.vhd,v 1.2 2004-04-04 14:15:45 arniml Exp $
+-- $Id: db_bus.vhd,v 1.3 2004-10-25 20:30:18 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -85,7 +85,8 @@ architecture rtl of db_bus is
   signal bus_q    : word_t;
 
   -- BUS direction marker
-  signal db_dir_q : std_logic;
+  signal db_dir_q,
+         db_dir_qq : std_logic;
 
 begin
 
@@ -100,9 +101,12 @@ begin
     if res_i = res_active_c then
       bus_q      <= (others => '0');
       db_dir_q   <= '0';
+      db_dir_qq  <= '0';
 
     elsif clk_i'event and clk_i = clk_active_c then
       if en_clk_i then
+        -- extend bus direction by one machine cycle
+        db_dir_qq  <= db_dir_q;
 
         if write_bus_i then
           bus_q    <= data_i;
@@ -129,7 +133,8 @@ begin
   db_o     <=   pcl_i
               when output_pcl_i else
                 bus_q;
-  db_dir_o <= db_dir_q or to_stdLogic(output_pcl_i);
+  db_dir_o <= db_dir_q or db_dir_qq or
+              to_stdLogic(output_pcl_i);
   data_o   <=   (others => bus_idle_level_c)
               when not read_bus_i else
                 db_i;
@@ -141,6 +146,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.2  2004/04/04 14:15:45  arniml
+-- add dump_compare support
+--
 -- Revision 1.1  2004/03/23 21:31:52  arniml
 -- initial check-in
 --
