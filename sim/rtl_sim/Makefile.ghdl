@@ -15,14 +15,18 @@
 #GCOV = -Wc,-ftest-coverage -Wc,-fprofile-arcs
 GCOV =
 
+# In case elaborating/linking throws error messages about undefined references
+#GCOV_LINK = -Wl,-lgcov
+GCOV_LINK =
 
 LIB_WORK  = ghdl-work
 
-CLEAN     = ghdl --clean --std=87 --workdir=$(LIB_WORK); rm -f tb_*_c0 *.bb *.bbg *.da *.gcov
+CLEAN     = ghdl --clean --std=87 --workdir=$(LIB_WORK); \
+            rm -f tb_*_c0 *.gcno *.gcda *.gcov UNUSED
 
 ANALYZE   = ghdl -a --std=87 --workdir=$(LIB_WORK) $(GCOV)
 
-ELABORATE = ghdl -e --std=87 --workdir=$(LIB_WORK)
+ELABORATE = ghdl -e --std=87 --workdir=$(LIB_WORK) $(GCOV_LINK)
 
 MAKE_LIB  = mkdir -p $(LIB_WORK)
 
