@@ -2,7 +2,7 @@
 --
 -- T8048 Microcontroller System
 --
--- $Id: t8048.vhd,v 1.2 2004-03-29 19:40:14 arniml Exp $
+-- $Id: t8048.vhd,v 1.3 2004-05-20 21:58:26 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -68,11 +68,17 @@ entity t8048 is
 end t8048;
 
 
+library ieee;
+use ieee.numeric_std.all;
+
 use work.t48_core_comp_pack.t48_core;
 use work.t48_core_comp_pack.syn_rom;
 use work.t48_core_comp_pack.syn_ram;
 
 architecture struct of t8048 is
+
+  -- Address width of internal ROM
+  constant rom_addr_width_c : natural := 10;
 
   signal t0_s             : std_logic;
   signal t0_dir_s         : std_logic;
@@ -89,6 +95,8 @@ architecture struct of t8048 is
   signal dmem_data_to_s   : std_logic_vector( 7 downto 0);
   signal pmem_addr_s      : std_logic_vector(11 downto 0);
   signal pmem_data_s      : std_logic_vector( 7 downto 0);
+
+  signal ea_s             : std_logic;
 
 begin
 
@@ -109,7 +117,7 @@ begin
       t0_o         => t0_s,
       t0_dir_o     => t0_dir_s,
       int_n_i      => int_n_i,
-      ea_i         => ea_i,
+      ea_i         => ea_s,
       rd_n_o       => rd_n_o,
       psen_n_o     => psen_n_o,
       wr_n_o       => wr_n_o,
@@ -176,7 +184,8 @@ begin
 
     -- Port 1 -----------------------------------------------------------------
     for i in p1_b'range loop
-      p1_b(i) <= open_collector_f(p1_s(i));
+--      p1_b(i) <= open_collector_f(p1_s(i));
+      p1_b(i) <= p1_s(i);
     end loop;
 --     if p1_low_imp_s = '1' then
 --       p1_b <= p1_s;
@@ -198,13 +207,44 @@ begin
   --
   -----------------------------------------------------------------------------
 
+
+  -----------------------------------------------------------------------------
+  -- Process ea
+  --
+  -- Purpose:
+  --   Detects access to external program memory.
+  --   Either by ea_i = '1' or when program memory address leaves address
+  --   range of internal ROM.
+  --
+  ea: process (ea_i,
+               pmem_addr_s)
+  begin
+    if ea_i = '1' then
+      -- Forced external access
+      ea_s <= '1';
+
+    elsif unsigned(pmem_addr_s(11 downto rom_addr_width_c)) = 0 then
+      -- Internal access
+      ea_s <= '0';
+
+    else
+      -- Access to program memory out of internal range
+      ea_s <= '1';
+
+    end if;
+
+  end process ea;
+  --
+  -----------------------------------------------------------------------------
+
+
   rom_1k_b : syn_rom
     generic map (
-      address_width_g => 10
+      address_width_g => rom_addr_width_c
     )
     port map (
       clk_i      => xtal_i,
-      rom_addr_i => pmem_addr_s(9 downto 0),
+      rom_addr_i => pmem_addr_s(rom_addr_width_c-1 downto 0),
       rom_data_o => pmem_data_s
     );
 
@@ -228,6 +268,9 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.2  2004/03/29 19:40:14  arniml
+-- rename pX_limp to pX_low_imp
+--
 -- Revision 1.1  2004/03/24 21:32:27  arniml
 -- initial check-in
 --
