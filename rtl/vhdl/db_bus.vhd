@@ -3,7 +3,7 @@
 -- The BUS unit.
 -- Implements the BUS port logic.
 --
--- $Id: db_bus.vhd,v 1.1 2004-03-23 21:31:52 arniml Exp $
+-- $Id: db_bus.vhd,v 1.2 2004-04-04 14:15:45 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -98,7 +98,7 @@ begin
   bus_regs: process (res_i, clk_i)
   begin
     if res_i = res_active_c then
-      bus_q      <= (others => '1');
+      bus_q      <= (others => '0');
       db_dir_q   <= '0';
 
     elsif clk_i'event and clk_i = clk_active_c then
@@ -141,5 +141,8 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2004/03/23 21:31:52  arniml
+-- initial check-in
+--
 --
 -------------------------------------------------------------------------------

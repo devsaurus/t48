@@ -3,7 +3,7 @@
 -- The Program Status Word (PSW).
 -- Implements the PSW with its special bits.
 --
--- $Id: psw.vhd,v 1.2 2004-03-28 21:28:13 arniml Exp $
+-- $Id: psw.vhd,v 1.3 2004-04-04 14:15:45 arniml Exp $
 --
 -- All rights reserved
 --
@@ -85,6 +85,7 @@ use ieee.std_logic_arith.all;
 use work.t48_pack.clk_active_c;
 use work.t48_pack.res_active_c;
 use work.t48_pack.bus_idle_level_c;
+use work.t48_pack.nibble_t;
 
 architecture rtl of psw is
 
@@ -95,9 +96,13 @@ architecture rtl of psw is
   constant bs_c        : natural := 0;
 
   -- the PSW register
-  signal psw_q : std_logic_vector(3 downto 0);
+  signal psw_q : nibble_t;
   -- the Stack Pointer
   signal sp_q  : unsigned(2 downto 0);
+
+  -- pragma translate_off
+  signal psw_s : word_t;
+  -- pragma translate_on
 
 begin
 
@@ -185,6 +190,15 @@ begin
   -----------------------------------------------------------------------------
 
 
+  -- pragma translate_off
+  tb: process (psw_q, sp_q)
+  begin
+    psw_s(7 downto 4) <= psw_q;
+    psw_s(3)          <= '1';
+    psw_s(2 downto 0) <= conv_std_logic_vector(sp_q, 3);
+  end process tb;
+  -- pragma translate_on
+
   -----------------------------------------------------------------------------
   -- Output mapping.
   -----------------------------------------------------------------------------
@@ -200,6 +214,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.2  2004/03/28 21:28:13  arniml
+-- take auxiliary carry from direct ALU connection
+--
 -- Revision 1.1  2004/03/23 21:31:53  arniml
 -- initial check-in
 --
