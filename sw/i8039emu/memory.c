@@ -1,5 +1,5 @@
 /*
- * $Id: memory.c,v 1.1.1.1 2004-04-09 19:20:54 arniml Exp $
+ * $Id: memory.c,v 1.2 2004-04-14 20:50:51 arniml Exp $
  *
  * Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
  *
@@ -26,15 +26,18 @@
 #include <string.h>
 
 #include "memory.h"
+#include "i8039.h"
 
 
 static UINT8 code_mem[4096];
 
 
+static UINT8 port1 = 0xff, port2 = 0xff;
+
 
 UINT8 program_read_byte_8(UINT16 address)
 {
-  return(0);
+  return(code_mem[address]);
 }
 
 UINT8 cpu_readop(UINT16 address)
@@ -47,13 +50,54 @@ UINT8 cpu_readop_arg(UINT16 address)
   return(code_mem[address]);
 }
 
+
 UINT8 io_read_byte_8(UINT8 address)
 {
-  return(0);
+  UINT8 data;
+
+  switch (0x100 | address) {
+    case I8039_p1:
+      data = port1;
+      break;
+
+    case I8039_p2:
+      data = port2;
+      break;
+
+    case I8039_t0:
+      /* connect T0 to P1[0] */
+      data = port1 & 0x01;
+      break;
+
+    case I8039_t1:
+      /* connect T1 to P1[1] */
+      data = (port1 & 0x02) >> 1;
+      break;
+
+    default:
+      data = 0;
+      break;
+  }
+
+
+  return(data);
 }
+
 
 void io_write_byte_8(UINT8 address, UINT8 data)
 {
+  switch (0x100 | address) {
+    case I8039_p1:
+      port1 = data;
+      break;
+
+    case I8039_p2:
+      port2 = data;
+      break;
+
+    default:
+      break;
+  }
 }
 
 
