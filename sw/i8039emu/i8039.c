@@ -9,7 +9,7 @@
  *    Adapted for the T48 uController project, 2004 by Arnim Laeuger        *
  *      See http://www.opencores.org/projects.cgi/web/t48/overview          *
  *                                                                          *
- * $Id: i8039.c,v 1.3 2004-04-15 22:03:53 arniml Exp $
+ * $Id: i8039.c,v 1.4 2004-04-24 11:32:56 arniml Exp $
  *                                                                          *
  *  **** Change Log ****                                                    *
  *                                                                          *
@@ -731,7 +731,17 @@ int i8039_execute(int cycles, int dump)
               break;
 
             case ACCU_HAS_55:
-              accu_state = accu == 0x01 ? ACCU_PASS : ACCU_FAIL;
+              switch (accu) {
+                case 0x01:
+                  accu_state = ACCU_PASS;
+                  break;
+                case 0x00:
+                  accu_state = ACCU_FAIL;
+                  break;
+                default:
+                  accu_state = ACCU_IDLE;
+                  break;
+              }
               break;
 
             case ACCU_PASS:
