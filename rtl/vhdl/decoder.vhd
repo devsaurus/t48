@@ -3,7 +3,7 @@
 -- The Decoder unit.
 -- It decodes the instruction opcodes and executes them.
 --
--- $Id: decoder.vhd,v 1.8 2004-04-18 18:57:43 arniml Exp $
+-- $Id: decoder.vhd,v 1.9 2004-04-24 11:22:55 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -396,7 +396,6 @@ begin
                    cnd_take_branch_i,
                    opc_opcode_s,
                    opc_mnemonic_s,
-                   data_i,
                    psw_carry_i,
                    psw_f0_i,
                    f1_q,
@@ -1875,6 +1874,10 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.8  2004/04/18 18:57:43  arniml
+-- + enhance instruction strobe generation
+-- + rework address output under EA=1 conditions
+--
 -- Revision 1.7  2004/04/15 22:06:05  arniml
 -- + add marker for injected calls
 -- + suppress intstruction strobes for injected calls
