@@ -2,7 +2,7 @@
 --
 -- The testbench for t48_core.
 --
--- $Id: tb.vhd,v 1.1 2004-03-24 21:42:10 arniml Exp $
+-- $Id: tb.vhd,v 1.2 2004-03-24 23:22:35 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -61,6 +61,7 @@ architecture behav of tb is
   constant period_c : time := 90 ns;
 
   signal xtal_s          : std_logic;
+  signal xtal_n_s        : std_logic;
   signal res_n_s         : std_logic;
   signal xtal3_s         : std_logic;
   signal int_n_s         : std_logic;
@@ -250,13 +251,15 @@ begin
       ext_ram_we_s <= '1';
     end if;
 
-    if xtal_s'event then
+    if xtal_s'event and xtal_s = '1' then
       ext_ram_we_s <= '0';
     end if;
 
   end process ext_ram;
   --
   -----------------------------------------------------------------------------
+
+  xtal_n_s <= not xtal_s;
 
   -----------------------------------------------------------------------------
   -- The clock generator
@@ -341,4 +344,7 @@ end behav;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2004/03/24 21:42:10  arniml
+-- initial check-in
+--
 -------------------------------------------------------------------------------
