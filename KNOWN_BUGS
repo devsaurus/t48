@@ -1,0 +1,33 @@
+
+Known bugs of the T48 uController core
+======================================
+Version: $Id: KNOWN_BUGS,v 1.1 2004-05-18 12:07:22 arniml Exp $
+
+
+Release 0.1 BETA
+----------------
+
+******************************************************************************
+ANL and ORL to P2 read port status instead of port output register
+
+The ANL and ORL instructions for P2 read the port status and apply the logical
+operation on this value. Instead, they should read the port output register
+and operate on this value.
+
+Fixed in p2.vhd 1.5
+Regression test:
+white_box/p2_port_reg_conflict
+Fix will be included in next release.
+
+******************************************************************************
+Counter is not incremented
+
+When in counter mode, the timer/counter module does not increment upon a
+falling edge of T1. Reason is a typo in the code for the edge detection signal
+t1_inc_s - it will never become true.
+
+Fixed in timer.vhd 1.3
+Regression tests:
+black_box/cnt/cnt
+black_box/cnt/int
+Fix will be included in next release. 
