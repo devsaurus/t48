@@ -1,11 +1,36 @@
 
 Known bugs of the T48 uController core
 ======================================
-Version: $Date: 2004-06-30 21:25:54 $
+Version: $Date: 2004-09-12 10:17:58 $
+
+
+Release 0.3 BETA
+----------------
+
+*******************************************************************************
+PSENn Timing
+
+PSENn is erroneously activated during read or write from external memory when
+the read and write strobe signals RDn and WRn are active. This happens when
+code is executed from external Program Memory.
+
+The problem lies in the decoder module where the PSENn signal is generated
+based on the current machine cycle.
+
+Fixed in decoder.vhd 1.15
+Added waveform check for PSENn in if_timing.vhd 1.3
+New regression test: white_box/psen_rd_wr_timing
+Fix will be included in next release.
+
 
 
 Release 0.2 BETA
 ----------------
+
+*******************************************************************************
+PSENn Timing
+
+See above.
 
 *******************************************************************************
 Program Memory bank can be switched during interrupt
@@ -27,6 +52,11 @@ Fix will be included in next release.
 
 Release 0.1 BETA
 ----------------
+
+*******************************************************************************
+PSENn Timing
+
+See above.
 
 *******************************************************************************
 Program Memory bank can be switched during interrupt
