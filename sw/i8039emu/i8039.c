@@ -9,7 +9,7 @@
  *    Adapted for the T48 uController project, 2004 by Arnim Laeuger        *
  *      See http://www.opencores.org/projects.cgi/web/t48/overview          *
  *                                                                          *
- * $Id: i8039.c,v 1.4 2004-04-24 11:32:56 arniml Exp $
+ * $Id: i8039.c,v 1.5 2004-05-01 17:20:42 arniml Exp $
  *                                                                          *
  *  **** Change Log ****                                                    *
  *                                                                          *
@@ -484,7 +484,7 @@ static void rr_a(void)       { UINT8 i=R.A & 1; R.A >>= 1; if (i) R.A |= 0x80; e
 /* NS990113 */
 static void rrc_a(void)      { UINT8 i=M_Cy; if (R.A & 1) SET(C_FLAG); else CLR(C_FLAG); R.A >>= 1; if (i) R.A |= 0x80; else R.A &= 0x7f; }
 static void sel_mb0(void)   { R.A11 = 0; R.A11ff = 0; }
-static void sel_mb1(void)    { R.A11ff = 0x800; if (R.irq_executing == I8039_NO_INT) R.A11 = 0x800; }
+static void sel_mb1(void)    { R.A11ff = 0x800; R.A11 = 0x800; }
 static void sel_rb0(void)    { CLR(B_FLAG); regPTR = 0;  }
 static void sel_rb1(void)    { SET(B_FLAG); regPTR = 24; }
 static void stop_tcnt(void)  { R.timerON = R.countON = 0; }
