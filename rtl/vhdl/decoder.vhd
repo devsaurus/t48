@@ -3,7 +3,7 @@
 -- The Decoder unit.
 -- It decodes the instruction opcodes and executes them.
 --
--- $Id: decoder.vhd,v 1.13 2004-05-20 21:51:40 arniml Exp $
+-- $Id: decoder.vhd,v 1.14 2004-06-30 21:18:28 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -230,6 +230,7 @@ architecture rtl of decoder is
   signal retr_executed_s   : boolean;
   signal int_executed_s    : boolean;
   signal int_pending_s     : boolean;
+  signal int_in_progress_s : boolean;
 
   -- pragma translate_off
   signal istrobe_res_q     : std_logic;
@@ -264,25 +265,26 @@ begin
   -----------------------------------------------------------------------------
   int_b : int
     port map (
-      clk_i           => clk_i,
-      res_i           => res_i,
-      en_clk_i        => en_clk_i,
-      clk_mstate_i    => clk_mstate_i,
-      jtf_executed_i  => jtf_executed_s,
-      tim_overflow_i  => tim_overflow_i,
-      tf_o            => tf_s,
-      en_tcnti_i      => en_tcnti_s,
-      dis_tcnti_i     => dis_tcnti_s,
-      int_n_i         => int_n_i,
-      ale_i           => ale_i,
-      last_cycle_i    => last_cycle_s,
-      en_i_i          => en_i_s,
-      dis_i_i         => dis_i_s,
-      ext_int_o       => open,
-      tim_int_o       => tim_int_s,
-      retr_executed_i => retr_executed_s,
-      int_executed_i  => int_executed_s,
-      int_pending_o   => int_pending_s
+      clk_i             => clk_i,
+      res_i             => res_i,
+      en_clk_i          => en_clk_i,
+      clk_mstate_i      => clk_mstate_i,
+      jtf_executed_i    => jtf_executed_s,
+      tim_overflow_i    => tim_overflow_i,
+      tf_o              => tf_s,
+      en_tcnti_i        => en_tcnti_s,
+      dis_tcnti_i       => dis_tcnti_s,
+      int_n_i           => int_n_i,
+      ale_i             => ale_i,
+      last_cycle_i      => last_cycle_s,
+      en_i_i            => en_i_s,
+      dis_i_i           => dis_i_s,
+      ext_int_o         => open,
+      tim_int_o         => tim_int_s,
+      retr_executed_i   => retr_executed_s,
+      int_executed_i    => int_executed_s,
+      int_pending_o     => int_pending_s,
+      int_in_progress_o => int_in_progress_s
     );
 
   last_cycle_s <= not opc_multi_cycle_s or
@@ -405,7 +407,8 @@ begin
                    f1_q,
                    mb_q,
                    tim_int_s,
-                   int_pending_s)
+                   int_pending_s,
+                   int_in_progress_s)
 
     procedure address_indirect_3_f is
     begin
@@ -441,6 +444,9 @@ begin
         branch_taken_s       <= true;
 --      end if;
     end;
+
+    -- intermediate value of the Program Memory Bank Flag
+    variable mb_v : std_logic;
 
   begin
     -- default assignments
@@ -516,6 +522,14 @@ begin
     add_write_pmem_addr_s  <= false;
     ent0_clk_s             <= false;
     add_read_bus_s         <= false;
+
+    -- the Program Memory Bank Flag is held low when interrupts are in progress
+    -- according to the MCS-48 User's Manual
+    if int_in_progress_s then
+      mb_v := '0';
+    else
+      mb_v := mb_q;
+    end if;
 
     -- prepare potential register indirect address mode
     if not clk_second_cycle_i and clk_mstate_i = MSTATE2 then
@@ -752,7 +766,7 @@ begin
               read_dec_s           <= true;
               if not int_pending_s then
                 -- store high part of target address in Program Counter
-                data_s             <= "0000" & mb_q & opc_opcode_s(7 downto 5);
+                data_s             <= "0000" & mb_v & opc_opcode_s(7 downto 5);
               else
                 -- apply high part of vector address manually
                 data_s             <= (others => '0');
@@ -1096,10 +1110,9 @@ begin
 
             -- store high part of target address in Program Counter
             when MSTATE2 =>
-              data_s         <= "0000" & mb_q & opc_opcode_s(7 downto 5);
+              data_s         <= "0000" & mb_v & opc_opcode_s(7 downto 5);
               read_dec_s     <= true;
               pm_write_pch_o <= true;
-
 
             when others =>
               null;
@@ -1933,6 +1946,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.13  2004/05/20 21:51:40  arniml
+-- clean-up use of ea_i
+--
 -- Revision 1.12  2004/05/17 14:40:09  arniml
 -- assert p2_read_p2_o when expander port is read
 --

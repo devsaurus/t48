@@ -3,7 +3,7 @@
 -- The Interrupt Controller.
 -- It collects the interrupt sources and notifies the decoder.
 --
--- $Id: int.vhd,v 1.1 2004-03-23 21:31:52 arniml Exp $
+-- $Id: int.vhd,v 1.2 2004-06-30 21:18:28 arniml Exp $
 --
 -- All rights reserved
 --
@@ -50,25 +50,26 @@ use work.t48_pack.mstate_t;
 entity int is
 
   port (
-    clk_i           : in  std_logic;
-    res_i           : in  std_logic;
-    en_clk_i        : in  boolean;
-    clk_mstate_i    : in  mstate_t;
-    jtf_executed_i  : in  boolean;
-    tim_overflow_i  : in  boolean;
-    tf_o            : out std_logic;
-    en_tcnti_i      : in  boolean;
-    dis_tcnti_i     : in  boolean;
-    int_n_i         : in  std_logic;
-    ale_i           : in  boolean;
-    last_cycle_i    : in  boolean;
-    en_i_i          : in  boolean;
-    dis_i_i         : in  boolean;
-    ext_int_o       : out boolean;
-    tim_int_o       : out boolean;
-    retr_executed_i : in  boolean;
-    int_executed_i  : in  boolean;
-    int_pending_o   : out boolean
+    clk_i             : in  std_logic;
+    res_i             : in  std_logic;
+    en_clk_i          : in  boolean;
+    clk_mstate_i      : in  mstate_t;
+    jtf_executed_i    : in  boolean;
+    tim_overflow_i    : in  boolean;
+    tf_o              : out std_logic;
+    en_tcnti_i        : in  boolean;
+    dis_tcnti_i       : in  boolean;
+    int_n_i           : in  std_logic;
+    ale_i             : in  boolean;
+    last_cycle_i      : in  boolean;
+    en_i_i            : in  boolean;
+    dis_i_i           : in  boolean;
+    ext_int_o         : out boolean;
+    tim_int_o         : out boolean;
+    retr_executed_i   : in  boolean;
+    int_executed_i    : in  boolean;
+    int_pending_o     : out boolean;
+    int_in_progress_o : out boolean
   );
 
 end int;
@@ -145,6 +146,8 @@ begin
   --
   -- Purpose:
   --   Implement the various registers.
+  --   They are designed according Figure "Interrupt Logic" of
+  --   "The Single Component MCS-48 System".
   --
   regs: process (res_i, clk_i)
   begin
@@ -218,10 +221,11 @@ begin
   -----------------------------------------------------------------------------
   -- Output Mapping.
   -----------------------------------------------------------------------------
-  tf_o           <= to_stdLogic(timer_flag_q);
-  ext_int_o      <= int_type_q = ext_int_c;
-  tim_int_o      <= int_type_q = tim_int_c;
-  int_pending_o  <= int_state_q = PENDING;
+  tf_o              <= to_stdLogic(timer_flag_q);
+  ext_int_o         <= int_type_q = ext_int_c;
+  tim_int_o         <= int_type_q = tim_int_c;
+  int_pending_o     <= int_state_q = PENDING;
+  int_in_progress_o <= int_in_progress_q;
 
 end rtl;
 
@@ -230,5 +234,8 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2004/03/23 21:31:52  arniml
+-- initial check-in
+--
 --
 -------------------------------------------------------------------------------
