@@ -1,7 +1,7 @@
 
 Known bugs of the T48 uController core
 ======================================
-Version: $Date: 2004-06-29 20:41:52 $
+Version: $Date: 2004-06-30 21:25:54 $
 
 
 Release 0.2 BETA
@@ -15,6 +15,13 @@ of the Program Memory and befor executing the RETR instruction) the Program
 Memory bank can be switched by executing a JMP or CALL instruction. These
 instructions honour the current state of the Program Memory Bank Flag and thus
 switch the Program Memory bank upon execution.
+
+Fixed in:
+int.vhd 1.2
+decoder.vhd 1.14
+Updated regression test:
+black_box/mb/int
+Fix will be included in next release.
 
 
 
