@@ -9,7 +9,7 @@
  *    Adapted for the T48 uController project, 2004 by Arnim Laeuger        *
  *      See http://www.opencores.org/projects.cgi/web/t48/overview          *
  *                                                                          *
- * $Id: i8039.c,v 1.1.1.1 2004-04-09 19:20:53 arniml Exp $
+ * $Id: i8039.c,v 1.2 2004-04-14 20:52:01 arniml Exp $
  *                                                                          *
  *  **** Change Log ****                                                    *
  *                                                                          *
@@ -396,7 +396,7 @@ static void mov_a_r4(void)   { R.A = R4; }
 static void mov_a_r5(void)   { R.A = R5; }
 static void mov_a_r6(void)   { R.A = R6; }
 static void mov_a_r7(void)   { R.A = R7; }
-static void mov_a_psw(void)  { R.A = R.PSW; }
+static void mov_a_psw(void)  { R.A = R.PSW | 0x08; }
 static void mov_a_xr0(void)  { R.A = intRAM[R0 & INT_RAM_MASK]; }
 static void mov_a_xr1(void)  { R.A = intRAM[R1 & INT_RAM_MASK]; }
 static void mov_r0_a(void)   { R0 = R.A; }
@@ -407,7 +407,7 @@ static void mov_r4_a(void)   { R4 = R.A; }
 static void mov_r5_a(void)   { R5 = R.A; }
 static void mov_r6_a(void)   { R6 = R.A; }
 static void mov_r7_a(void)   { R7 = R.A; }
-static void mov_psw_a(void)  { R.PSW = R.A; regPTR = ((M_By) ? 24 : 0); R.SP = (R.PSW & 7) << 1; }
+static void mov_psw_a(void)  { R.PSW = R.A | 0x08; regPTR = ((M_By) ? 24 : 0); R.SP = (R.PSW & 7) << 1; }
 static void mov_r0_n(void)   { R0 = M_RDMEM_OPCODE(); }
 static void mov_r1_n(void)   { R1 = M_RDMEM_OPCODE(); }
 static void mov_r2_n(void)   { R2 = M_RDMEM_OPCODE(); }
@@ -654,7 +654,7 @@ static void dump_machine_state(void)
 {
   int i;
 
-  printf("  | %04X  %02X  %02X %02X", (UINT32)R.PC.w.l, (UINT32)R.A, (UINT32)R.SP, (UINT32)R.PSW);
+  printf("  | %04X  %02X  %02X %02X", (UINT32)R.PC.w.l, (UINT32)R.A, (UINT32)(R.SP >> 1), (UINT32)R.PSW);
   printf("  %02X  %X  %02X %02X",     (UINT32)R.bus, (UINT32)R.f1, (UINT32)R.P1, (UINT32)R.P2);
   printf(" %X  ",                     (UINT32)(R.A11 >> 11));
 
