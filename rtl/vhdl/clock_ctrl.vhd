@@ -3,7 +3,7 @@
 -- The Clock Control unit.
 -- Clock States and Machine Cycles are generated here.
 --
--- $Id: clock_ctrl.vhd,v 1.4 2004-04-24 23:44:25 arniml Exp $
+-- $Id: clock_ctrl.vhd,v 1.5 2004-10-25 19:35:41 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -209,7 +209,7 @@ begin
            end if;
 
         when MSTATE2 => 
-          if xtal2_s then
+          if xtal3_s then
             -- RD, WR are removed at the end of XTAL3 of second machine cycle
             rd_q     <= false;
             wr_q     <= false;
@@ -380,6 +380,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.4  2004/04/24 23:44:25  arniml
+-- move from std_logic_arith to numeric_std
+--
 -- Revision 1.3  2004/04/18 18:56:23  arniml
 -- reset machine state to MSTATE3 to allow proper instruction fetch
 -- after reset
