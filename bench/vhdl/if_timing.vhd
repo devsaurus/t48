@@ -2,7 +2,7 @@
 --
 -- Interface Timing Checker.
 --
--- $Id: if_timing.vhd,v 1.3 2004-09-12 00:31:50 arniml Exp $
+-- $Id: if_timing.vhd,v 1.4 2004-10-25 19:33:13 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -143,11 +143,6 @@ begin
         -- tAW: Addr Setup to WR
         assert (now - bus_change_ale_s) > (t_CY / 3 - 150 ns)
           report "Timing violation of tAW on WR!"
-          severity error;
-
-        -- tAW sanity check
-        assert (now - bus_change_ale_s) < t_CY
-          report "Timing relation between BUS and WR inconsistent!"
           severity error;
 
         -- WR inactive
@@ -592,6 +587,9 @@ end behav;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.3  2004/09/12 00:31:50  arniml
+-- add checks for PSEN
+--
 -- Revision 1.2  2004/04/25 20:40:58  arniml
 -- check expander timings
 --
