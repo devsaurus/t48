@@ -13,3 +13,5 @@
 export PROJECT_DIR=<local dir>/t48
 export VERIF_DIR=$PROJECT_DIR/sw/verif
 export SIM_DIR=$PROJECT_DIR/sim/rtl_sim
+
+export PATH=$PATH:$PROJECT_DIR/sw
