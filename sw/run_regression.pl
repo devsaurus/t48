@@ -4,7 +4,7 @@
 #
 # run_regression.pl
 #
-# $Id: run_regression.pl,v 1.4 2004-04-18 19:02:25 arniml Exp $
+# $Id: run_regression.pl,v 1.5 2004-05-16 16:27:05 arniml Exp $
 #
 # Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 #
@@ -77,7 +77,7 @@ $pwd = `pwd`;
 chomp($pwd);
 
 
-@asm_files = `find \$VERIF_DIR -name '*.asm'`;
+@asm_files = `find \$VERIF_DIR/black_box -name '*.asm'`;
 
 
 foreach $asm_file (@asm_files) {
