@@ -3,7 +3,7 @@
 -- The Decoder unit.
 -- It decodes the instruction opcodes and executes them.
 --
--- $Id: decoder.vhd,v 1.14 2004-06-30 21:18:28 arniml Exp $
+-- $Id: decoder.vhd,v 1.15 2004-09-12 00:35:44 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -361,7 +361,8 @@ begin
 
       when MSTATE4 =>
         if ea_i = '1' and
-           (need_address_v or last_cycle_s) then
+           ((not clk_second_cycle_i and assert_psen_s)
+            or last_cycle_s) then
           clk_assert_psen_o <= true;
           p2_output_pch_o   <= true;
           bus_output_pcl_o  <= true;
@@ -1946,6 +1947,12 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.14  2004/06/30 21:18:28  arniml
+-- Fix bug report:
+-- "Program Memory bank can be switched during interrupt"
+-- int module emits int_in_progress signal that is used inside the decoder
+-- to hold mb low for JMP and CALL during interrupts
+--
 -- Revision 1.13  2004/05/20 21:51:40  arniml
 -- clean-up use of ea_i
 --
