@@ -2,7 +2,7 @@
 --
 -- T48 Microcontroller Core
 --
--- $Id: t48_core.vhd,v 1.2 2004-03-28 13:13:20 arniml Exp $
+-- $Id: t48_core.vhd,v 1.3 2004-03-28 21:27:50 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -47,11 +47,8 @@
 -- Compared to the original MCS-48 architecture, the following limitations
 -- apply:
 --
---   * DA A instruction not implemented.
---     Implementation targeted for Beta milestone.
---
---   * Nibble-wide instructions addressing expander port not implemented.
---     Implementation targeted for Beta milestone.
+--   * Nibble-wide instructions addressing expander port implemented but
+--     not verified yet.
 --
 --   * Single-step mode not implemented.
 --     Not selected for future implementation.
@@ -151,6 +148,11 @@ architecture struct of t48_core is
   signal alu_aux_carry_s      : std_logic;
   signal alu_op_s             : alu_op_t;
   signal alu_use_carry_s      : boolean;
+  signal alu_da_low_s         : boolean;
+  signal alu_da_high_s        : boolean;
+  signal alu_da_overflow_s    : boolean;
+  signal alu_p06_temp_reg_s   : boolean;
+  signal alu_p60_temp_reg_s   : boolean;
 
   -- BUS signals
   signal bus_write_bus_s  : boolean;
@@ -290,7 +292,12 @@ begin
       aux_carry_i        => psw_aux_carry_s,
       aux_carry_o        => alu_aux_carry_s,
       alu_op_i           => alu_op_s,
-      use_carry_i        => alu_use_carry_s
+      use_carry_i        => alu_use_carry_s,
+      da_low_i           => alu_da_low_s,
+      da_high_i          => alu_da_high_s,
+      da_overflow_o      => alu_da_overflow_s,
+      p06_temp_reg_i     => alu_p06_temp_reg_s,
+      p60_temp_reg_i     => alu_p60_temp_reg_s
     );
 
   bus_mux_b : bus_mux
@@ -414,9 +421,13 @@ begin
       psw_write_psw_o        => psw_write_psw_s,
       psw_write_sp_o         => psw_write_sp_s,
       alu_carry_i            => alu_carry_s,
-      alu_aux_carry_i        => alu_aux_carry_s,
       alu_op_o               => alu_op_s,
       alu_use_carry_o        => alu_use_carry_s,
+      alu_da_low_o           => alu_da_low_s,
+      alu_da_high_o          => alu_da_high_s,
+      alu_da_overflow_i      => alu_da_overflow_s,
+      alu_p06_temp_reg_o     => alu_p06_temp_reg_s,
+      alu_p60_temp_reg_o     => alu_p60_temp_reg_s,
       bus_output_pcl_o       => bus_output_pcl_s,
       bus_bidir_bus_o        => bus_bidir_bus_s,
       clk_multi_cycle_o      => clk_multi_cycle_s,
@@ -448,6 +459,7 @@ begin
       pm_addr_type_o         => pm_addr_type_s,
       psw_special_data_o     => psw_special_data_s,
       psw_carry_i            => psw_carry_s,
+      psw_aux_carry_i        => psw_aux_carry_s,
       psw_f0_i               => psw_f0_s,
       psw_inc_stackp_o       => psw_inc_stackp_s,
       psw_dec_stackp_o       => psw_dec_stackp_s,
@@ -594,6 +606,7 @@ begin
       write_f0_i         => psw_write_f0_s,
       write_bs_i         => psw_write_bs_s,
       carry_o            => psw_carry_s,
+      aux_carry_i        => alu_aux_carry_s,
       aux_carry_o        => psw_aux_carry_s,
       f0_o               => psw_f0_s,
       bs_o               => psw_bs_s
@@ -619,6 +632,9 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.2  2004/03/28 13:13:20  arniml
+-- connect control signal for Port 2 expander
+--
 -- Revision 1.1  2004/03/23 21:31:53  arniml
 -- initial check-in
 --

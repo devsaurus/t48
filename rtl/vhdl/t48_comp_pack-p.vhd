@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 --
--- $Id: t48_comp_pack-p.vhd,v 1.2 2004-03-28 13:13:20 arniml Exp $
+-- $Id: t48_comp_pack-p.vhd,v 1.3 2004-03-28 21:27:49 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -41,7 +41,12 @@ package t48_comp_pack is
       aux_carry_i        : in  std_logic;
       aux_carry_o        : out std_logic;
       alu_op_i           : in  alu_op_t;
-      use_carry_i        : in  boolean
+      use_carry_i        : in  boolean;
+      da_low_i           : in  boolean;
+      da_high_i          : in  boolean;
+      da_overflow_o      : out boolean;
+      p06_temp_reg_i     : in  boolean;
+      p60_temp_reg_i     : in  boolean
     );
   end component;
 
@@ -162,8 +167,12 @@ package t48_comp_pack is
       psw_write_psw_o        : out boolean;
       psw_write_sp_o         : out boolean;
       alu_carry_i            : in  std_logic;
-      alu_aux_carry_i        : in  std_logic;
       alu_op_o               : out alu_op_t;
+      alu_da_low_o           : out boolean;
+      alu_da_high_o          : out boolean;
+      alu_da_overflow_i      : in  boolean;
+      alu_p06_temp_reg_o     : out boolean;
+      alu_p60_temp_reg_o     : out boolean;
       alu_use_carry_o        : out boolean;
       bus_output_pcl_o       : out boolean;
       bus_bidir_bus_o        : out boolean;
@@ -196,6 +205,7 @@ package t48_comp_pack is
       pm_addr_type_o         : out pmem_addr_ident_t;
       psw_special_data_o     : out std_logic;
       psw_carry_i            : in  std_logic;
+      psw_aux_carry_i        : in  std_logic;
       psw_f0_i               : in  std_logic;
       psw_inc_stackp_o       : out boolean;
       psw_dec_stackp_o       : out boolean;
@@ -372,6 +382,7 @@ package t48_comp_pack is
       write_f0_i         : in  boolean;
       write_bs_i         : in  boolean;
       carry_o            : out std_logic;
+      aux_carry_i        : in  std_logic;
       aux_carry_o        : out std_logic;
       f0_o               : out std_logic;
       bs_o               : out std_logic
