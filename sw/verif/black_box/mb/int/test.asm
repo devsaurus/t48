@@ -1,5 +1,5 @@
 	;; *******************************************************************
-	;; $Id: test.asm,v 1.2 2004-05-01 17:19:45 arniml Exp $
+	;; $Id: test.asm,v 1.3 2004-06-30 21:15:31 arniml Exp $
 	;;
 	;; Test Program Memory bank selector with interrupts.
 	;; *******************************************************************
@@ -10,7 +10,6 @@
 	ORG	0
 	jmp	start
 	ORG	3
-	sel	mb1
 	jmp	interrupt & 07FFH
 
 	ORG	7
@@ -18,6 +17,7 @@
 
 	;; Start of test
 start:
+	sel	mb1
 	mov	r0, #000H
 	en	i
 poll:	jf1	pass
@@ -30,17 +30,22 @@ fail:	FAIL
 
 	ORG	0232H
 	jmp	fail
-	jmp	fail
-	jmp	fail
+interrupt:
+	call	trick_mb
+	cpl	f1
+	retr
 
+	ORG	0250H
+trick_mb:
+	ret
 
 	ORG	0A32H
 	jmp	fail_hi
-interrupt:
-	cpl	f1
-	sel	mb1
-	retr
+	jmp	fail_hi
+	jmp	fail_hi
 
+	ORG	0A50H
+	jmp	fail_hi
 
 fail_hi:
 	FAIL
