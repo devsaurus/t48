@@ -3,7 +3,7 @@
 -- The Arithmetic Logic Unit (ALU).
 -- It contains the ALU core plus the Accumulator and the Temp Reg.
 --
--- $Id: alu.vhd,v 1.4 2004-04-06 18:10:41 arniml Exp $
+-- $Id: alu.vhd,v 1.5 2004-04-06 20:21:53 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -190,6 +190,8 @@ begin
   alu_core: process (in_a_s,
                      in_b_s,
                      alu_op_i,
+                     carry_i,
+                     use_carry_i,
                      add_result_s)
 
   begin
@@ -419,6 +421,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.4  2004/04/06 18:10:41  arniml
+-- rework adder and force resource sharing between ADD, INC and DEC
+--
 -- Revision 1.3  2004/04/04 14:18:52  arniml
 -- add measures to implement XCHD
 --
