@@ -3,7 +3,7 @@
 -- The Decoder unit.
 -- It decodes the instruction opcodes and executes them.
 --
--- $Id: decoder.vhd,v 1.9 2004-04-24 11:22:55 arniml Exp $
+-- $Id: decoder.vhd,v 1.10 2004-04-25 16:22:03 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -1414,12 +1414,23 @@ begin
         end if;
 
         if not clk_second_cycle_i then
-          -- read dmem and put contents on BUS as external address
-          if clk_mstate_i = MSTATE3 then
-            dm_read_dmem_o     <= true;
-            bus_write_bus_o    <= true;
-          end if;
+          case clk_mstate_i is
+            -- read dmem and put contents on BUS as external address
+            when MSTATE3 =>
+              dm_read_dmem_o     <= true;
+              bus_write_bus_o    <= true;
 
+            -- store contents of Accumulator to BUS
+            when MSTATE5 =>
+              if opc_opcode_s(4) = '1' then
+                alu_read_alu_o   <= true;
+                bus_write_bus_o  <= true;
+              end if;
+
+            when others =>
+              null;
+          end case;
+    
         else
           if clk_mstate_i = MSTATE1 then
             if opc_opcode_s(4) = '0' then
@@ -1874,6 +1885,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.9  2004/04/24 11:22:55  arniml
+-- removed superfluous signal from sensitivity list
+--
 -- Revision 1.8  2004/04/18 18:57:43  arniml
 -- + enhance instruction strobe generation
 -- + rework address output under EA=1 conditions
