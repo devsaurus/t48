@@ -9,7 +9,7 @@
  *    Adapted for the T48 uController project, 2004 by Arnim Laeuger        *
  *      See http://www.opencores.org/projects.cgi/web/t48/overview          *
  *                                                                          *
- * $Id: i8039.c,v 1.5 2004-05-01 17:20:42 arniml Exp $
+ * $Id: i8039.c,v 1.6 2004-07-03 14:38:11 arniml Exp $
  *                                                                          *
  *  **** Change Log ****                                                    *
  *                                                                          *
@@ -468,6 +468,8 @@ static void retr(void)
     regPTR = ((M_By) ? 24 : 0);
 
     R.irq_executing = I8039_NO_INT;
+
+    R.A11 = R.A11ff;
 
     /* Take an interrupt if a request is still being made */
     if (R.irq_state == I8039_EXTERNAL_INT) {
