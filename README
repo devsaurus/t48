@@ -1,0 +1,104 @@
+
+README for the T48 uController project
+======================================
+Version: $Date: 2004-05-27 20:37:08 $
+
+
+Introduction
+------------
+
+The T48 µController core an is implementation of the MCS-48 microcontroller
+family architecture. While being a controller core for SoC, it also aims for
+code-compatability and cycle-accuracy so that it can be used as a drop-in
+replacement for any MCS-48 controller.
+It can be configured to better suit the requirements and characteristics of
+the integrating system. On the other hand, nearly the full functionality of a
+stock 8048/8049 is available.
+
+
+Download
+--------
+
+Download the latest stable release from the project homepage at OpenCores.org:
+
+  http://www.opencores.org/projects.cgi/web/t48/overview/
+
+You can get the latest version of the design files from CVS:
+
+  http://www.opencores.org/pdownloads.cgi/list/t48
+
+Please keep in mind that this is work in progress and might contain smaller or
+bigger problems.
+You should also check the Tracker for known bugs and see if they affect your
+work.
+
+
+Installation
+------------
+
+Once the directory structure is generated either by check-out from CVS or by
+unpacking the tar-archive, the central project initialization file should be
+set up. A template called init_project.template.sh is located in the sw
+directory where a copy can be edited. Normally, only the definition for the
+variable PROJECT_DIR has to be adjusted to the path where the directory
+structure is located.
+The commands for setting the necessary variables assume a bash/sh-like
+shell. In case you run a different shell like csh or ksh, you should adjust
+these commands as well.
+
+The meaning of the variables is as follows:
+
+  * PROJECT_DIR
+    Points to the root of the project installation. All further references are
+    derived from its setting.
+
+  * VERIF_DIR
+    Location of the verification suite.
+
+  * SIM_DIR
+    Directory for running simulations.
+
+These variables must be properly set whenever scripts or makefiles of the T48
+project are executed. Otherwise, you will most likely encounter error
+messages.
+
+NOTE: The concepts of the mentioned shells require that the init_project.sh is
+      run in the context of the shell. I.e. you should 'source' the script
+      instead of executing it like a command. This will make sure that the
+      variable settings are really effective in the calling shell instance.
+
+
+Directory Structure
+-------------------
+
+The project's directory structure follows the proposal of OpenCores.org.
+
+t48
+ |
+ \--+-- rtl
+    |    |
+    |    \-- vhdl           : VHDL code containing the RTL description
+    |         |               of the core.
+    |         \-- system    : RTL VHDL code of sample systems.
+    |
+    +-- bench
+    |    |
+    |    \-- vhdl           : VHDL testbench code.
+    |
+    +-- sim
+    |    |
+    |    \-- rtl_sim        : Directory for running simulations.
+    |
+    \-- sw                  : General purpose scripts and files.
+         |
+         +-- i8039emu       : An MCS-48 emulator written in C.
+         |
+         \-- verif          : The verification suite.
+              |
+              +-- include   : Global includes and makefiles.
+              |
+              +-- black_box : Black-box verification tests.
+              |
+              +-- white_box : White-box verification tests.
+              |
+              \-- gp_sw     : General purpose software.
