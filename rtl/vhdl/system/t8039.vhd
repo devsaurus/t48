@@ -2,7 +2,7 @@
 --
 -- T8039 Microcontroller System
 --
--- $Id: t8039.vhd,v 1.2 2004-05-20 21:53:42 arniml Exp $
+-- $Id: t8039.vhd,v 1.3 2004-12-03 19:43:12 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -68,9 +68,7 @@ entity t8039 is
 end t8039;
 
 
-use work.t48_core_comp_pack.t48_core;
-use work.t48_core_comp_pack.syn_rom;
-use work.t48_core_comp_pack.syn_ram;
+use work.t48_system_comp_pack.t8039_notri;
 
 architecture struct of t8039 is
 
@@ -82,39 +80,24 @@ architecture struct of t8039 is
   signal p2_low_imp_s     : std_logic;
   signal p1_s             : std_logic_vector( 7 downto 0);
   signal p1_low_imp_s     : std_logic;
-  signal xtal3_s          : std_logic;
-  signal dmem_addr_s      : std_logic_vector( 7 downto 0);
-  signal dmem_we_s        : std_logic;
-  signal dmem_data_from_s : std_logic_vector( 7 downto 0);
-  signal dmem_data_to_s   : std_logic_vector( 7 downto 0);
-  signal pmem_data_s      : std_logic_vector( 7 downto 0);
-
-  signal vdd_s            : std_logic;
 
 begin
 
-  -- no Program memory available
-  pmem_data_s <= (others => '0');
-  vdd_s       <= '1';
-
-  t48_core_b : t48_core
+  t8039_notri_b : t8039_notri
     generic map (
-      xtal_div_3_g        => 1,
-      register_mnemonic_g => 1,
-      include_port1_g     => 1,
-      include_port2_g     => 1,
-      include_bus_g       => 1,
-      include_timer_g     => 1,
-      sample_t1_state_g   => 4
+      -- we don't need explicit gating of input ports
+      -- this is done implicitely by the bidirectional pads
+      gate_port_input_g => 0
     )
+
     port map (
       xtal_i       => xtal_i,
-      reset_i      => reset_n_i,
+      reset_n_i    => reset_n_i,
       t0_i         => t0_b,
       t0_o         => t0_s,
       t0_dir_o     => t0_dir_s,
       int_n_i      => int_n_i,
-      ea_i         => vdd_s,
+      ea_i         => ea_i,
       rd_n_o       => rd_n_o,
       psen_n_o     => psen_n_o,
       wr_n_o       => wr_n_o,
@@ -129,16 +112,7 @@ begin
       p1_i         => p1_b,
       p1_o         => p1_s,
       p1_low_imp_o => p1_low_imp_s,
-      prog_n_o     => prog_n_o,
-      clk_i        => xtal_i,
-      en_clk_i     => xtal3_s,
-      xtal3_o      => xtal3_s,
-      dmem_addr_o  => dmem_addr_s,
-      dmem_we_o    => dmem_we_s,
-      dmem_data_i  => dmem_data_from_s,
-      dmem_data_o  => dmem_data_to_s,
-      pmem_addr_o  => open,
-      pmem_data_i  => pmem_data_s
+      prog_n_o     => prog_n_o
     );
 
   -----------------------------------------------------------------------------
@@ -203,19 +177,6 @@ begin
   --
   -----------------------------------------------------------------------------
 
-  ram_128_b : syn_ram
-    generic map (
-      address_width_g => 7
-    )
-    port map (
-      clk_i      => xtal_i,
-      res_i      => reset_n_i,
-      ram_addr_i => dmem_addr_s(6 downto 0),
-      ram_data_i => dmem_data_to_s,
-      ram_we_i   => dmem_we_s,
-      ram_data_o => dmem_data_from_s
-    );
-
 end struct;
 
 
@@ -223,7 +184,4 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
--- Revision 1.1  2004/04/18 18:51:10  arniml
--- initial check-in
---
 -------------------------------------------------------------------------------
