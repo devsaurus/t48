@@ -2,7 +2,7 @@
 --
 -- The testbench for t48_core.
 --
--- $Id: tb.vhd,v 1.3 2004-03-26 22:39:28 arniml Exp $
+-- $Id: tb.vhd,v 1.4 2004-03-28 21:30:25 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -79,6 +79,7 @@ architecture behav of tb is
   signal p2_s            : std_logic_vector( 7 downto 0);
   signal t48_p2_s        : std_logic_vector( 7 downto 0);
   signal p2_limp_s       : std_logic;
+  signal prog_n_s        : std_logic;
 
   signal bus_s           : std_logic_vector( 7 downto 0);
   signal t48_bus_s       : std_logic_vector( 7 downto 0);
@@ -168,7 +169,7 @@ begin
       p1_i        => p1_s,
       p1_o        => t48_p1_s,
       p1_limp_o   => p1_limp_s,
-      prog_n_o    => open,
+      prog_n_o    => prog_n_s,
       clk_i       => xtal_s,
       en_clk_i    => xtal3_s,
       xtal3_o     => xtal3_s,
@@ -344,6 +345,9 @@ end behav;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.3  2004/03/26 22:39:28  arniml
+-- enhance simulation result string
+--
 -- Revision 1.2  2004/03/24 23:22:35  arniml
 -- put ext_ram on falling clock edge to sample the write enable properly
 --
