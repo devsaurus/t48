@@ -105,6 +105,7 @@ $(decoder) : $(RTL_DIR)/decoder.vhd \
 		$(alu_pack) \
 		$(t48_pack) \
 		$(t48_comp_pack) \
+		$(t48_tb_pack) \
 		$(decoder_pack)
 	$(ANALYZE) $(RTL_DIR)/decoder.vhd
 
