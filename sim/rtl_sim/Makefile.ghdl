@@ -80,13 +80,20 @@ cond_branch_pack = $(LIB_WORK)/cond_branch_pack-p.o
 cond_branch = $(LIB_WORK)/cond_branch.o
 clock_ctrl_rtl_c0 = $(LIB_WORK)/clock_ctrl-c.o
 clock_ctrl = $(LIB_WORK)/clock_ctrl.o
-clk_gate_rtl_c0 = $(LIB_WORK)/clk_gate-c.o
-clk_gate = $(LIB_WORK)/clk_gate.o
 bus_mux_rtl_c0 = $(LIB_WORK)/bus_mux-c.o
 bus_mux = $(LIB_WORK)/bus_mux.o
 alu_rtl_c0 = $(LIB_WORK)/alu-c.o
 alu_pack = $(LIB_WORK)/alu_pack-p.o
 alu = $(LIB_WORK)/alu.o
+#
+##############################################################################
+
+
+##############################################################################
+# The default target for elaboration
+#
+.PHONY: all
+all: elaborate
 #
 ##############################################################################
 
