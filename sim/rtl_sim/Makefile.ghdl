@@ -1,0 +1,83 @@
+LIB_WORK  = ghdl-work
+
+CLEAN     = ghdl --clean --std=87 --workdir=$(LIB_WORK)
+
+ANALYZE   = ghdl -a --ieee=synopsys --std=87 --workdir=$(LIB_WORK)
+
+ELABORATE = ghdl -e --ieee=synopsys --std=87 --workdir=$(LIB_WORK)
+
+MAKE_LIB  = mkdir -p $(LIB_WORK)
+
+tb_t8048_behav_c0=$(LIB_WORK)/tb_t8048-c.o
+tb_t8048=$(LIB_WORK)/tb_t8048.o
+tb_behav_c0=$(LIB_WORK)/tb-c.o
+tb=$(LIB_WORK)/tb.o
+t8048_struct_c0=$(LIB_WORK)/t8048-c.o
+t8048=$(LIB_WORK)/t8048.o
+t48_tb_pack = $(LIB_WORK)/t48_tb_pack-p.o
+t48_pack = $(LIB_WORK)/t48_pack-p.o
+t48_core_struct_c0 = $(LIB_WORK)/t48_core-c.o
+t48_core = $(LIB_WORK)/t48_core.o
+t48_core_comp_pack = $(LIB_WORK)/t48_core_comp_pack-p.o
+t48_comp_pack = $(LIB_WORK)/t48_comp_pack-p.o
+syn_rom = $(LIB_WORK)/syn_rom-e.o
+syn_rom-lpm-a = $(LIB_WORK)/syn_rom-lpm-a.o
+syn_rom_lpm_c0 = $(LIB_WORK)/syn_rom-lpm-c.o
+lpm_rom = $(LIB_WORK)/lpm_rom.o
+syn_ram = $(LIB_WORK)/syn_ram-e.o
+syn_ram-lpm-a = $(LIB_WORK)/syn_ram-lpm-a.o
+syn_ram_lpm_c0 = $(LIB_WORK)/syn_ram-lpm-c.o
+lpm_ram_dq = $(LIB_WORK)/lpm_ram_dq.o
+psw_rtl_c0 = $(LIB_WORK)/psw-c.o
+psw = $(LIB_WORK)/psw.o
+pmem_ctrl_rtl_c0 = $(LIB_WORK)/pmem_ctrl-c.o
+pmem_ctrl_pack = $(LIB_WORK)/pmem_ctrl_pack-p.o
+pmem_ctrl = $(LIB_WORK)/pmem_ctrl.o
+p2_rtl_c0 = $(LIB_WORK)/p2-c.o
+p2 = $(LIB_WORK)/p2.o
+p1_rtl_c0 = $(LIB_WORK)/p1-c.o
+p1 = $(LIB_WORK)/p1.o
+timer_rtl_c0 = $(LIB_WORK)/timer-c.o
+timer = $(LIB_WORK)/timer.o
+opc_table_rtl_c0 = $(LIB_WORK)/opc_table-c.o
+opc_table = $(LIB_WORK)/opc_table.o
+opc_decoder_rtl_c0 = $(LIB_WORK)/opc_decoder-c.o
+opc_decoder = $(LIB_WORK)/opc_decoder.o
+int_rtl_c0 = $(LIB_WORK)/int-c.o
+int = $(LIB_WORK)/int.o
+dmem_ctrl_rtl_c0 = $(LIB_WORK)/dmem_ctrl-c.o
+dmem_ctrl_pack = $(LIB_WORK)/dmem_ctrl_pack-p.o
+dmem_ctrl = $(LIB_WORK)/dmem_ctrl.o
+decoder_rtl_c0 = $(LIB_WORK)/decoder-c.o
+decoder_pack = $(LIB_WORK)/decoder_pack-p.o
+decoder = $(LIB_WORK)/decoder.o
+db_bus_rtl_c0 = $(LIB_WORK)/db_bus-c.o
+db_bus = $(LIB_WORK)/db_bus.o
+cond_branch_rtl_c0 = $(LIB_WORK)/cond_branch-c.o
+cond_branch_pack = $(LIB_WORK)/cond_branch_pack-p.o
+cond_branch = $(LIB_WORK)/cond_branch.o
+clock_ctrl_rtl_c0 = $(LIB_WORK)/clock_ctrl-c.o
+clock_ctrl = $(LIB_WORK)/clock_ctrl.o
+clk_gate_rtl_c0 = $(LIB_WORK)/clk_gate-c.o
+clk_gate = $(LIB_WORK)/clk_gate.o
+bus_mux_rtl_c0 = $(LIB_WORK)/bus_mux-c.o
+bus_mux = $(LIB_WORK)/bus_mux.o
+alu_rtl_c0 = $(LIB_WORK)/alu-c.o
+alu_pack = $(LIB_WORK)/alu_pack-p.o
+alu = $(LIB_WORK)/alu.o
+
+tb_elab=$(LIB_WORK)/e~tb_behav_c0.o
+tb_t8048_elab=$(LIB_WORK)e~tb_t8048_behav_c0.o
+
+$(tb_elab) : $(tb_behav_c0)
+	$(ELABORATE) tb_behav_c0; \
+	strip tb_behav_c0
+
+$(tb_t8048_elab) : $(tb_t8048_behav_c0)
+	$(ELABORATE) tb_t8048_behav_c0; \
+	strip tb_t8048_behav_c0
+
+.PHONY: elaborate
+elaborate: $(LIB_WORK) $(tb_elab) $(tb_t8048_elab)
+
+include Makefile.hier
