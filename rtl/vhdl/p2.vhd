@@ -3,7 +3,7 @@
 -- The Port 2 unit.
 -- Implements the Port 2 logic.
 --
--- $Id: p2.vhd,v 1.1 2004-03-23 21:31:53 arniml Exp $
+-- $Id: p2.vhd,v 1.2 2004-03-28 13:11:43 arniml Exp $
 --
 -- All rights reserved
 --
@@ -62,6 +62,7 @@ entity p2 is
     write_exp_i  : in  boolean;
     read_p2_i    : in  boolean;
     read_reg_i   : in  boolean;
+    read_exp_i   : in  boolean;
     -- Port 2 Interface -------------------------------------------------------
     output_pch_i : in  boolean;
     output_exp_i : in  boolean;
@@ -84,12 +85,6 @@ use work.t48_pack.bus_idle_level_c;
 
 architecture rtl of p2 is
 
-  subtype exp_t  is std_logic_vector(1 downto 0);
-
-  -- 8243 expander address mapping
-  type     exp_array_t is array (3 downto 0) of nibble_t;
-  constant exp_c : exp_array_t := ("0100", "0101", "0110", "0111");
-
   -- the port output register
   signal p2_q   : word_t;
 
@@ -97,8 +92,7 @@ architecture rtl of p2 is
   signal limp_q : std_logic;
 
   -- the expander register
-  signal exp_q  : exp_t;
-  signal exp_s  : nibble_t;
+  signal exp_q  : nibble_t;
 
 begin
 
@@ -138,24 +132,64 @@ begin
   -----------------------------------------------------------------------------
 
 
-  exp_s <= exp_c(conv_integer(unsigned(exp_q)));
+  -----------------------------------------------------------------------------
+  -- Process p2_port
+  --
+  -- Purpose:
+  --   Generates the output byte vector for Port 2.
+  --
+  p2_port: process (p2_q,
+                    exp_q,
+                    output_exp_i,
+                    pch_i,
+                    output_pch_i)
+  begin
+    p2_o                   <= p2_q;
+
+    if output_exp_i then
+      p2_o(nibble_t'range) <= exp_q;
+    end if;
+
+    if output_pch_i then
+      p2_o(nibble_t'range) <= pch_i;
+    end if;
+
+  end process p2_port;
+  --
+  -----------------------------------------------------------------------------
+
+
+  -----------------------------------------------------------------------------
+  -- Process p2_data
+  --
+  -- Purpose:
+  --   Generates the T48 bus data.
+  --
+  p2_data: process (read_p2_i,
+                    p2_i,
+                    read_reg_i,
+                    p2_q,
+                    read_exp_i)
+  begin
+    data_o   <= (others => bus_idle_level_c);
+
+    if read_p2_i then
+      data_o <= p2_i;
+    elsif read_reg_i then
+      data_o <= p2_q;
+    elsif read_exp_i then
+      data_o <= "0000" & p2_i(nibble_t'range);
+    end if;
+
+  end process p2_data;
+  --
+  -----------------------------------------------------------------------------
 
 
   -----------------------------------------------------------------------------
   -- Output Mapping.
   -----------------------------------------------------------------------------
-  p2_o      <=   "0000" & exp_s
-               when output_exp_i else
-                 "0000" & pch_i
-               when output_pch_i else
-                 p2_q;
   p2_limp_o <= limp_q;
-
-  data_o    <=   (others => bus_idle_level_c)
-               when not read_p2_i else
-                 p2_q
-               when read_reg_i else
-                 p2_i;
 
 end rtl;
 
@@ -164,5 +198,7 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2004/03/23 21:31:53  arniml
+-- initial check-in
 --
 -------------------------------------------------------------------------------
