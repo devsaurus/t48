@@ -3,7 +3,7 @@
 -- The Data Memory control unit.
 -- All accesses to the Data Memory are managed here.
 --
--- $Id: dmem_ctrl.vhd,v 1.1 2004-03-23 21:31:52 arniml Exp $
+-- $Id: dmem_ctrl.vhd,v 1.2 2004-04-18 18:58:29 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -101,8 +101,7 @@ begin
   addr_decode: process (data_i,
                         addr_type_i,
                         bank_select_i,
-                        dmem_addr_q,
-                        write_dmem_addr_i)
+                        dmem_addr_q)
     variable stack_addr_v : unsigned(5 downto 0);
   begin
     -- default assignment
@@ -205,5 +204,8 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2004/03/23 21:31:52  arniml
+-- initial check-in
+--
 --
 -------------------------------------------------------------------------------
