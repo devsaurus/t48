@@ -1,4 +1,4 @@
-.t48_core_b.decoder_b.istrobe_s
+.t48_core_b.decoder_b.istrobe_q
 .t48_core_b.pmem_ctrl_b.program_counter_q[11:0]
 .t48_core_b.alu_b.accumulator_q[7:0]
 .t48_core_b.psw_b.sp_q[2:0]
