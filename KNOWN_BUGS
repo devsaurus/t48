@@ -1,11 +1,22 @@
 
 Known bugs of the T48 uController core
 ======================================
-Version: $Id: KNOWN_BUGS,v 1.1 2004-05-18 12:07:22 arniml Exp $
+Version: $Date: 2004-05-20 22:00:59 $
 
 
 Release 0.1 BETA
 ----------------
+
+******************************************************************************
+External Program Memory ignored when EA = 0
+
+The external Program Memory is always ignored when EA = 0 with the t8048 system
+toplevel. Desired behaviour is to access external Program Memory when code
+has to be fetched from an address location that is outside the internal
+Program Memory.
+
+Fixed in t8048.vhd 1.3
+Fix will be included in next release.
 
 ******************************************************************************
 ANL and ORL to P2 read port status instead of port output register
