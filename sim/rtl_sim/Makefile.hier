@@ -303,12 +303,20 @@ $(t8039_struct_c0) : $(RTL_DIR)/system/t8039-c.vhd \
 		$(t8039)
 	$(ANALYZE) $(RTL_DIR)/system/t8039-c.vhd
 
+$(if_timing) : $(BENCH_DIR)/if_timing.vhd
+	$(ANALYZE) $(BENCH_DIR)/if_timing.vhd
+
+$(if_timing_behav_c0) : $(BENCH_DIR)/if_timing-c.vhd \
+		$(if_timing)
+	$(ANALYZE) $(BENCH_DIR)/if_timing-c.vhd
+
 $(tb) : $(BENCH_DIR)/tb.vhd \
 		$(t48_tb_pack) \
 		$(t48_core_comp_pack)
 	$(ANALYZE) $(BENCH_DIR)/tb.vhd
 
 $(tb_behav_c0) : $(BENCH_DIR)/tb-c.vhd \
+		$(if_timing_behav_c0) \
 		$(t48_core_struct_c0) \
 		$(syn_ram_lpm_c0) \
 		$(syn_rom_lpm_c0) \
