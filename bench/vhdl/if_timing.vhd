@@ -2,7 +2,7 @@
 --
 -- Interface Timing Checker.
 --
--- $Id: if_timing.vhd,v 1.2 2004-04-25 20:40:58 arniml Exp $
+-- $Id: if_timing.vhd,v 1.3 2004-09-12 00:31:50 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -197,6 +197,14 @@ begin
         severity error;
     end if;
 
+    -- PSEN
+    if psen_n_i = '0' then
+      -- tRD2: PSEN to Data In
+      assert (now - last_psen_n_fall_s) < (t_CY * 4/15 - 170 ns)
+        report "Timing violation of tRD2 on BUS vs. PSEN!"
+        severity error;
+    end if;
+
   end process bus_check;
   --
   -----------------------------------------------------------------------------
@@ -322,6 +330,59 @@ begin
     end case;
 
   end process prog_check;
+  --
+  -----------------------------------------------------------------------------
+
+
+  -----------------------------------------------------------------------------
+  -- Check PSEN
+  --
+  psen_check: process (psen_n_i)
+  begin
+    case psen_n_i is
+      when '1' =>
+        -- tCC2: Control Pulse Width PSEN
+        assert (now - last_psen_n_fall_s) > (t_CY * 2/5 - 200 ns)
+          report "Timing violation of tCC2 on PSEN!"
+          severity error;
+
+      when '0' => 
+        -- tLAFC2: ALE to Control PSEN
+        assert (now - last_ale_fall_s) > (t_CY / 10 - 75 ns)
+          report "Timing violation of tLAFC2 on PSEN vs. ALE!"
+          severity error;
+
+      when others =>
+        null;
+
+    end case;
+
+  end process psen_check;
+  --
+  -----------------------------------------------------------------------------
+
+
+  -----------------------------------------------------------------------------
+  -- Check cycle overlap
+  --
+  cycle_overlap_check: process (psen_n_i,
+                                rd_n_i,
+                                wr_n_i)
+    variable tmp_v : std_logic_vector(2 downto 0);
+  begin
+    tmp_v := psen_n_i & rd_n_i & wr_n_i;
+    case tmp_v is
+      when "001" |
+           "010" |
+           "100" |
+           "000" =>
+        assert false
+          report "Cycle overlap deteced on PSEN, RD and WR!"
+          severity error;
+
+    end case;
+
+  end process cycle_overlap_check;
   --
   -----------------------------------------------------------------------------
 
@@ -531,6 +592,9 @@ end behav;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.2  2004/04/25 20:40:58  arniml
+-- check expander timings
+--
 -- Revision 1.1  2004/04/25 16:24:10  arniml
 -- initial check-in
 --
