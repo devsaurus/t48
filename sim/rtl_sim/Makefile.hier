@@ -9,18 +9,18 @@
 # The following environment/make variables are expected. Set them in the
 # tool-specific Makefile or from the shell.
 #
-#  SOURCE_DIR : VHDL source base directory
-#               <local path>/t48/rtl/vhdl
+#  PROJECT_DIR : Project base directory
+#                Set in sw/init_project.sh
 #
-#  LIB_WORK   : object directory for the work library
-#               <local path>/t48/sim/rtl_sim/<tool-object dir>
+#  LIB_WORK    : object directory for the work library
+#                <local path>/t48/sim/rtl_sim/<tool-object dir>
 #
-#  MAKE_LIB   : command to create the work library
+#  MAKE_LIB    : command to create the work library
 #
-#  ANALYZE    : command calling the tool-specific compiler for analysis of
-#               the VHDL code
+#  ANALYZE     : command calling the tool-specific compiler for analysis of
+#                the VHDL code
 #
-#  CLEAN      : command to clean the tool-object directory
+#  CLEAN       : command to clean the tool-object directory
 #
 #  Various VHDL design units.
 #
@@ -31,10 +31,8 @@
 #
 ##############################################################################
 
-SOURCE_DIR = ../..
-
-RTL_DIR   = $(SOURCE_DIR)/rtl/vhdl
-BENCH_DIR = $(SOURCE_DIR)/bench/vhdl
+RTL_DIR   = $(PROJECT_DIR)/rtl/vhdl
+BENCH_DIR = $(PROJECT_DIR)/bench/vhdl
 
 
 $(LIB_WORK):
