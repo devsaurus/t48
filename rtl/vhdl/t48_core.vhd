@@ -2,7 +2,7 @@
 --
 -- T48 Microcontroller Core
 --
--- $Id: t48_core.vhd,v 1.5 2004-04-04 14:18:53 arniml Exp $
+-- $Id: t48_core.vhd,v 1.6 2004-04-07 22:09:03 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -148,7 +148,6 @@ architecture struct of t48_core is
   signal alu_aux_carry_s      : std_logic;
   signal alu_op_s             : alu_op_t;
   signal alu_use_carry_s      : boolean;
-  signal alu_da_low_s         : boolean;
   signal alu_da_high_s        : boolean;
   signal alu_da_overflow_s    : boolean;
   signal alu_accu_low_s       : boolean;
@@ -290,11 +289,9 @@ begin
       read_alu_i         => alu_read_alu_s,
       carry_i            => psw_carry_s,
       carry_o            => alu_carry_s,
-      aux_carry_i        => psw_aux_carry_s,
       aux_carry_o        => alu_aux_carry_s,
       alu_op_i           => alu_op_s,
       use_carry_i        => alu_use_carry_s,
-      da_low_i           => alu_da_low_s,
       da_high_i          => alu_da_high_s,
       da_overflow_o      => alu_da_overflow_s,
       accu_low_i         => alu_accu_low_s,
@@ -425,7 +422,6 @@ begin
       alu_carry_i            => alu_carry_s,
       alu_op_o               => alu_op_s,
       alu_use_carry_o        => alu_use_carry_s,
-      alu_da_low_o           => alu_da_low_s,
       alu_da_high_o          => alu_da_high_s,
       alu_da_overflow_i      => alu_da_overflow_s,
       alu_accu_low_o         => alu_accu_low_s,
@@ -635,6 +631,9 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.5  2004/04/04 14:18:53  arniml
+-- add measures to implement XCHD
+--
 -- Revision 1.4  2004/03/29 19:39:58  arniml
 -- rename pX_limp to pX_low_imp
 --

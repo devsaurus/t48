@@ -3,7 +3,7 @@
 -- A synchronous parametrizable RAM instantiating a standard RAM from
 -- the Altera LPM.
 --
--- $Id: syn_ram-lpm-a.vhd,v 1.1 2004-03-24 21:32:27 arniml Exp $
+-- $Id: syn_ram-lpm-a.vhd,v 1.2 2004-04-07 22:09:08 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -70,11 +70,7 @@ architecture lpm of syn_ram is
     );
   end component;
 
-  signal zero_s : std_logic;
-
 begin
-
-  zero_s <= '0';
 
   ram_b : lpm_ram_dq
     generic map (
@@ -103,4 +99,7 @@ end lpm;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2004/03/24 21:32:27  arniml
+-- initial check-in
+--
 -------------------------------------------------------------------------------

@@ -3,7 +3,7 @@
 -- The Arithmetic Logic Unit (ALU).
 -- It contains the ALU core plus the Accumulator and the Temp Reg.
 --
--- $Id: alu.vhd,v 1.6 2004-04-07 20:56:23 arniml Exp $
+-- $Id: alu.vhd,v 1.7 2004-04-07 22:09:03 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -67,11 +67,9 @@ entity alu is
     -- Decoder Interface ------------------------------------------------------
     carry_i            : in  std_logic;
     carry_o            : out std_logic;
-    aux_carry_i        : in  std_logic;
     aux_carry_o        : out std_logic;
     alu_op_i           : in  alu_op_t;
     use_carry_i        : in  boolean;
-    da_low_i           : in  boolean;
     da_high_i          : in  boolean;
     da_overflow_o      : out boolean;
     accu_low_i         : in  boolean;
@@ -421,6 +419,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.6  2004/04/07 20:56:23  arniml
+-- default assignment for aux_carry_o
+--
 -- Revision 1.5  2004/04/06 20:21:53  arniml
 -- fix sensitivity list
 --

@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 --
--- $Id: t48_comp_pack-p.vhd,v 1.5 2004-04-04 14:18:53 arniml Exp $
+-- $Id: t48_comp_pack-p.vhd,v 1.6 2004-04-07 22:09:03 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -38,11 +38,9 @@ package t48_comp_pack is
       read_alu_i         : in  boolean;
       carry_i            : in  std_logic;
       carry_o            : out std_logic;
-      aux_carry_i        : in  std_logic;
       aux_carry_o        : out std_logic;
       alu_op_i           : in  alu_op_t;
       use_carry_i        : in  boolean;
-      da_low_i           : in  boolean;
       da_high_i          : in  boolean;
       da_overflow_o      : out boolean;
       accu_low_i         : in  boolean;
@@ -169,7 +167,6 @@ package t48_comp_pack is
       psw_write_sp_o         : out boolean;
       alu_carry_i            : in  std_logic;
       alu_op_o               : out alu_op_t;
-      alu_da_low_o           : out boolean;
       alu_da_high_o          : out boolean;
       alu_accu_low_o         : out boolean;
       alu_da_overflow_i      : in  boolean;

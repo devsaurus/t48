@@ -3,7 +3,7 @@
 -- The Decoder unit.
 -- It decodes the instruction opcodes and executes them.
 --
--- $Id: decoder.vhd,v 1.4 2004-04-04 14:18:53 arniml Exp $
+-- $Id: decoder.vhd,v 1.5 2004-04-07 22:09:03 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -102,7 +102,6 @@ entity decoder is
     alu_carry_i            : in  std_logic;
     alu_op_o               : out alu_op_t;
     alu_use_carry_o        : out boolean;
-    alu_da_low_o           : out boolean;
     alu_da_high_o          : out boolean;
     alu_accu_low_o         : out boolean;
     alu_p06_temp_reg_o     : out boolean;
@@ -462,7 +461,6 @@ begin
     psw_write_sp_o         <= false;
     alu_op_o               <= ALU_NOP;
     alu_use_carry_o        <= false;
-    alu_da_low_o           <= false;
     alu_da_high_o          <= false;
     alu_accu_low_o         <= false;
     clk_assert_prog_o      <= false;
@@ -819,8 +817,6 @@ begin
           -- Step 2: Check Auxiliary Carry and overflow on low nibble
           --         Add 0x06 to shadow Accumulator if one is true
           when MSTATE4 =>
-            alu_da_low_o         <= true;
-
             if psw_aux_carry_i = '1' or alu_da_overflow_i then
               alu_read_alu_o     <= true;
               alu_write_shadow_o <= true;
@@ -1843,6 +1839,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.4  2004/04/04 14:18:53  arniml
+-- add measures to implement XCHD
+--
 -- Revision 1.3  2004/03/28 21:15:48  arniml
 -- implemented mnemonic DA
 --
