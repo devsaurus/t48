@@ -2,7 +2,7 @@
 --
 -- The Timer/Counter unit.
 --
--- $Id: timer.vhd,v 1.3 2004-05-16 15:32:57 arniml Exp $
+-- $Id: timer.vhd,v 1.4 2004-07-04 13:06:45 arniml Exp $
 --
 -- All rights reserved
 --
@@ -182,7 +182,6 @@ begin
   regs: process (res_i, clk_i)
   begin
     if res_i = res_active_c then
-      counter_q      <= (others => '0');
       overflow_q     <= false;
       t1_q           <= '0';
       prescaler_q    <= (others => '0');
@@ -254,6 +253,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.3  2004/05/16 15:32:57  arniml
+-- fix edge detector bug for counter
+--
 -- Revision 1.2  2004/04/15 22:05:13  arniml
 -- increment prescaler with MSTATE4
 --
