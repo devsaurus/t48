@@ -3,7 +3,7 @@
 -- The Decoder unit.
 -- It decodes the instruction opcodes and executes them.
 --
--- $Id: decoder.vhd,v 1.11 2004-05-16 15:33:39 arniml Exp $
+-- $Id: decoder.vhd,v 1.12 2004-05-17 14:40:09 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -1402,6 +1402,7 @@ begin
             -- hold expander port until inactive edge of PROG
             -- write Accumulator with nibble of expander port
             when MSTATE2 =>
+              p2_read_p2_o     <= true;
               p2_output_exp_o  <= true;
               p2_read_exp_o    <= true;
               alu_write_accu_o <= true;
@@ -1931,6 +1932,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.11  2004/05/16 15:33:39  arniml
+-- work around bug in Quartus II 4.0
+--
 -- Revision 1.10  2004/04/25 16:22:03  arniml
 -- adjust external timing of BUS
 --
