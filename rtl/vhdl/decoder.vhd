@@ -3,7 +3,7 @@
 -- The Decoder unit.
 -- It decodes the instruction opcodes and executes them.
 --
--- $Id: decoder.vhd,v 1.7 2004-04-15 22:06:05 arniml Exp $
+-- $Id: decoder.vhd,v 1.8 2004-04-18 18:57:43 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -229,7 +229,8 @@ architecture rtl of decoder is
   signal int_pending_s     : boolean;
 
   -- pragma translate_off
-  signal istrobe_s         : std_logic;
+  signal istrobe_res_q     : std_logic;
+  signal istrobe_q         : std_logic;
   signal injected_int_q    : std_logic;
   -- pragma translate_on
 
@@ -293,6 +294,7 @@ begin
   --
   machine_cycle: process (clk_mstate_i,
                           clk_second_cycle_i,
+                          last_cycle_s,
                           ea_i,
                           assert_psen_s,
                           branch_taken_q,
@@ -322,6 +324,7 @@ begin
             pm_read_pmem_o  <= true;
           else
             bus_read_bus_s  <= true;
+            p2_output_pch_o <= true;
           end if;
         end if;
 
@@ -342,22 +345,26 @@ begin
       when MSTATE3 =>
         if need_address_v then
           pm_write_pmem_addr_s <= true;
+        end if;
 
-          if ea_i = '1' then
-            bus_output_pcl_o   <= true;
-          end if;
+        if ea_i = '1' and
+           (need_address_v and last_cycle_s) then
+          bus_output_pcl_o   <= true;
         end if;
 
       when MSTATE4 =>
-        if need_address_v and ea_i = '1' then
+        if ea_i = '1' and
+           (need_address_v or last_cycle_s) then
           clk_assert_psen_o <= true;
-
-          p2_output_pch_o  <= true;
+          p2_output_pch_o   <= true;
+          bus_output_pcl_o  <= true;
         end if;
 
       when MSTATE5 =>
-        if need_address_v and ea_i = '1' then
+        if ea_i = '1' and
+           (need_address_v and last_cycle_s) then
           clk_assert_psen_o <= true;
+          p2_output_pch_o   <= true;
         end if;
 
       when others =>
@@ -1771,7 +1778,8 @@ begin
       mb_q           <= '0';
       t0_dir_q       <= '0';
       -- pragma translate_off
-      istrobe_s      <= '0';
+      istrobe_res_q  <= '1';
+      istrobe_q      <= '0';
       injected_int_q <= '0';
       -- pragma translate_on
 
@@ -1806,23 +1814,32 @@ begin
         end if;
 
         -- pragma translate_off
-        -- Instruction Strobe -------------------------------------------------
-        if clk_mstate_i = MSTATE5 and last_cycle_s and
-          injected_int_q = '0' then
-          istrobe_s      <= '1';
-        else
-          istrobe_s      <= '0';
-        end if;
-
         -- Marker for injected instruction ------------------------------------
         if opc_inj_int_s then
           injected_int_q <= '1';
         elsif clk_mstate_i = MSTATE5 and last_cycle_s then
           injected_int_q <= '0';
         end if;
+
+        -- Remove istrobe after reset suppression -----------------------------
+        if clk_mstate_i = MSTATE5 and last_cycle_s then
+          istrobe_res_q  <= '0';
+        end if;
         -- pragma translate_on
 
       end if;
+
+      -- pragma translate_off
+      -- Instruction Strobe ---------------------------------------------------
+      if clk_mstate_i = MSTATE5 and last_cycle_s and
+         injected_int_q = '0' then
+        if istrobe_res_q = '0' then
+          istrobe_q <= '1';
+        end if;
+      else
+        istrobe_q   <= '0';
+      end if;
+      -- pragma translate_on
 
     end if;
 
@@ -1832,7 +1849,7 @@ begin
 
   -- pragma translate_off
   -- assign to global signal for testbench
-  tb_istrobe_s <= istrobe_s;
+  tb_istrobe_s <= istrobe_q;
   -- pragma translate_on
 
 
@@ -1858,6 +1875,10 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.7  2004/04/15 22:06:05  arniml
+-- + add marker for injected calls
+-- + suppress intstruction strobes for injected calls
+--
 -- Revision 1.6  2004/04/14 20:53:33  arniml
 -- make istrobe visible through testbench package
 --
