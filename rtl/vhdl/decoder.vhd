@@ -3,7 +3,7 @@
 -- The Decoder unit.
 -- It decodes the instruction opcodes and executes them.
 --
--- $Id: decoder.vhd,v 1.10 2004-04-25 16:22:03 arniml Exp $
+-- $Id: decoder.vhd,v 1.11 2004-05-16 15:33:39 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -172,6 +172,9 @@ use work.t48_tb_pack.tb_istrobe_s;
 -- pragma translate_on
 
 architecture rtl of decoder is
+
+  -- Enable fixing a bug of Quartus II 4.0
+  constant enable_quartus_bugfix_c : boolean := true;
 
   -- Opcode Decoder
   signal opc_multi_cycle_s : boolean;
@@ -406,7 +409,7 @@ begin
     procedure address_indirect_3_f is
     begin
       -- apply dmem address from selected register for indirect mode
-      if opc_opcode_s(3) = '0' then
+      if opc_opcode_s(3) = '0' or enable_quartus_bugfix_c then
         dm_read_dmem_o       <= true;
         dm_write_dmem_addr_o <= true;
         dm_addr_type_o       <= DM_PLAIN;
@@ -432,10 +435,10 @@ begin
     begin
       -- store address in Program Counter low byte if branch has to
       -- be taken
-      if clk_mstate_i = MSTATE1 and cnd_take_branch_i then
+--      if clk_mstate_i = MSTATE1 and cnd_take_branch_i then
         pm_write_pcl_o       <= true;
         branch_taken_s       <= true;
-      end if;
+--      end if;
     end;
 
   begin
@@ -534,7 +537,10 @@ begin
         case clk_mstate_i is
           -- read RAM once for indirect address mode
           when MSTATE3 =>
-            address_indirect_3_f;
+            if not enable_quartus_bugfix_c or
+               opc_opcode_s(3) = '0' then
+              address_indirect_3_f;
+            end if;
 
           -- store data from RAM to Temp Reg
           when MSTATE4 =>
@@ -591,7 +597,10 @@ begin
         case clk_mstate_i is
           -- read RAM once for indirect address mode
           when MSTATE3 =>
-            address_indirect_3_f;
+            if not enable_quartus_bugfix_c or
+               opc_opcode_s(3) = '0' then
+              address_indirect_3_f;
+            end if;
 
           -- store data from RAM to Temp Reg
           when MSTATE4 =>
@@ -934,7 +943,9 @@ begin
         else
           -- store address in Program Counter low byte if branch has to
           -- be taken
-          cond_jump_c2_m1_f;
+          if clk_mstate_i = MSTATE1 and cnd_take_branch_i then
+            cond_jump_c2_m1_f;
+          end if;
 
         end if;
 
@@ -971,7 +982,10 @@ begin
         case clk_mstate_i is
           -- read RAM once for indirect address mode
           when MSTATE3 =>
-            address_indirect_3_f;
+            if not enable_quartus_bugfix_c or
+               opc_opcode_s(3) = '0' then
+              address_indirect_3_f;
+            end if;
 
           when MSTATE4 =>
             -- INC Rr; INC @ Rr: store data from RAM to shadow Accumulator
@@ -1013,7 +1027,9 @@ begin
         else
           -- store address in Program Counter low byte if branch has to
           -- be taken
-          cond_jump_c2_m1_f;
+          if clk_mstate_i = MSTATE1 and cnd_take_branch_i then
+            cond_jump_c2_m1_f;
+          end if;
 
         end if;
 
@@ -1032,7 +1048,9 @@ begin
         else
           -- store address in Program Counter low byte if branch has to
           -- be taken
-          cond_jump_c2_m1_f;
+          if clk_mstate_i = MSTATE1 and cnd_take_branch_i then
+            cond_jump_c2_m1_f;
+          end if;
 
         end if;
 
@@ -1057,7 +1075,9 @@ begin
         else
           -- store address in Program Counter low byte if branch has to
           -- be taken
-          cond_jump_c2_m1_f;
+          if clk_mstate_i = MSTATE1 and cnd_take_branch_i then
+            cond_jump_c2_m1_f;
+          end if;
 
         end if;
 
@@ -1122,7 +1142,9 @@ begin
         else
           -- store address in Program Counter low byte if branch has to
           -- be taken
-          cond_jump_c2_m1_f;
+          if clk_mstate_i = MSTATE1 and cnd_take_branch_i then
+            cond_jump_c2_m1_f;
+          end if;
 
         end if;
 
@@ -1145,7 +1167,9 @@ begin
         else
           -- store address in Program Counter low byte if branch has to
           -- be taken
-          cond_jump_c2_m1_f;
+          if clk_mstate_i = MSTATE1 and cnd_take_branch_i then
+            cond_jump_c2_m1_f;
+          end if;
 
         end if;
 
@@ -1164,7 +1188,9 @@ begin
         else
           -- store address in Program Counter low byte if branch has to
           -- be taken
-          cond_jump_c2_m1_f;
+          if clk_mstate_i = MSTATE1 and cnd_take_branch_i then
+            cond_jump_c2_m1_f;
+          end if;
 
         end if;
 
@@ -1184,7 +1210,9 @@ begin
         else
           -- store address in Program Counter low byte if branch has to
           -- be taken
-          cond_jump_c2_m1_f;
+          if clk_mstate_i = MSTATE1 and cnd_take_branch_i then
+            cond_jump_c2_m1_f;
+          end if;
 
         end if;
 
@@ -1203,7 +1231,10 @@ begin
         case clk_mstate_i is
           -- read RAM once for indirect address mode
           when MSTATE3 =>
-            address_indirect_3_f;
+            if not enable_quartus_bugfix_c or
+               opc_opcode_s(3) = '0' then
+              address_indirect_3_f;
+            end if;
 
           -- read data from RAM and store in Accumulator
           when MSTATE4 =>
@@ -1236,7 +1267,10 @@ begin
         case clk_mstate_i is
           -- read RAM once for indirect address mode
           when MSTATE3 =>
-            address_indirect_3_f;
+            if not enable_quartus_bugfix_c or
+               opc_opcode_s(3) = '0' then
+              address_indirect_3_f;
+            end if;
 
           -- write Accumulator to dmem
           when MSTATE5 =>
@@ -1254,7 +1288,10 @@ begin
 
         -- read RAM once for indirect address mode
         if not clk_second_cycle_i and clk_mstate_i = MSTATE3 then
-          address_indirect_3_f;
+          if not enable_quartus_bugfix_c or
+             opc_opcode_s(3) = '0' then
+            address_indirect_3_f;
+          end if;
         end if;
 
         -- Write Data Memory when contents of Program Memory is on bus
@@ -1455,7 +1492,10 @@ begin
         case clk_mstate_i is
           -- read RAM once for indirect address mode
           when MSTATE3 =>
-            address_indirect_3_f;
+            if not enable_quartus_bugfix_c or
+               opc_opcode_s(3) = '0' then
+              address_indirect_3_f;
+            end if;
 
           -- store data from RAM to Temp Reg
           when MSTATE4 =>
@@ -1687,7 +1727,10 @@ begin
         case clk_mstate_i is
           -- read RAM once for indirect address mode
           when MSTATE3 =>
-            address_indirect_3_f;
+            if not enable_quartus_bugfix_c or
+               opc_opcode_s(3) = '0' then
+              address_indirect_3_f;
+            end if;
 
           -- store data from RAM in Accumulator and Temp Reg
           -- Accumulator is already shadowed!
@@ -1721,7 +1764,10 @@ begin
         case clk_mstate_i is
           -- read RAM once for indirect address mode
           when MSTATE3 =>
-            address_indirect_3_f;
+            if not enable_quartus_bugfix_c or
+               opc_opcode_s(3) = '0' then
+              address_indirect_3_f;
+            end if;
 
           -- store data from RAM to Temp Reg
           when MSTATE4 =>
@@ -1885,6 +1931,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.10  2004/04/25 16:22:03  arniml
+-- adjust external timing of BUS
+--
 -- Revision 1.9  2004/04/24 11:22:55  arniml
 -- removed superfluous signal from sensitivity list
 --
