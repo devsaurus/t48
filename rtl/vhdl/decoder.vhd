@@ -3,7 +3,7 @@
 -- The Decoder unit.
 -- It decodes the instruction opcodes and executes them.
 --
--- $Id: decoder.vhd,v 1.5 2004-04-07 22:09:03 arniml Exp $
+-- $Id: decoder.vhd,v 1.6 2004-04-14 20:53:33 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -166,6 +166,10 @@ use work.decoder_pack.all;
 
 use work.t48_comp_pack.opc_decoder;
 use work.t48_comp_pack.int;
+
+-- pragma translate_off
+use work.t48_tb_pack.tb_istrobe_s;
+-- pragma translate_on
 
 architecture rtl of decoder is
 
@@ -1816,6 +1820,11 @@ begin
   --
   -----------------------------------------------------------------------------
 
+  -- pragma translate_off
+  -- assign to global signal for testbench
+  tb_istrobe_s <= istrobe_s;
+  -- pragma translate_on
+
 
   -----------------------------------------------------------------------------
   -- Output Mapping.
@@ -1839,6 +1848,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.5  2004/04/07 22:09:03  arniml
+-- remove unused signals
+--
 -- Revision 1.4  2004/04/04 14:18:53  arniml
 -- add measures to implement XCHD
 --
