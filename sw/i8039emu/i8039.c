@@ -9,7 +9,7 @@
  *    Adapted for the T48 uController project, 2004 by Arnim Laeuger        *
  *      See http://www.opencores.org/projects.cgi/web/t48/overview          *
  *                                                                          *
- * $Id: i8039.c,v 1.6 2004-07-03 14:38:11 arniml Exp $
+ * $Id: i8039.c,v 1.7 2004-07-04 12:06:53 arniml Exp $
  *                                                                          *
  *  **** Change Log ****                                                    *
  *                                                                          *
@@ -658,7 +658,7 @@ static void dump_machine_state(void)
 
   printf("  | %04X  %02X  %02X %02X", (UINT32)R.PC.w.l, (UINT32)R.A, (UINT32)(R.SP >> 1), (UINT32)R.PSW);
   printf("  %02X  %X  %02X %02X",     (UINT32)R.bus, (UINT32)R.f1, (UINT32)R.P1, (UINT32)R.P2);
-  printf(" %X  ",                     (UINT32)(R.A11 >> 11));
+  printf(" %X  ",                     (UINT32)(R.A11ff >> 11));
 
   for (i = 0; i < 256; i++)
     printf(" %02X", R.RAM[i]);
@@ -764,7 +764,7 @@ int i8039_execute(int cycles, int dump)
             for ( ; inst_cycles > 0; inst_cycles-- )
             {
                 T1 = test_r(1);
-                if (POSITIVE_EDGE_T1)
+                if (NEGATIVE_EDGE_T1)
                 {
                     R.timer++;
                     if (R.timer == 0) {
