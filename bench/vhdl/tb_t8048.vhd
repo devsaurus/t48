@@ -2,7 +2,7 @@
 --
 -- The testbench for t8048.
 --
--- $Id: tb_t8048.vhd,v 1.3 2004-04-14 20:57:44 arniml Exp $
+-- $Id: tb_t8048.vhd,v 1.4 2004-04-18 19:00:58 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -91,8 +91,6 @@ architecture behav of tb_t8048 is
   signal ram_addr_s      : std_logic_vector( 7 downto 0);
   signal ram_we_s        : std_logic;
 
-  signal t0_s : std_logic;
-  signal t1_s : std_logic;
   signal p1_b : std_logic_vector( 7 downto 0);
   signal p2_b : std_logic_vector( 7 downto 0);
 
@@ -111,8 +109,6 @@ begin
   zero_s <= '0';
   one_s  <= '1';
 
-  t0_s   <= 'H';
-  t1_s   <= 'H';
   p2_b   <= (others => 'H');
   p1_b   <= (others => 'H');
 
@@ -133,7 +129,7 @@ begin
     port map (
       xtal_i    => xtal_s,
       reset_n_i => res_n_s,
-      t0_b      => t0_s,
+      t0_b      => p1_b(0),
       int_n_i   => int_n_s,
       ea_i      => zero_s,
       rd_n_o    => rd_n_s,
@@ -141,7 +137,7 @@ begin
       wr_n_o    => wr_n_s,
       ale_o     => ale_s,
       db_b      => db_b,
-      t1_i      => t1_s,
+      t1_i      => p1_b(1),
       p2_b      => p2_b,
       p1_b      => p1_b,
       prog_n_o  => prog_n_s
@@ -153,10 +149,8 @@ begin
   -- External RAM access signals
   --
   ext_ram: process (wr_n_s,
-                    ext_ram_addr_s,
                     ale_s,
                     db_b)
---                    clk_s)
   begin
     if ale_s'event and ale_s = '0' then
       if not is_X(db_b) then
@@ -265,6 +259,11 @@ end behav;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.3  2004/04/14 20:57:44  arniml
+-- wait for instruction strobe after final end-of-simulation detection
+-- this ensures that the last mov instruction is part of the dump and
+-- enables 100% matching with i8039 simulator
+--
 -- Revision 1.2  2004/03/26 22:39:28  arniml
 -- enhance simulation result string
 --
