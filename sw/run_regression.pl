@@ -1,15 +1,19 @@
 #!/usr/bin/perl -w
 #
-##############################################################################
+# ############################################################################
 #
 # run_regression.pl
 #
-# $Id: run_regression.pl,v 1.1 2004-04-01 20:32:59 arniml Exp $
+# $Id: run_regression.pl,v 1.2 2004-04-09 19:17:09 arniml Exp $
 #
 # Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 #
 # All rights reserved
 #
+# ############################################################################
+#
+# Purpose:
+# ========
 #
 # Runs regression suite over all testcells found in $VERIF_DIR.
 #
@@ -18,7 +22,7 @@
 # The resulting hex-file is then copied to $SIM_DIR where the VHDL simulator
 # is started.
 #
-##############################################################################
+
 
 use strict;
 
