@@ -2,7 +2,7 @@
 --
 -- The testbench for t8048.
 --
--- $Id: tb_t8048.vhd,v 1.2 2004-03-26 22:39:28 arniml Exp $
+-- $Id: tb_t8048.vhd,v 1.3 2004-04-14 20:57:44 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -233,6 +233,10 @@ begin
         if tb_accu_s = "01010101" then
           wait on tb_accu_s;
           if tb_accu_s = "00000001" then
+            -- wait for instruction strobe of this move
+            wait until tb_istrobe_s'event and tb_istrobe_s = '1';
+            -- wait for next strobe
+            wait until tb_istrobe_s'event and tb_istrobe_s = '1';
             assert false
               report "Simulation Result: PASS."
               severity note;
@@ -261,6 +265,9 @@ end behav;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.2  2004/03/26 22:39:28  arniml
+-- enhance simulation result string
+--
 -- Revision 1.1  2004/03/24 21:42:10  arniml
 -- initial check-in
 --

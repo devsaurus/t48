@@ -2,7 +2,7 @@
 --
 -- The testbench for t48_core.
 --
--- $Id: tb.vhd,v 1.5 2004-03-29 19:45:15 arniml Exp $
+-- $Id: tb.vhd,v 1.6 2004-04-14 20:57:44 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -317,6 +317,10 @@ begin
         if tb_accu_s = "01010101" then
           wait on tb_accu_s;
           if tb_accu_s = "00000001" then
+            -- wait for instruction strobe of this move
+            wait until tb_istrobe_s'event and tb_istrobe_s = '1';
+            -- wait for next strobe
+            wait until tb_istrobe_s'event and tb_istrobe_s = '1';
             assert false
               report "Simulation Result: PASS."
               severity note;
@@ -345,6 +349,9 @@ end behav;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.5  2004/03/29 19:45:15  arniml
+-- rename pX_limp to pX_low_imp
+--
 -- Revision 1.4  2004/03/28 21:30:25  arniml
 -- connect prog_n_o
 --
