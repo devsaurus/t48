@@ -2,7 +2,7 @@
 --
 -- T8048 Microcontroller System
 --
--- $Id: t8048.vhd,v 1.3 2004-05-20 21:58:26 arniml Exp $
+-- $Id: t8048.vhd,v 1.4 2004-10-24 09:10:16 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -184,8 +184,7 @@ begin
 
     -- Port 1 -----------------------------------------------------------------
     for i in p1_b'range loop
---      p1_b(i) <= open_collector_f(p1_s(i));
-      p1_b(i) <= p1_s(i);
+      p1_b(i) <= open_collector_f(p1_s(i));
     end loop;
 --     if p1_low_imp_s = '1' then
 --       p1_b <= p1_s;
@@ -268,6 +267,10 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.3  2004/05/20 21:58:26  arniml
+-- Fix for:
+-- External Program Memory ignored when EA = 0
+--
 -- Revision 1.2  2004/03/29 19:40:14  arniml
 -- rename pX_limp to pX_low_imp
 --
