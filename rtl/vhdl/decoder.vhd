@@ -3,7 +3,7 @@
 -- The Decoder unit.
 -- It decodes the instruction opcodes and executes them.
 --
--- $Id: decoder.vhd,v 1.6 2004-04-14 20:53:33 arniml Exp $
+-- $Id: decoder.vhd,v 1.7 2004-04-15 22:06:05 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -230,6 +230,7 @@ architecture rtl of decoder is
 
   -- pragma translate_off
   signal istrobe_s         : std_logic;
+  signal injected_int_q    : std_logic;
   -- pragma translate_on
 
 begin
@@ -1771,6 +1772,7 @@ begin
       t0_dir_q       <= '0';
       -- pragma translate_off
       istrobe_s      <= '0';
+      injected_int_q <= '0';
       -- pragma translate_on
 
     elsif clk_i'event and clk_i = clk_active_c then
@@ -1803,16 +1805,24 @@ begin
           t0_dir_q     <= '1';
         end if;
 
-      end if;
+        -- pragma translate_off
+        -- Instruction Strobe -------------------------------------------------
+        if clk_mstate_i = MSTATE5 and last_cycle_s and
+          injected_int_q = '0' then
+          istrobe_s      <= '1';
+        else
+          istrobe_s      <= '0';
+        end if;
 
-      -- pragma translate_off
-      -- Instruction Strobe ---------------------------------------------------
-      if clk_mstate_i = MSTATE5 and last_cycle_s then
-        istrobe_s      <= '1';
-      else
-        istrobe_s      <= '0';
+        -- Marker for injected instruction ------------------------------------
+        if opc_inj_int_s then
+          injected_int_q <= '1';
+        elsif clk_mstate_i = MSTATE5 and last_cycle_s then
+          injected_int_q <= '0';
+        end if;
+        -- pragma translate_on
+
       end if;
-      -- pragma translate_on
 
     end if;
 
@@ -1848,6 +1858,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.6  2004/04/14 20:53:33  arniml
+-- make istrobe visible through testbench package
+--
 -- Revision 1.5  2004/04/07 22:09:03  arniml
 -- remove unused signals
 --
