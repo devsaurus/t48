@@ -1,11 +1,32 @@
 
 Known bugs of the T48 uController core
 ======================================
-Version: $Date: 2004-09-12 10:17:58 $
+Version: $Date: 2004-10-24 09:13:06 $
+
+
+Release 0.4 BETA
+----------------
+
+*******************************************************************************
+P1 constantly in push-pull mode in t8048
+
+Port P1 is constantly driven by an active push-pull driver instead of an
+open-collector driver type. This inhibits using any bit of P1 in input
+direction.
+
+Fixed in:
+t8048.vhd 1.4
+Fix will be included in next release.
+
 
 
 Release 0.3 BETA
 ----------------
+
+*******************************************************************************
+P1 constantly in push-pull mode in t8048
+
+See above.
 
 *******************************************************************************
 PSENn Timing
@@ -26,6 +47,11 @@ Fix will be included in next release.
 
 Release 0.2 BETA
 ----------------
+
+*******************************************************************************
+P1 constantly in push-pull mode in t8048
+
+See above.
 
 *******************************************************************************
 PSENn Timing
