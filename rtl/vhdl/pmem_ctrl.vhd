@@ -3,7 +3,9 @@
 -- The Program Memory control unit.
 -- All operations related to the Program Memory are managed here.
 --
--- $Id: pmem_ctrl.vhd,v 1.2 2004-04-24 23:44:25 arniml Exp $
+-- $Id: pmem_ctrl.vhd,v 1.3 2004-07-11 16:51:33 arniml Exp $
+--
+-- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved
 --
@@ -216,6 +218,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.2  2004/04/24 23:44:25  arniml
+-- move from std_logic_arith to numeric_std
+--
 -- Revision 1.1  2004/03/23 21:31:53  arniml
 -- initial check-in
 --

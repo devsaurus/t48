@@ -3,7 +3,9 @@
 -- The Port 2 unit.
 -- Implements the Port 2 logic.
 --
--- $Id: p2.vhd,v 1.5 2004-05-17 13:52:46 arniml Exp $
+-- $Id: p2.vhd,v 1.6 2004-07-11 16:51:33 arniml Exp $
+--
+-- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved
 --
@@ -196,6 +198,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.5  2004/05/17 13:52:46  arniml
+-- Fix bug "ANL and ORL to P1/P2 read port status instead of port output register"
+--
 -- Revision 1.4  2004/04/24 23:44:25  arniml
 -- move from std_logic_arith to numeric_std
 --

@@ -4,7 +4,9 @@
 -- Derives instruction mnemonics and multicycle information
 -- using the OPC table unit.
 --
--- $Id: opc_decoder.vhd,v 1.1 2004-03-23 21:31:52 arniml Exp $
+-- $Id: opc_decoder.vhd,v 1.2 2004-07-11 16:51:33 arniml Exp $
+--
+-- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved
 --
@@ -168,5 +170,8 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2004/03/23 21:31:52  arniml
+-- initial check-in
+--
 --
 -------------------------------------------------------------------------------

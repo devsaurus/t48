@@ -4,7 +4,9 @@
 -- Decodes the given opcode to instruction mnemonics.
 -- Also derives the multicycle information.
 --
--- $Id: opc_table.vhd,v 1.2 2004-03-28 13:10:48 arniml Exp $
+-- $Id: opc_table.vhd,v 1.3 2004-07-11 16:51:33 arniml Exp $
+--
+-- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved
 --
@@ -408,6 +410,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.2  2004/03/28 13:10:48  arniml
+-- merge MN_ANLD, MN_MOVD_PP_A and MN_ORLD_PP_A to OUTLD_PP_A
+--
 -- Revision 1.1  2004/03/23 21:31:52  arniml
 -- initial check-in
 --

@@ -3,7 +3,9 @@
 -- The Interrupt Controller.
 -- It collects the interrupt sources and notifies the decoder.
 --
--- $Id: int.vhd,v 1.2 2004-06-30 21:18:28 arniml Exp $
+-- $Id: int.vhd,v 1.3 2004-07-11 16:51:33 arniml Exp $
+--
+-- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved
 --
@@ -234,6 +236,12 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.2  2004/06/30 21:18:28  arniml
+-- Fix bug report:
+-- "Program Memory bank can be switched during interrupt"
+-- int module emits int_in_progress signal that is used inside the decoder
+-- to hold mb low for JMP and CALL during interrupts
+--
 -- Revision 1.1  2004/03/23 21:31:52  arniml
 -- initial check-in
 --

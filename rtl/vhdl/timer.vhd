@@ -2,7 +2,9 @@
 --
 -- The Timer/Counter unit.
 --
--- $Id: timer.vhd,v 1.4 2004-07-04 13:06:45 arniml Exp $
+-- $Id: timer.vhd,v 1.5 2004-07-11 16:51:33 arniml Exp $
+--
+-- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved
 --
@@ -253,6 +255,13 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.4  2004/07/04 13:06:45  arniml
+-- counter_q is not cleared during reset
+-- this would match all different descriptions of the Counter as
+-- a) if the software assumes that the Counter is modified during reset, it
+--    will initialize the Counter anyhow
+-- b) the special case 'Counter not modified during reset' is covered
+--
 -- Revision 1.3  2004/05/16 15:32:57  arniml
 -- fix edge detector bug for counter
 --

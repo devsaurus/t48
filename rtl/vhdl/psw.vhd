@@ -3,7 +3,9 @@
 -- The Program Status Word (PSW).
 -- Implements the PSW with its special bits.
 --
--- $Id: psw.vhd,v 1.6 2004-04-24 23:44:25 arniml Exp $
+-- $Id: psw.vhd,v 1.7 2004-07-11 16:51:33 arniml Exp $
+--
+-- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved
 --
@@ -214,6 +216,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.6  2004/04/24 23:44:25  arniml
+-- move from std_logic_arith to numeric_std
+--
 -- Revision 1.5  2004/04/24 11:25:39  arniml
 -- removed dummy_s - workaround not longer needed for GHDL 0.11.1
 --
