@@ -1,5 +1,5 @@
 	;; *******************************************************************
-	;; $Id: test.asm,v 1.1 2004-03-28 21:06:14 arniml Exp $
+	;; $Id: test.asm,v 1.2 2004-04-07 22:09:35 arniml Exp $
 	;;
 	;; Test DA A.
 	;; *******************************************************************
@@ -16,12 +16,14 @@
 	mov	a, #09BH
 	da	a
 	jnc	fail
+	mov	r0, a
+	mov	a, psw
+	jb6	fail
+	mov	a, r0
 	cpl	a
 	add	a, #001H
 	cpl	a
 	jnz	fail
-	mov	a, psw
-	jb6	fail
 
 	;; a value that should not be changed
 	;; upper nibble: no overflow
@@ -30,11 +32,14 @@
 	add	a, r7		; clear C and AC
 	da	a
 	jc	fail
+	mov	r0, a
+	mov	a, psw
+	jb6	fail
+	mov	a, r0
 	cpl	a
 	add	a, #037H
 	cpl	a
 	jnz	fail
-	jb6	fail
 
 	;; upper nibble: no overflow
 	;; lower nibble: overflow
@@ -42,11 +47,14 @@
 	add	a, r7		; clear C and AC
 	da	a
 	jc	fail
+	mov	r0, a
+	mov	a, psw
+	jb6	fail
+	mov	a, r0
 	cpl	a
 	add	a, #050H
 	cpl	a
 	jnz	fail
-	jb6	fail
 
 	;; upper nibble: overflow
 	;; lower nibble: no overflow
@@ -54,11 +62,14 @@
 	add	a, r7		; clear C and AC
 	da	a
 	jnc	fail
+	mov	r0, a
+	mov	a, psw
+	jb6	fail
+	mov	a, r0
 	cpl	a
 	add	a, #021H
 	cpl	a
 	jnz	fail
-	jb6	fail
 
 	;; upper nibble: overflow
 	;; lower nibble: overflow
@@ -66,11 +77,14 @@
 	add	a, r7		; clear C and AC
 	da	a
 	jnc	fail
+	mov	r0, a
+	mov	a, psw
+	jb6	fail
+	mov	a, r0
 	cpl	a
 	add	a, #044H
 	cpl	a
 	jnz	fail
-	jb6	fail
 
 
 	;; ******************************************************************
