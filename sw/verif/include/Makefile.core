@@ -1,0 +1,17 @@
+
+.PHONY: all
+all: t48_rom.hex
+
+$(MODULE).p: $(MODULE).asm
+	asl -i $(VERIF_DIR)/include -L $(MODULE).asm
+
+t48_rom.hex: $(MODULE).p
+	p2hex $(MODULE).p t48_rom.hex
+
+.PHONY: simu
+simu: all
+	cp t48_rom.hex $(SIM_DIR)
+
+.PHONY: clean
+clean:
+	rm -f *.p *~ *.hex *.lst
