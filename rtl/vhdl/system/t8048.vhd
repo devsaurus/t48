@@ -2,7 +2,7 @@
 --
 -- T8048 Microcontroller System
 --
--- $Id: t8048.vhd,v 1.6 2004-12-02 22:08:42 arniml Exp $
+-- $Id: t8048.vhd,v 1.7 2004-12-03 19:44:36 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -74,9 +74,6 @@ use ieee.numeric_std.all;
 use work.t48_system_comp_pack.t8048_notri;
 
 architecture struct of t8048 is
-
-  -- Address width of internal ROM
-  constant rom_addr_width_c : natural := 10;
 
   signal t0_s             : std_logic;
   signal t0_dir_s         : std_logic;
@@ -191,6 +188,10 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.6  2004/12/02 22:08:42  arniml
+-- introduced generic gate_port_input_g
+-- forces masking of P1 and P2 input bus
+--
 -- Revision 1.5  2004/12/01 23:09:47  arniml
 -- intruduced hierarchy t8048_notri where all system functionality
 -- except bidirectional ports is handled
