@@ -3,7 +3,7 @@
 -- The Arithmetic Logic Unit (ALU).
 -- It contains the ALU core plus the Accumulator and the Temp Reg.
 --
--- $Id: alu.vhd,v 1.3 2004-04-04 14:18:52 arniml Exp $
+-- $Id: alu.vhd,v 1.4 2004-04-06 18:10:41 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -107,6 +107,8 @@ architecture rtl of alu is
   -- output of the ALU core
   signal data_s  : word_t;
 
+  signal add_result_s : alu_operand_t;
+
 begin
 
   -----------------------------------------------------------------------------
@@ -188,23 +190,12 @@ begin
   alu_core: process (in_a_s,
                      in_b_s,
                      alu_op_i,
-                     use_carry_i,
-                     carry_i,
-                     aux_carry_i)
-
-    variable add_v : alu_operand_t;
-    variable c_v   : std_logic;
-
-    function add_f(a, b : alu_operand_t;
-                      c : std_logic      ) return alu_operand_t is
-    begin
-      return UNSIGNED(a) + UNSIGNED(b) + CONV_UNSIGNED(c, alu_operand_t'length);
-    end;
+                     add_result_s)
 
   begin
     -- default assigments
-    data_s     <= (others => '0');
-    carry_o    <= '0';
+    data_s      <= (others => '0');
+    carry_o     <= '0';
 
     case alu_op_i is
       -- Operation: AND -------------------------------------------------------
@@ -221,16 +212,8 @@ begin
 
       -- Operation: Add -------------------------------------------------------
       when ALU_ADD =>
-        if use_carry_i then
-          c_v := carry_i;
-        else
-          c_v := '0';
-        end if;
-
-        add_v   := add_f("0" & in_a_s, "0" & in_b_s, c_v);
-
-        data_s  <= add_v(data_s'range);
-        carry_o <= add_v(add_v'high);
+        data_s  <= add_result_s(data_s'range);
+        carry_o <= add_result_s(add_result_s'high);
 
       -- Operation: CPL -------------------------------------------------------
       when ALU_CPL =>
@@ -269,13 +252,11 @@ begin
 
       -- Operation: DEC -------------------------------------------------------
       when ALU_DEC =>
-        add_v  := add_f(not ("0" & in_a_s), "000000001", '0');
-        data_s <= not add_v(data_s'range);
+        data_s <= add_result_s(data_s'range);
 
       -- Operation: INC -------------------------------------------------------
       when ALU_INC =>
-        add_v  := add_f("0" & in_a_s, "000000001", '0');
-        data_s <= add_v(data_s'range);
+        data_s <= add_result_s(data_s'range);
 
       -- Operation CONCAT -----------------------------------------------------
       when ALU_CONCAT =>
@@ -300,36 +281,76 @@ begin
 
 
   -----------------------------------------------------------------------------
-  -- Process aux_carry
+  -- Process adder
   --
   -- Purpose:
-  --  Calculates the Auxiliary Carry.
+  --   Implements the adder used by several instructions.
+  --   This way of modelling the adder forces resource sharing of:
+  --     * ADD
+  --     * INC
+  --     * DEC
   --
-  aux_carry: process (in_a_s,
-                      in_b_s,
-                      data_s)
-    variable aux_c_v : std_logic_vector(1 downto 0);
+  adder: process (in_a_s,
+                  in_b_s,
+                  alu_op_i,
+                  carry_i,
+                  use_carry_i)
+
+    variable add_a_v, add_b_v : alu_operand_t;
+    variable result_v         : alu_operand_t;
+    variable c_v              : std_logic;
+    variable aux_c_v          : std_logic_vector(1 downto 0);
+
   begin
-    aux_carry_o       <= '0';
+    -- Carry Selection --------------------------------------------------------
+    if use_carry_i then
+      c_v := carry_i;
+    else
+      c_v := '0';
+    end if;
+
+    -- Operand Selection ------------------------------------------------------
+    -- defaults for ADD
+    add_a_v := '0' & in_a_s;
+    add_b_v := '0' & in_b_s;
+
+    case alu_op_i is
+      when ALU_INC =>
+        add_b_v := "000000001";
+      when ALU_DEC =>
+        add_b_v := "111111111";
+      when others =>
+        null;
+    end case;
+
+    -- The Adder --------------------------------------------------------------
+    result_v := UNSIGNED(add_a_v) +
+                UNSIGNED(add_b_v) +
+                CONV_UNSIGNED(c_v, alu_operand_t'length);
+
+    add_result_s <= result_v;
+
+    -- Auxiliary Carry --------------------------------------------------------
     aux_c_v           := in_a_s(4) & in_b_s(4);
 
     case aux_c_v is
       when "00" | "11" =>
-        if data_s(4) = '1' then
+        if result_v(4) = '1' then
           aux_carry_o <= '1';
         end if;
 
       when "01" | "10" =>
-        if data_s(4) = '0' then
+        if result_v(4) = '0' then
           aux_carry_o <= '1';
         end if;
 
       when others =>
+          aux_carry_o <= '0';
         null;
 
     end case;
 
-  end process aux_carry;
+  end process adder;
   --
   -----------------------------------------------------------------------------
 
@@ -398,6 +419,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.3  2004/04/04 14:18:52  arniml
+-- add measures to implement XCHD
+--
 -- Revision 1.2  2004/03/28 21:08:51  arniml
 -- support for DA instruction
 --
