@@ -2,7 +2,7 @@
 --
 -- The testbench for t48_core.
 --
--- $Id: tb.vhd,v 1.2 2004-03-24 23:22:35 arniml Exp $
+-- $Id: tb.vhd,v 1.3 2004-03-26 22:39:28 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -317,11 +317,11 @@ begin
           wait on tb_accu_s;
           if tb_accu_s = "00000001" then
             assert false
-              report "Simulation PASS."
+              report "Simulation Result: PASS."
               severity note;
           else
             assert false
-              report "Simulation FAIL."
+              report "Simulation Result: FAIL."
               severity note;
           end if;
 
@@ -344,6 +344,9 @@ end behav;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.2  2004/03/24 23:22:35  arniml
+-- put ext_ram on falling clock edge to sample the write enable properly
+--
 -- Revision 1.1  2004/03/24 21:42:10  arniml
 -- initial check-in
 --
