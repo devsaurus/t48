@@ -2,7 +2,7 @@
 --
 -- The testbench for t48_core.
 --
--- $Id: tb.vhd,v 1.9 2004-05-17 14:43:33 arniml Exp $
+-- $Id: tb.vhd,v 1.10 2004-05-21 11:24:47 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -73,6 +73,25 @@ architecture behav of tb is
     );
   end component;
 
+  component lpm_rom
+    generic (
+      LPM_WIDTH           : positive;
+      LPM_TYPE            : string    := "LPM_ROM";
+      LPM_WIDTHAD         : positive;
+      LPM_NUMWORDS        : natural   := 0;
+      LPM_FILE            : string;
+      LPM_ADDRESS_CONTROL : string    := "REGISTERED";
+      LPM_OUTDATA         : string    := "REGISTERED";
+      LPM_HINT            : string    := "UNUSED"
+    );
+    port (
+      address             : in  std_logic_vector(LPM_WIDTHAD-1 downto 0);
+      inclock             : in  std_logic;
+      memenab             : in  std_logic;
+      q                   : out std_logic_vector(LPM_WIDTH-1 downto 0)
+    );
+  end component;
+
   signal xtal_s          : std_logic;
   signal xtal_n_s        : std_logic;
   signal res_n_s         : std_logic;
@@ -99,18 +118,21 @@ architecture behav of tb is
   signal t48_bus_s       : std_logic_vector( 7 downto 0);
   signal bus_dir_s       : std_logic;
 
-  signal ext_mem_addr_s      : std_logic_vector( 7 downto 0);
+  signal ext_mem_addr_q      : std_logic_vector( 7 downto 0);
   signal ext_ram_data_from_s : std_logic_vector( 7 downto 0);
-  signal ext_ram_we_s        : std_logic;
+  signal ext_ram_we_q        : std_logic;
   signal rd_n_s              : std_logic;
   signal wr_n_s              : std_logic;
+
+  signal ext_rom_data_s  : std_logic_vector( 7 downto 0);
+  signal ext_rom_addr_s  : std_logic_vector(11 downto 0);
 
   signal tb_p1_q : std_logic_vector( 7 downto 0);
   signal tb_p2_q : std_logic_vector( 7 downto 0);
 
-  signal ext_mem_sel_we_s : boolean;
-  signal ena_ext_ram_s    : boolean;
-  signal ena_tb_periph_s  : boolean;
+  signal ext_mem_sel_we_q : boolean;
+  signal ena_ext_ram_q    : boolean;
+  signal ena_tb_periph_q  : boolean;
 
   signal zero_s          : std_logic;
   signal one_s           : std_logic;
@@ -122,16 +144,55 @@ begin
   one_s       <= '1';
   zero_byte_s <= (others => '0');
 
-  rom_4k : syn_rom
+  -----------------------------------------------------------------------------
+  -- Internal ROM, 2k bytes
+  -- Initialized by file t48_rom.hex.
+  -----------------------------------------------------------------------------
+  rom_internal_2k : lpm_rom
     generic map (
-      address_width_g => 12
+      LPM_WIDTH           => 8,
+      LPM_TYPE            => "LPM_ROM",
+      LPM_WIDTHAD         => 11,
+      LPM_NUMWORDS        => 2 ** 11,
+      LPM_FILE            => "t48_rom.hex",
+      LPM_ADDRESS_CONTROL => "REGISTERED",
+      LPM_OUTDATA         => "UNREGISTERED",
+      LPM_HINT            => "UNUSED"
     )
     port map (
-      clk_i      => xtal_s,
-      rom_addr_i => rom_addr_s,
-      rom_data_o => rom_data_s
+      address  => rom_addr_s(10 downto 0),
+      inclock  => xtal_s,
+      memenab  => one_s,
+      q        => rom_data_s
     );
 
+  -----------------------------------------------------------------------------
+  -- External ROM, 2k bytes
+  -- Initialized by file t48_ext_rom.hex.
+  -----------------------------------------------------------------------------
+  ext_rom_addr_s(11 downto 8) <= t48_p2_s(3 downto 0);
+  ext_rom_addr_s( 7 downto 0) <= ext_mem_addr_q;
+  rom_external_2k : lpm_rom
+    generic map (
+      LPM_WIDTH           => 8,
+      LPM_TYPE            => "LPM_ROM",
+      LPM_WIDTHAD         => 11,
+      LPM_NUMWORDS        => 2 ** 11,
+      LPM_FILE            => "t48_ext_rom.hex",
+      LPM_ADDRESS_CONTROL => "REGISTERED",
+      LPM_OUTDATA         => "UNREGISTERED",
+      LPM_HINT            => "UNUSED"
+    )
+    port map (
+      address  => ext_rom_addr_s(10 downto 0),
+      inclock  => xtal_s,
+      memenab  => one_s,
+      q        => ext_rom_data_s
+    );
+
+  -----------------------------------------------------------------------------
+  -- Internal RAM, 256 bytes
+  -----------------------------------------------------------------------------
   ram_256 : syn_ram
     generic map (
       address_width_g => 8
@@ -145,6 +206,9 @@ begin
       ram_data_o => ram_data_from_s
     );
 
+  -----------------------------------------------------------------------------
+  -- External RAM, 256 bytes
+  -----------------------------------------------------------------------------
   ext_ram_b : syn_ram
     generic map (
       address_width_g => 8
@@ -152,9 +216,9 @@ begin
     port map (
       clk_i      => xtal_s,
       res_i      => res_n_s,
-      ram_addr_i => ext_mem_addr_s,
+      ram_addr_i => ext_mem_addr_q,
       ram_data_i => bus_s,
-      ram_we_i   => ext_ram_we_s,
+      ram_we_i   => ext_ram_we_q,
       ram_data_o => ext_ram_data_from_s
     );
 
@@ -175,7 +239,7 @@ begin
       t0_o         => open,
       t0_dir_o     => open,
       int_n_i      => int_n_s,
-      ea_i         => zero_s,
+      ea_i         => rom_addr_s(11),
       rd_n_o       => rd_n_s,
       psen_n_o     => psen_n_s,
       wr_n_o       => wr_n_s,
@@ -260,7 +324,11 @@ begin
              (others => 'Z');
 
   bus_s <=   ext_ram_data_from_s
-           when rd_n_s = '0' and ena_ext_ram_s else
+           when rd_n_s = '0' and ena_ext_ram_q else
+             (others => 'Z');
+
+  bus_s <=   ext_rom_data_s
+           when psen_n_s = '0' else
              (others => 'Z');
 
 
@@ -268,36 +336,36 @@ begin
   -- External memory access signals
   --
   ext_mem: process (wr_n_s,
-                    ext_mem_addr_s,
-                    ena_ext_ram_s,
+                    ext_mem_addr_q,
+                    ena_ext_ram_q,
                     ale_s,
                     bus_s,
                     xtal_s)
   begin
     if ale_s'event and ale_s = '0' then
       if not is_X(bus_s) then
-        ext_mem_addr_s <= bus_s;
+        ext_mem_addr_q <= bus_s;
       else
-        ext_mem_addr_s <= (others => '0');
+        ext_mem_addr_q <= (others => '0');
       end if;
     end if;
 
     if wr_n_s'event and wr_n_s = '1' then
       -- write enable for external RAM
-      if ena_ext_ram_s then
-        ext_ram_we_s <= '1';
+      if ena_ext_ram_q then
+        ext_ram_we_q <= '1';
       end if;
 
       -- process external memory selector
-      if ext_mem_addr_s = "11111111" then
-        ext_mem_sel_we_s <= true;
+      if ext_mem_addr_q = "11111111" then
+        ext_mem_sel_we_q <= true;
       end if;
 
     end if;
 
     if xtal_s'event and xtal_s = '1' then
-      ext_ram_we_s     <= '0';
-      ext_mem_sel_we_s <= false;
+      ext_ram_we_q     <= '0';
+      ext_mem_sel_we_q <= false;
     end if;
 
   end process ext_mem;
@@ -317,21 +385,21 @@ begin
   ext_mem_sel: process (res_n_s, xtal_s)
   begin
     if res_n_s = '0' then
-      ena_ext_ram_s       <= true;
-      ena_tb_periph_s     <= false;
+      ena_ext_ram_q       <= true;
+      ena_tb_periph_q     <= false;
 
     elsif xtal_s'event and xtal_s = '1' then
-      if ext_mem_sel_we_s then
+      if ext_mem_sel_we_q then
         if bus_s(0) = '1' then
-          ena_ext_ram_s   <= true;
+          ena_ext_ram_q   <= true;
         else
-          ena_ext_ram_s   <= false;
+          ena_ext_ram_q   <= false;
         end if;
 
         if bus_s(1) = '1' then
-          ena_tb_periph_s <= true;
+          ena_tb_periph_q <= true;
         else
-          ena_tb_periph_s <= false;
+          ena_tb_periph_q <= false;
         end if;
       end if;
 
@@ -370,8 +438,8 @@ begin
       tb_p2_q <= (others => 'H');
 
     elsif wr_n_s'event and wr_n_s = '1' then
-      if ena_tb_periph_s then
-        case ext_mem_addr_s is
+      if ena_tb_periph_q then
+        case ext_mem_addr_q is
           -- P1
           when "00000000" =>
             tb_p1_q <= oc_f(t48_bus_s);
@@ -486,6 +554,11 @@ end behav;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.9  2004/05/17 14:43:33  arniml
+-- add testbench peripherals for P1 and P2
+-- this became necessary to observe a difference between externally applied
+-- port data and internally applied port data
+--
 -- Revision 1.8  2004/04/25 20:41:48  arniml
 -- connect if_timing to P2 output of T48
 --
