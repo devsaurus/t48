@@ -3,7 +3,7 @@
 -- The Program Status Word (PSW).
 -- Implements the PSW with its special bits.
 --
--- $Id: psw.vhd,v 1.1 2004-03-23 21:31:53 arniml Exp $
+-- $Id: psw.vhd,v 1.2 2004-03-28 21:28:13 arniml Exp $
 --
 -- All rights reserved
 --
@@ -70,6 +70,7 @@ entity psw is
     write_f0_i         : in  boolean;
     write_bs_i         : in  boolean;
     carry_o            : out std_logic;
+    aux_carry_i        : in  std_logic;
     aux_carry_o        : out std_logic;
     f0_o               : out std_logic;
     bs_o               : out std_logic
@@ -138,7 +139,7 @@ begin
         end if;
         --
         if write_aux_carry_i then
-          psw_q(aux_carry_c) <= special_data_i;
+          psw_q(aux_carry_c) <= aux_carry_i;
         end if;
         --
         if write_f0_i then
@@ -199,5 +200,7 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2004/03/23 21:31:53  arniml
+-- initial check-in
 --
 -------------------------------------------------------------------------------
