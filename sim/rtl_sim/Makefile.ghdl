@@ -1,11 +1,8 @@
-#######################################################################################
+##############################################################################
 #
 # Tool-specific Makefile for the GHDL compiler.
 #
-# The following environment variables should be set from the shell:
-#
-#  SOURCE_DIR : VHDL source base directory
-#               <local path>/t48/rtl/vhdl
+# It sets all variables needed for VHDL code compilation with Makefile.hier.
 #
 #
 # Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
