@@ -1,3 +1,20 @@
+#######################################################################################
+#
+# Tool-specific Makefile for the GHDL compiler.
+#
+# The following environment variables should be set from the shell:
+#
+#  SOURCE_DIR : VHDL source base directory
+#               <local path>/t48/rtl/vhdl
+#
+#
+# Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
+#
+# All rights reserved
+#
+##############################################################################
+
+
 LIB_WORK  = ghdl-work
 
 CLEAN     = ghdl --clean --std=87 --workdir=$(LIB_WORK)
@@ -8,12 +25,16 @@ ELABORATE = ghdl -e --ieee=synopsys --std=87 --workdir=$(LIB_WORK)
 
 MAKE_LIB  = mkdir -p $(LIB_WORK)
 
-tb_t8048_behav_c0=$(LIB_WORK)/tb_t8048-c.o
-tb_t8048=$(LIB_WORK)/tb_t8048.o
-tb_behav_c0=$(LIB_WORK)/tb-c.o
-tb=$(LIB_WORK)/tb.o
-t8048_struct_c0=$(LIB_WORK)/t8048-c.o
-t8048=$(LIB_WORK)/t8048.o
+
+##############################################################################
+# The analyze targets
+#
+tb_t8048_behav_c0 = $(LIB_WORK)/tb_t8048-c.o
+tb_t8048 = $(LIB_WORK)/tb_t8048.o
+tb_behav_c0 = $(LIB_WORK)/tb-c.o
+tb = $(LIB_WORK)/tb.o
+t8048_struct_c0 = $(LIB_WORK)/t8048-c.o
+t8048 = $(LIB_WORK)/t8048.o
 t48_tb_pack = $(LIB_WORK)/t48_tb_pack-p.o
 t48_pack = $(LIB_WORK)/t48_pack-p.o
 t48_core_struct_c0 = $(LIB_WORK)/t48_core-c.o
@@ -65,10 +86,22 @@ bus_mux = $(LIB_WORK)/bus_mux.o
 alu_rtl_c0 = $(LIB_WORK)/alu-c.o
 alu_pack = $(LIB_WORK)/alu_pack-p.o
 alu = $(LIB_WORK)/alu.o
+#
+##############################################################################
 
-tb_elab=$(LIB_WORK)/e~tb_behav_c0.o
-tb_t8048_elab=$(LIB_WORK)e~tb_t8048_behav_c0.o
 
+##############################################################################
+# The elaboration targets
+#
+tb_elab = $(LIB_WORK)/e~tb_behav_c0.o
+tb_t8048_elab = $(LIB_WORK)e~tb_t8048_behav_c0.o
+#
+##############################################################################
+
+
+##############################################################################
+# Tool-specific elaboration rules
+#
 $(tb_elab) : $(tb_behav_c0)
 	$(ELABORATE) tb_behav_c0; \
 	strip tb_behav_c0
@@ -79,5 +112,8 @@ $(tb_t8048_elab) : $(tb_t8048_behav_c0)
 
 .PHONY: elaborate
 elaborate: $(LIB_WORK) $(tb_elab) $(tb_t8048_elab)
+#
+##############################################################################
+
 
 include Makefile.hier

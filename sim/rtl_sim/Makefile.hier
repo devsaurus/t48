@@ -1,3 +1,35 @@
+##############################################################################
+#
+# Core Makefile for the T48 project.
+#
+# The dependencies for all VHDL source files are stored here.
+# Include this file from within the tool-specific Makefile. See
+# Makefile.ghdl for an example how to use it.
+#
+# The following environment/make variables are expected. Set them in the
+# tool-specific Makefile or from the shell.
+#
+#  SOURCE_DIR : VHDL source base directory
+#               <local path>/t48/rtl/vhdl
+#
+#  LIB_WORK   : object directory for the work library
+#               <local path>/t48/sim/rtl_sim/<tool-object dir>
+#
+#  MAKE_LIB   : command to create the work library
+#
+#  ANALYZE    : command calling the tool-specific compiler for analysis of
+#               the VHDL code
+#
+#  CLEAN      : command to clean the tool-object directory
+#
+#  Various VHDL design units.
+#
+#
+# Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
+#
+# All rights reserved
+#
+##############################################################################
 
 SOURCE_DIR = ../..
 
