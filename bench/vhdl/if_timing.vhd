@@ -2,7 +2,7 @@
 --
 -- Interface Timing Checker.
 --
--- $Id: if_timing.vhd,v 1.4 2004-10-25 19:33:13 arniml Exp $
+-- $Id: if_timing.vhd,v 1.5 2004-12-03 19:58:55 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -374,6 +374,8 @@ begin
         assert false
           report "Cycle overlap deteced on PSEN, RD and WR!"
           severity error;
+      when others =>
+        null;
 
     end case;
 
@@ -587,6 +589,10 @@ end behav;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.4  2004/10/25 19:33:13  arniml
+-- remove tAW sanity check
+-- conflicts with OUTL A, BUS
+--
 -- Revision 1.3  2004/09/12 00:31:50  arniml
 -- add checks for PSEN
 --
