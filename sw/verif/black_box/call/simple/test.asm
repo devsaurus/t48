@@ -1,5 +1,5 @@
 	;; *******************************************************************
-	;; $Id: test.asm,v 1.1.1.1 2004-03-25 22:29:17 arniml Exp $
+	;; $Id: test.asm,v 1.2 2004-03-29 20:09:47 arniml Exp $
 	;;
 	;; Test CALL addr with simple program.
 	;; *******************************************************************
@@ -20,6 +20,7 @@ call1:	call	goon1
 	ORG	039FH
 
 goon1:	mov	a, psw
+	anl	a, #~040H	; mask AC, tested separately with DA
 	add	a, #~009H + 1
 	jnz	fail
 
@@ -29,6 +30,7 @@ call2:	call	goon2
 
 goon2:	clr	c
 	mov	a, psw
+	anl	a, #~040H	; mask AC, tested separately with DA
 	add	a, #~00AH + 1
 	jnz	fail
 
@@ -40,6 +42,7 @@ goon2:	clr	c
 
 	inc	r0
 	mov	a, @r0
+	anl	a, #~040H	; mask AC, tested separately with DA
 	add	a, #(~((call1+2) >> 8) + 1) & 0FFH
 	jnz	fail
 
@@ -50,6 +53,7 @@ goon2:	clr	c
 
 	inc	r0
 	mov	a, @r0
+	anl	a, #~040H	; mask AC, tested separately with DA
 	add	a, #(~((call2+2) >> 8 | 080H) + 1) & 0FFH
 	jnz	fail
 	

@@ -1,5 +1,5 @@
 	;; *******************************************************************
-	;; $Id: test.asm,v 1.1.1.1 2004-03-25 22:29:17 arniml Exp $
+	;; $Id: test.asm,v 1.2 2004-03-29 20:09:50 arniml Exp $
 	;;
 	;; Test several commands related to PSW.
 	;; *******************************************************************
@@ -29,12 +29,14 @@
 	jf0	ok_1
 	jmp	fail
 ok_1:	mov	a, psw
+	anl	a, #~040H	; mask AC, tested separately with DA
 	add	a, #(~028H + 1) & 0FFH
 	jnz	fail
 
 	clr	f0
 	jnc	fail
 	mov	a, psw
+	anl	a, #~040H	; mask AC, tested separately with DA
 	add	a, #(~088H + 1) & 0FFH
 	jnz	fail
 
@@ -42,6 +44,7 @@ ok_1:	mov	a, psw
 	jc	fail
 	sel	rb1
 	mov	a, psw
+	anl	a, #~040H	; mask AC, tested separately with DA
 	add	a, #(~018H + 1) & 0FFH
 	jnz	fail
 
@@ -49,6 +52,7 @@ ok_1:	mov	a, psw
 	jc	fail
 	sel	rb0
 	mov	a, psw
+	anl	a, #~040H	; mask AC, tested separately with DA
 	add	a, #(~08H + 1) & 0FFH
 	jnz	fail
 
