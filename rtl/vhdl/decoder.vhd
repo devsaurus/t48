@@ -3,7 +3,7 @@
 -- The Decoder unit.
 -- It decodes the instruction opcodes and executes them.
 --
--- $Id: decoder.vhd,v 1.15 2004-09-12 00:35:44 arniml Exp $
+-- $Id: decoder.vhd,v 1.16 2004-10-25 19:39:24 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -986,6 +986,8 @@ begin
 
       -- Mnemonic INS ---------------------------------------------------------
       when MN_INS =>
+        clk_assert_rd_o  <= true;
+
         -- read BUS and store in Accumulator
         if clk_second_cycle_i and clk_mstate_i = MSTATE2 then
           alu_write_accu_o <= true;
@@ -1602,8 +1604,12 @@ begin
 
       -- Mnemonic OUTL_EXT ----------------------------------------------------
       when MN_OUTL_EXT =>
+        if opc_opcode_s(4) = '0' then
+          clk_assert_wr_o <= true;
+        end if;
+
         -- read Accumulator and store in Port/BUS output register
-        if clk_second_cycle_i and clk_mstate_i = MSTATE4 then
+        if not clk_second_cycle_i and clk_mstate_i = MSTATE4 then
           alu_read_alu_o  <= true;
 
           if opc_opcode_s(4) = '1' then
@@ -1947,6 +1953,13 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.15  2004/09/12 00:35:44  arniml
+-- Fix bug report:
+-- "PSENn Timing"
+-- PSEN is now only asserted for the second cycle if explicitely
+-- requested by assert_psen_s.
+-- The previous implementation asserted PSEN together with RD or WR.
+--
 -- Revision 1.14  2004/06/30 21:18:28  arniml
 -- Fix bug report:
 -- "Program Memory bank can be switched during interrupt"
