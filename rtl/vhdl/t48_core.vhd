@@ -2,7 +2,7 @@
 --
 -- T48 Microcontroller Core
 --
--- $Id: t48_core.vhd,v 1.6 2004-04-07 22:09:03 arniml Exp $
+-- $Id: t48_core.vhd,v 1.7 2004-05-01 11:58:04 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -48,7 +48,7 @@
 -- apply:
 --
 --   * Nibble-wide instructions addressing expander port implemented but
---     not verified yet.
+--     not verified in detail.
 --
 --   * Single-step mode not implemented.
 --     Not selected for future implementation.
@@ -631,6 +631,9 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.6  2004/04/07 22:09:03  arniml
+-- remove unused signals
+--
 -- Revision 1.5  2004/04/04 14:18:53  arniml
 -- add measures to implement XCHD
 --
