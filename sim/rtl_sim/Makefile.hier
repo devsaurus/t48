@@ -356,6 +356,7 @@ $(tb_t8039) : $(BENCH_DIR)/tb_t8039.vhd \
 $(tb_t8039_behav_c0) : $(BENCH_DIR)/tb_t8039-c.vhd \
 		$(t8039_struct_c0) \
 		$(syn_ram_lpm_c0) \
+		$(syn_rom_lpm_c0) \
 		$(t48_tb_pack) \
 		$(t48_core_comp_pack) \
 		$(tb_t8039)
@@ -369,6 +370,7 @@ $(tb_t8048) : $(BENCH_DIR)/tb_t8048.vhd \
 $(tb_t8048_behav_c0) : $(BENCH_DIR)/tb_t8048-c.vhd \
 		$(t8048_struct_c0) \
 		$(syn_ram_lpm_c0) \
+		$(syn_rom_lpm_c0) \
 		$(t48_tb_pack) \
 		$(t48_core_comp_pack) \
 		$(tb_t8048)
