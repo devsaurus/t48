@@ -1,11 +1,35 @@
 
 Known bugs of the T48 uController core
 ======================================
-Version: $Date: 2004-10-25 21:37:36 $
+Version: $Date: 2005-05-04 20:20:15 $
+
+
+Release 0.5 BETA
+----------------
+
+*******************************************************************************
+Wrong clock applied to T0
+
+After executing the 'ENT0 CLK' instruction, the internal clock (XTAL divided
+by 3) should be applied to T0.
+The t48_core applies clk_i to T0. This is equal to XTAL in the current
+implementation of t8048 and others. Therefore, the clock at T0 is three times
+faster than specified.
+
+Fixed in:
+clock_ctrl.vhd 1.7
+t48_core.vhd 1.8
+Fix will be included in next release.
+
 
 
 Release 0.4 BETA
 ----------------
+
+*******************************************************************************
+Wrong clock applied to T0
+
+See above.
 
 *******************************************************************************
 RD' and WR' not asserted for INS A, BUS and OUTL BUS, A
@@ -17,7 +41,6 @@ signals are missing.
 Fixed in:
 decoder.vhd 1.16
 Fix will be included in next release.
-
 
 *******************************************************************************
 P1 constantly in push-pull mode in t8048
@@ -34,6 +57,11 @@ Fix will be included in next release.
 
 Release 0.3 BETA
 ----------------
+
+*******************************************************************************
+Wrong clock applied to T0
+
+See above.
 
 *******************************************************************************
 RD' and WR' not asserted for INS A, BUS and OUTL BUS, A
@@ -64,6 +92,11 @@ Fix will be included in next release.
 
 Release 0.2 BETA
 ----------------
+
+*******************************************************************************
+Wrong clock applied to T0
+
+See above.
 
 *******************************************************************************
 RD' and WR' not asserted for INS A, BUS and OUTL BUS, A
@@ -100,6 +133,11 @@ Fix will be included in next release.
 
 Release 0.1 BETA
 ----------------
+
+*******************************************************************************
+Wrong clock applied to T0
+
+See above.
 
 *******************************************************************************
 RD' and WR' not asserted for INS A, BUS and OUTL BUS, A
