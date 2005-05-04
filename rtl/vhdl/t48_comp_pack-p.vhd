@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
 --
--- $Id: t48_comp_pack-p.vhd,v 1.7 2004-06-30 21:16:21 arniml Exp $
+-- $Id: t48_comp_pack-p.vhd,v 1.8 2005-05-04 20:12:37 arniml Exp $
 --
--- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
+-- Copyright (c) 2004, 2005, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved
 --
@@ -74,6 +74,7 @@ package t48_comp_pack is
       res_i          : in  std_logic;
       en_clk_i       : in  boolean;
       xtal3_o        : out boolean;
+      t0_o           : out std_logic;
       multi_cycle_i  : in  boolean;
       assert_psen_i  : in  boolean;
       assert_prog_i  : in  boolean;

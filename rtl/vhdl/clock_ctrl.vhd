@@ -3,9 +3,9 @@
 -- The Clock Control unit.
 -- Clock States and Machine Cycles are generated here.
 --
--- $Id: clock_ctrl.vhd,v 1.6 2004-10-25 20:31:12 arniml Exp $
+-- $Id: clock_ctrl.vhd,v 1.7 2005-05-04 20:12:36 arniml Exp $
 --
--- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
+-- Copyright (c) 2004, 2005, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved
 --
@@ -62,6 +62,7 @@ entity clock_ctrl is
     res_i          : in  std_logic;
     en_clk_i       : in  boolean;
     xtal3_o        : out boolean;
+    t0_o           : out std_logic;
     multi_cycle_i  : in  boolean;
     assert_psen_i  : in  boolean;
     assert_prog_i  : in  boolean;
@@ -92,6 +93,8 @@ architecture rtl of clock_ctrl is
   signal x1_s,
          x2_s,
          x3_s    : std_logic;
+
+  signal t0_q    : std_logic;
 
 
   -- The five clock states.
@@ -132,12 +135,19 @@ begin
     begin
       if res_i = res_active_c then
         xtal_q <= TO_UNSIGNED(0, 2);
+        t0_q   <= '0';
 
       elsif xtal_i'event and xtal_i = clk_active_c then
         if xtal_q < 2 then
           xtal_q <= xtal_q + 1;
         else
           xtal_q <= TO_UNSIGNED(0, 2);
+        end if;
+
+        if xtal3_s then
+          t0_q <= '1';
+        else
+          t0_q <= '0';
         end if;
 
       end if;
@@ -153,6 +163,7 @@ begin
     x3_s <=   '1'
             when xtal_q = 2 else
               '0';
+    t0_o <= t0_q;
 
   end generate;
 
@@ -165,6 +176,7 @@ begin
     x1_s <= '1';
     x2_s <= '1';
     x3_s <= '1';
+    t0_o <= xtal_i;
 
   end generate;
 
@@ -386,6 +398,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.6  2004/10/25 20:31:12  arniml
+-- remove PROG and end of XTAL2, see comment for details
+--
 -- Revision 1.5  2004/10/25 19:35:41  arniml
 -- deassert rd_q, wr_q and prog_q at end of XTAL3
 --

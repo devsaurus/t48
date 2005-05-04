@@ -2,9 +2,9 @@
 --
 -- T48 Microcontroller Core
 --
--- $Id: t48_core.vhd,v 1.7 2004-05-01 11:58:04 arniml Exp $
+-- $Id: t48_core.vhd,v 1.8 2005-05-04 20:12:37 arniml Exp $
 --
--- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
+-- Copyright (c) 2004, 2005, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved
 --
@@ -323,6 +323,7 @@ begin
       res_i          => reset_i,
       en_clk_i       => en_clk_s,
       xtal3_o        => xtal3_s,
+      t0_o           => t0_o,
       multi_cycle_i  => clk_multi_cycle_s,
       assert_psen_i  => clk_assert_psen_s,
       assert_prog_i  => clk_assert_prog_s,
@@ -616,7 +617,6 @@ begin
   -- Output Mapping.
   -----------------------------------------------------------------------------
   ale_o       <= to_stdLogic(ale_s);
-  t0_o        <= clk_i;
   psen_n_o    <= to_stdLogic(not psen_s);
   prog_n_o    <= to_stdLogic(not prog_s);
   rd_n_o      <= to_stdLogic(not rd_s);
@@ -631,6 +631,9 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.7  2004/05/01 11:58:04  arniml
+-- update notice about expander port instructions
+--
 -- Revision 1.6  2004/04/07 22:09:03  arniml
 -- remove unused signals
 --
