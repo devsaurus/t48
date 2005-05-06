@@ -2,7 +2,7 @@
 --
 -- The Wishbone master module.
 --
--- $Id: wb_master.vhd,v 1.1 2005-05-05 19:49:03 arniml Exp $
+-- $Id: wb_master.vhd,v 1.2 2005-05-06 18:54:03 arniml Exp $
 --
 -- Copyright (c) 2005, Arnim Laeuger (arniml@opencores.org)
 --
@@ -160,6 +160,7 @@ begin
     wb_cyc_o <= '0';
     wb_stb_o <= '0';
     en_clk_o <= '1';
+    state_s  <= IDLE;
 
     case state_q is
       when IDLE =>
@@ -221,4 +222,7 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2005/05/05 19:49:03  arniml
+-- initial check-in
+--
 -------------------------------------------------------------------------------
