@@ -1,7 +1,22 @@
 
 Change log for the T48 uController core
 =======================================
-Version: $Date: 2004-10-26 21:41:38 $
+Version: $Date: 2005-05-08 15:51:47 $
+
+
+* Bugfix for "Wrong clock applied to T0"
+  Applied in clock_ctrl.vhd 1.7
+             t48_core.vhd 1.8
+
+* Introduced "notri" hierarchy for t8048 and t8039 system.
+  This allows the usage of such a system without tri-state signals.
+
+* Fixed lpm_memory type definition in lpm_rom.vhd and lpm_ram.vhd.
+
+* New Wishbone master module: wb_master.vhd
+
+* New system toplevel: t8050_wb.vhd
+  Contains the Wishbone master.
 
 
 Release 0.5 BETA
