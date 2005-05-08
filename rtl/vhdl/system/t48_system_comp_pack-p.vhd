@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 --
--- $Id: t48_system_comp_pack-p.vhd,v 1.4 2005-05-05 19:49:58 arniml Exp $
+-- $Id: t48_system_comp_pack-p.vhd,v 1.5 2005-05-08 10:36:24 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -15,22 +15,22 @@ package t48_system_comp_pack is
 
   component wb_master
     port (
-      xtal_i      : in  std_logic;
-      res_i       : in  std_logic;
-      en_clk_o    : out std_logic;
-      ale_i       : in  std_logic;
-      rd_n_i      : in  std_logic;
-      wr_n_i      : in  std_logic;
-      sel_range_i : in  std_logic_vector( 1 downto 0);
-      db_bus_i    : in  std_logic_vector( 7 downto 0);
-      db_bus_o    : out std_logic_vector( 7 downto 0);
-      wb_cyc_o    : out std_logic;
-      wb_stb_o    : out std_logic;
-      wb_we_o     : out std_logic;
-      wb_adr_o    : out std_logic_vector(23 downto 0);
-      wb_ack_i    : in  std_logic;
-      wb_dat_i    : in  std_logic_vector( 7 downto 0);
-      wb_dat_o    : out std_logic_vector( 7 downto 0)
+      xtal_i   : in  std_logic;
+      res_i    : in  std_logic;
+      en_clk_o : out std_logic;
+      ale_i    : in  std_logic;
+      rd_n_i   : in  std_logic;
+      wr_n_i   : in  std_logic;
+      adr_i    : in  std_logic;
+      db_bus_i : in  std_logic_vector( 7 downto 0);
+      db_bus_o : out std_logic_vector( 7 downto 0);
+      wb_cyc_o : out std_logic;
+      wb_stb_o : out std_logic;
+      wb_we_o  : out std_logic;
+      wb_adr_o : out std_logic_vector(23 downto 0);
+      wb_ack_i : in  std_logic;
+      wb_dat_i : in  std_logic_vector( 7 downto 0);
+      wb_dat_o : out std_logic_vector( 7 downto 0)
     );
   end component;
 
