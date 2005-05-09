@@ -3,7 +3,7 @@
 -- The Decoder unit.
 -- It decodes the instruction opcodes and executes them.
 --
--- $Id: decoder.vhd,v 1.16 2004-10-25 19:39:24 arniml Exp $
+-- $Id: decoder.vhd,v 1.17 2005-05-09 22:26:08 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -73,7 +73,6 @@ entity decoder is
     -- T48 Bus Interface ------------------------------------------------------
     data_i                 : in  word_t;
     data_o                 : out word_t;
-    stack_high_o           : out boolean;
     alu_write_accu_o       : out boolean;
     alu_write_shadow_o     : out boolean;
     alu_write_temp_reg_o   : out boolean;
@@ -460,7 +459,6 @@ begin
     set_mb_s               <= false;
     add_inc_pc_s           <= false;
     assert_psen_s          <= false;
-    stack_high_o           <= false;
     alu_write_accu_o       <= false;
     alu_write_shadow_o     <= false;
     alu_write_temp_reg_o   <= false;
@@ -1953,6 +1951,13 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.16  2004/10/25 19:39:24  arniml
+-- Fix bug report:
+-- "RD' and WR' not asserted for INS A, BUS and OUTL BUS, A"
+-- rd is asserted for INS A, BUS
+-- wr is asserted for OUTL BUS, A
+-- P1, P2 and BUS are written in first instruction cycle
+--
 -- Revision 1.15  2004/09/12 00:35:44  arniml
 -- Fix bug report:
 -- "PSENn Timing"
