@@ -2,7 +2,7 @@
 --
 -- The Wishbone master module.
 --
--- $Id: wb_master.vhd,v 1.3 2005-05-08 10:36:07 arniml Exp $
+-- $Id: wb_master.vhd,v 1.4 2005-05-10 22:36:23 arniml Exp $
 --
 -- Copyright (c) 2005, Arnim Laeuger (arniml@opencores.org)
 --
@@ -114,7 +114,8 @@ architecture rtl of wb_master is
   signal wr_s,
          rd_s       : boolean;
 
-  signal adr_q : std_logic_vector(23 downto 0);
+  signal adr_q    : std_logic_vector(23 downto 0);
+  signal wb_dat_q : std_logic_vector( 7 downto 0);
 
 begin
 
@@ -138,8 +139,9 @@ begin
   seq: process (res_i, xtal_i)
   begin
     if res_i = res_active_c then
-      adr_q   <= (others => '0');
-      state_q <= IDLE;
+      adr_q    <= (others => '0');
+      wb_dat_q <= (others => '0');
+      state_q  <= IDLE;
 
     elsif xtal_i'event and xtal_i = clk_active_c then
       -- Address register -----------------------------------------------------
@@ -154,6 +156,11 @@ begin
       -- set adr2 part
       if wr_s and sel_adr2_s then
         adr_q(word_t'length*3 - 1 downto word_t'length*2) <= db_bus_i;
+      end if;
+
+      -- Data from peripheral has to be saved ---------------------------------
+      if wb_ack_i = '1' then
+        wb_dat_q <= wb_dat_i;
       end if;
 
       -- FSM state ------------------------------------------------------------
@@ -227,7 +234,7 @@ begin
               when sel_adr1_s else
                 adr_q(word_t'length*3 - 1 downto word_t'length*2)
               when sel_adr2_s else
-                wb_dat_i;
+                wb_dat_q;
               
 
   -----------------------------------------------------------------------------
@@ -236,7 +243,7 @@ begin
   wb_adr_o <= adr_q;
   wb_dat_o <= db_bus_i;
   wb_we_o  <=   '1'
-              when wr_s else
+              when wr_s and sel_wb_s else
                 '0';
 
 end rtl;
@@ -246,6 +253,11 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.3  2005/05/08 10:36:07  arniml
+-- simplify address range:
+-- - configuration range
+-- - Wishbone range
+--
 -- Revision 1.2  2005/05/06 18:54:03  arniml
 -- assign default for state_s
 --
