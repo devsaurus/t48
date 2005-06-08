@@ -3,7 +3,7 @@
 -- The Program Memory control unit.
 -- All operations related to the Program Memory are managed here.
 --
--- $Id: pmem_ctrl.vhd,v 1.3 2004-07-11 16:51:33 arniml Exp $
+-- $Id: pmem_ctrl.vhd,v 1.4 2005-06-08 19:13:53 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -90,8 +90,13 @@ use work.t48_pack.page_t;
 
 architecture rtl of pmem_ctrl is
 
+  -- implemented counter width of Program Counter
+  -- the upper bit is only altered by JMP, CALL and RET(R)
+  subtype pc_count_range_t is natural range pmem_addr_width_c-2 downto 0;
+
   -- the Program Counter
   signal program_counter_q : unsigned(pmem_addr_t'range);
+
 
   -- the Program Memory address
   signal pmem_addr_s,
@@ -122,7 +127,10 @@ begin
             UNSIGNED(data_i(pmem_addr_width_c - dmem_addr_width_c - 1 downto 0));
         elsif inc_pc_i then
           -- increment mode
-          program_counter_q <= program_counter_q + 1;
+          -- the MSB is not modified by linear increments
+          -- it can only be altered by JMP, CALL or RET(R)
+          program_counter_q(pc_count_range_t) <=
+            program_counter_q(pc_count_range_t) + 1;
         end if;
 
         -- set pmem address
@@ -218,11 +226,13 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.3  2004/07/11 16:51:33  arniml
+-- cleanup copyright notice
+--
 -- Revision 1.2  2004/04/24 23:44:25  arniml
 -- move from std_logic_arith to numeric_std
 --
 -- Revision 1.1  2004/03/23 21:31:53  arniml
 -- initial check-in
---
 --
 -------------------------------------------------------------------------------
