@@ -1,11 +1,25 @@
 
 Known bugs of the T48 uController core
 ======================================
-Version: $Date: 2005-05-04 20:20:15 $
+Version: $Date: 2005-06-08 19:23:24 $
 
 
 Release 0.5 BETA
 ----------------
+
+*******************************************************************************
+MSB of Program Counter changed upon PC increment
+
+The current implementation of the Program Counter allows that the MSB (bit 11)
+is modifed when the PC increments at address 07FFh linear code execution. This
+is contrary to the description found in "The Expanded MCS-48 System" which
+states that bit 11 is only altered by JMP and CALL/RET but not by normal
+increment.
+
+Fixed in:
+pmem_crtl.vhd 1.4
+New regression test: white_box/pc_wrap_bit11
+Fix will be included in next release.
 
 *******************************************************************************
 Wrong clock applied to T0
@@ -25,6 +39,11 @@ Fix will be included in next release.
 
 Release 0.4 BETA
 ----------------
+
+*******************************************************************************
+MSB of Program Counter changed upon PC increment
+
+See above.
 
 *******************************************************************************
 Wrong clock applied to T0
@@ -57,6 +76,11 @@ Fix will be included in next release.
 
 Release 0.3 BETA
 ----------------
+
+*******************************************************************************
+MSB of Program Counter changed upon PC increment
+
+See above.
 
 *******************************************************************************
 Wrong clock applied to T0
@@ -92,6 +116,11 @@ Fix will be included in next release.
 
 Release 0.2 BETA
 ----------------
+
+*******************************************************************************
+MSB of Program Counter changed upon PC increment
+
+See above.
 
 *******************************************************************************
 Wrong clock applied to T0
@@ -133,6 +162,11 @@ Fix will be included in next release.
 
 Release 0.1 BETA
 ----------------
+
+*******************************************************************************
+MSB of Program Counter changed upon PC increment
+
+See above.
 
 *******************************************************************************
 Wrong clock applied to T0
