@@ -3,7 +3,7 @@
 -- The Decoder unit.
 -- It decodes the instruction opcodes and executes them.
 --
--- $Id: decoder.vhd,v 1.17 2005-05-09 22:26:08 arniml Exp $
+-- $Id: decoder.vhd,v 1.18 2005-06-09 22:18:28 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -1485,13 +1485,14 @@ begin
           end case;
     
         else
-          if clk_mstate_i = MSTATE1 then
+          if clk_mstate_i = MSTATE2 then
             if opc_opcode_s(4) = '0' then
               -- store contents of BUS in Accumulator
               add_read_bus_s   <= true;
               alu_write_accu_o <= true;
             else
               -- store contents of Accumulator to BUS
+              -- to this to keep bus in output direction
               alu_read_alu_o   <= true;
               bus_write_bus_o  <= true;
             end if;
@@ -1951,6 +1952,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.17  2005/05/09 22:26:08  arniml
+-- remove obsolete output stack_high_o
+--
 -- Revision 1.16  2004/10/25 19:39:24  arniml
 -- Fix bug report:
 -- "RD' and WR' not asserted for INS A, BUS and OUTL BUS, A"
