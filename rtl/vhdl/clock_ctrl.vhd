@@ -3,7 +3,7 @@
 -- The Clock Control unit.
 -- Clock States and Machine Cycles are generated here.
 --
--- $Id: clock_ctrl.vhd,v 1.7 2005-05-04 20:12:36 arniml Exp $
+-- $Id: clock_ctrl.vhd,v 1.8 2005-06-09 22:15:10 arniml Exp $
 --
 -- Copyright (c) 2004, 2005, Arnim Laeuger (arniml@opencores.org)
 --
@@ -216,7 +216,7 @@ begin
           end if;
 
         when MSTATE1 => 
-          if xtal3_s then
+          if en_clk_i then              -- equivalent to xtal3_s
              psen_q   <= false;
            end if;
 
@@ -229,7 +229,7 @@ begin
             -- the rest of the core.
             prog_q   <= false;
           end if;
-          if xtal3_s then
+          if en_clk_i then              -- equivalent to xtal3_s
             -- RD, WR are removed at the end of XTAL3 of second machine cycle
             rd_q     <= false;
             wr_q     <= false;
@@ -242,7 +242,7 @@ begin
           end if;
 
         when MSTATE4 => 
-          if xtal3_s then
+          if en_clk_i then              -- equivalent to xtal3_s
             -- PSEN is set at the end of XTAL3
             if assert_psen_i then
               psen_q <= true;
@@ -398,6 +398,12 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.7  2005/05/04 20:12:36  arniml
+-- Fix bug report:
+-- "Wrong clock applied to T0"
+-- t0_o is generated inside clock_ctrl with a separate flip-flop running
+-- with xtal_i
+--
 -- Revision 1.6  2004/10/25 20:31:12  arniml
 -- remove PROG and end of XTAL2, see comment for details
 --
@@ -416,6 +422,5 @@ end rtl;
 --
 -- Revision 1.1  2004/03/23 21:31:52  arniml
 -- initial check-in
---
 --
 -------------------------------------------------------------------------------
