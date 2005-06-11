@@ -3,7 +3,7 @@
 -- T8048 Microcontroller System
 -- 8050 toplevel with Wishbone interface
 --
--- $Id: t8050_wb.vhd,v 1.1 2005-05-08 10:36:59 arniml Exp $
+-- $Id: t8050_wb.vhd,v 1.2 2005-06-11 10:16:05 arniml Exp $
 --
 -- Copyright (c) 2005, Arnim Laeuger (arniml@opencores.org)
 --
@@ -94,7 +94,7 @@ use ieee.numeric_std.all;
 use work.t48_core_comp_pack.t48_core;
 use work.t48_core_comp_pack.syn_rom;
 use work.t48_core_comp_pack.syn_ram;
-use work.t48_system_comp_pack.wb_master;
+use work.t48_system_comp_pack.t48_wb_master;
 
 architecture struct of t8050_wb is
 
@@ -240,7 +240,7 @@ begin
   -----------------------------------------------------------------------------
 
 
-  wb_master_b : wb_master
+  wb_master_b : t48_wb_master
     port map (
       xtal_i   => xtal_i,
       res_i    => reset_n_i,
@@ -291,4 +291,7 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2005/05/08 10:36:59  arniml
+-- initial check-in
+--
 -------------------------------------------------------------------------------

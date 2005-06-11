@@ -2,7 +2,7 @@
 --
 -- The Wishbone master module.
 --
--- $Id: wb_master.vhd,v 1.4 2005-05-10 22:36:23 arniml Exp $
+-- $Id: wb_master.vhd,v 1.5 2005-06-11 10:16:05 arniml Exp $
 --
 -- Copyright (c) 2005, Arnim Laeuger (arniml@opencores.org)
 --
@@ -69,7 +69,7 @@ use ieee.std_logic_1164.all;
 
 use work.t48_pack.all;
 
-entity wb_master is
+entity t48_wb_master is
 
   port (
     xtal_i   : in  std_logic;
@@ -92,10 +92,10 @@ entity wb_master is
     wb_dat_o : out std_logic_vector( 7 downto 0)
   );
 
-end wb_master;
+end t48_wb_master;
 
 
-architecture rtl of wb_master is
+architecture rtl of t48_wb_master is
 
   -----------------------------------------------------------------------------
   -- Controller FSM
@@ -253,6 +253,10 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.4  2005/05/10 22:36:23  arniml
+-- save data from wishbone bus in register bank with wb_ack
+-- necessary to hold data from peripheral/memory until it is read by T48
+--
 -- Revision 1.3  2005/05/08 10:36:07  arniml
 -- simplify address range:
 -- - configuration range

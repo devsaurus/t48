@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 --
--- $Id: t48_system_comp_pack-p.vhd,v 1.5 2005-05-08 10:36:24 arniml Exp $
+-- $Id: t48_system_comp_pack-p.vhd,v 1.6 2005-06-11 10:16:05 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -13,7 +13,7 @@ use ieee.std_logic_1164.all;
 
 package t48_system_comp_pack is
 
-  component wb_master
+  component t48_wb_master
     port (
       xtal_i   : in  std_logic;
       res_i    : in  std_logic;

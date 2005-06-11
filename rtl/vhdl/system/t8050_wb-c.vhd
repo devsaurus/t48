@@ -2,7 +2,7 @@
 --
 -- T8048 Microcontroller System
 --
--- $Id: t8050_wb-c.vhd,v 1.1 2005-05-08 10:36:59 arniml Exp $
+-- $Id: t8050_wb-c.vhd,v 1.2 2005-06-11 10:19:14 arniml Exp $
 --
 -- Copyright (c) 2005, Arnim Laeuger (arniml@opencores.org)
 --
@@ -22,8 +22,8 @@ configuration t8050_wb_struct_c0 of t8050_wb is
       use configuration work.syn_ram_lpm_c0;
     end for;
 
-    for wb_master_b : wb_master
-      use configuration work.wb_master_rtl_c0;
+    for wb_master_b : t48_wb_master
+      use configuration work.t48_wb_master_rtl_c0;
     end for;
 
     for t48_core_b : t48_core
