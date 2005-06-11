@@ -3,7 +3,7 @@
 -- The Conditional Branch Logic unit.
 -- Decisions whether to take a jump or not are made here.
 --
--- $Id: cond_branch.vhd,v 1.2 2004-04-24 23:44:25 arniml Exp $
+-- $Id: cond_branch.vhd,v 1.3 2005-06-11 10:08:43 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -49,9 +49,9 @@ use ieee.std_logic_1164.all;
 
 use work.t48_pack.word_t;
 
-use work.cond_branch_pack.all;
+use work.t48_cond_branch_pack.all;
 
-entity cond_branch is
+entity t48_cond_branch is
 
   port (
     -- Global Interface -------------------------------------------------------
@@ -73,7 +73,7 @@ entity cond_branch is
     comp_value_i   : in  comp_value_t
   );
 
-end cond_branch;
+end t48_cond_branch;
 
 
 library ieee;
@@ -82,7 +82,7 @@ use ieee.numeric_std.all;
 use work.t48_pack.res_active_c;
 use work.t48_pack.clk_active_c;
 
-architecture rtl of cond_branch is
+architecture rtl of t48_cond_branch is
 
   -- marker for branch taken
   signal take_branch_s,
@@ -205,8 +205,10 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.2  2004/04/24 23:44:25  arniml
+-- move from std_logic_arith to numeric_std
+--
 -- Revision 1.1  2004/03/23 21:31:52  arniml
 -- initial check-in
---
 --
 -------------------------------------------------------------------------------

@@ -3,15 +3,15 @@
 -- The Port 1 unit.
 -- Implements the Port 1 logic.
 --
--- $Id: p1-c.vhd,v 1.1 2004-03-23 21:31:52 arniml Exp $
+-- $Id: p1-c.vhd,v 1.2 2005-06-11 10:08:43 arniml Exp $
 --
 -- All rights reserved
 --
 -------------------------------------------------------------------------------
 
-configuration p1_rtl_c0 of p1 is
+configuration t48_p1_rtl_c0 of t48_p1 is
 
   for rtl
   end for;
 
-end p1_rtl_c0;
+end t48_p1_rtl_c0;

@@ -3,7 +3,7 @@
 -- The Program Status Word (PSW).
 -- Implements the PSW with its special bits.
 --
--- $Id: psw.vhd,v 1.7 2004-07-11 16:51:33 arniml Exp $
+-- $Id: psw.vhd,v 1.8 2005-06-11 10:08:43 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -49,7 +49,7 @@ use ieee.std_logic_1164.all;
 
 use work.t48_pack.word_t;
 
-entity psw is
+entity t48_psw is
 
   port (
     -- Global Interface -------------------------------------------------------
@@ -78,7 +78,7 @@ entity psw is
     bs_o               : out std_logic
   );
 
-end psw;
+end t48_psw;
 
 
 library ieee;
@@ -89,7 +89,7 @@ use work.t48_pack.res_active_c;
 use work.t48_pack.bus_idle_level_c;
 use work.t48_pack.nibble_t;
 
-architecture rtl of psw is
+architecture rtl of t48_psw is
 
   -- special bit positions in PSW
   constant carry_c     : natural := 3;
@@ -216,6 +216,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.7  2004/07/11 16:51:33  arniml
+-- cleanup copyright notice
+--
 -- Revision 1.6  2004/04/24 23:44:25  arniml
 -- move from std_logic_arith to numeric_std
 --

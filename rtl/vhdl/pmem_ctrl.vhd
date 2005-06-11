@@ -3,7 +3,7 @@
 -- The Program Memory control unit.
 -- All operations related to the Program Memory are managed here.
 --
--- $Id: pmem_ctrl.vhd,v 1.4 2005-06-08 19:13:53 arniml Exp $
+-- $Id: pmem_ctrl.vhd,v 1.5 2005-06-11 10:08:43 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -49,9 +49,9 @@ use ieee.std_logic_1164.all;
 
 use work.t48_pack.pmem_addr_t;
 use work.t48_pack.word_t;
-use work.pmem_ctrl_pack.pmem_addr_ident_t;
+use work.t48_pmem_ctrl_pack.pmem_addr_ident_t;
 
-entity pmem_ctrl is
+entity t48_pmem_ctrl is
 
   port (
     -- Global Interface -------------------------------------------------------
@@ -74,13 +74,13 @@ entity pmem_ctrl is
     pmem_data_i       : in  word_t
   );
 
-end pmem_ctrl;
+end t48_pmem_ctrl;
 
 
 library ieee;
 use ieee.numeric_std.all;
 
-use work.pmem_ctrl_pack.all;
+use work.t48_pmem_ctrl_pack.all;
 use work.t48_pack.res_active_c;
 use work.t48_pack.clk_active_c;
 use work.t48_pack.bus_idle_level_c;
@@ -88,7 +88,7 @@ use work.t48_pack.pmem_addr_width_c;
 use work.t48_pack.dmem_addr_width_c;
 use work.t48_pack.page_t;
 
-architecture rtl of pmem_ctrl is
+architecture rtl of t48_pmem_ctrl is
 
   -- implemented counter width of Program Counter
   -- the upper bit is only altered by JMP, CALL and RET(R)
@@ -226,6 +226,10 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.4  2005/06/08 19:13:53  arniml
+-- fix bug report
+-- "MSB of Program Counter changed upon PC increment"
+--
 -- Revision 1.3  2004/07/11 16:51:33  arniml
 -- cleanup copyright notice
 --

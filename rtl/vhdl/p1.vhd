@@ -3,7 +3,7 @@
 -- The Port 1 unit.
 -- Implements the Port 1 logic.
 --
--- $Id: p1.vhd,v 1.4 2004-07-11 16:51:33 arniml Exp $
+-- $Id: p1.vhd,v 1.5 2005-06-11 10:08:43 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -49,7 +49,7 @@ use ieee.std_logic_1164.all;
 
 use work.t48_pack.word_t;
 
-entity p1 is
+entity t48_p1 is
 
   port (
     -- Global Interface -------------------------------------------------------
@@ -68,14 +68,14 @@ entity p1 is
     p1_low_imp_o : out std_logic
   );
 
-end p1;
+end t48_p1;
 
 
 use work.t48_pack.clk_active_c;
 use work.t48_pack.res_active_c;
 use work.t48_pack.bus_idle_level_c;
 
-architecture rtl of p1 is
+architecture rtl of t48_p1 is
 
   -- the port output register
   signal p1_q   : word_t;
@@ -155,6 +155,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.4  2004/07/11 16:51:33  arniml
+-- cleanup copyright notice
+--
 -- Revision 1.3  2004/05/17 14:37:53  arniml
 -- reorder data_o generation
 --

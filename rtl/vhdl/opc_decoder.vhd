@@ -4,7 +4,7 @@
 -- Derives instruction mnemonics and multicycle information
 -- using the OPC table unit.
 --
--- $Id: opc_decoder.vhd,v 1.2 2004-07-11 16:51:33 arniml Exp $
+-- $Id: opc_decoder.vhd,v 1.3 2005-06-11 10:08:43 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -49,9 +49,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 use work.t48_pack.word_t;
-use work.decoder_pack.mnemonic_t;
+use work.t48_decoder_pack.mnemonic_t;
 
-entity opc_decoder is
+entity t48_opc_decoder is
 
   generic (
     -- store mnemonic in flip-flops (registered-out)
@@ -73,18 +73,18 @@ entity opc_decoder is
     multi_cycle_o : out boolean
   );
 
-end opc_decoder;
+end t48_opc_decoder;
 
 
 use work.t48_pack.clk_active_c;
 use work.t48_pack.res_active_c;
 use work.t48_pack.to_boolean;
 --use work.decoder_pack.MN_NOP;
-use work.decoder_pack.all;
+use work.t48_decoder_pack.all;
 
-use work.t48_comp_pack.opc_table;
+use work.t48_comp_pack.t48_opc_table;
 
-architecture rtl of opc_decoder is
+architecture rtl of t48_opc_decoder is
 
   -- the opcode register
   signal opcode_q : word_t;
@@ -114,7 +114,7 @@ begin
   -----------------------------------------------------------------------------
   -- Opcode Decoder Table
   -----------------------------------------------------------------------------
-  opc_table_b : opc_table
+  opc_table_b : t48_opc_table
     port map (
       opcode_i      => opcode_q,
       multi_cycle_o => multi_cycle_s,
@@ -170,8 +170,10 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.2  2004/07/11 16:51:33  arniml
+-- cleanup copyright notice
+--
 -- Revision 1.1  2004/03/23 21:31:52  arniml
 -- initial check-in
---
 --
 -------------------------------------------------------------------------------

@@ -3,7 +3,7 @@
 -- The BUS unit.
 -- Implements the BUS port logic.
 --
--- $Id: db_bus.vhd,v 1.4 2005-06-09 22:16:26 arniml Exp $
+-- $Id: db_bus.vhd,v 1.5 2005-06-11 10:08:43 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -49,7 +49,7 @@ use ieee.std_logic_1164.all;
 
 use work.t48_pack.word_t;
 
-entity db_bus is
+entity t48_db_bus is
 
   port (
     -- Global Interface -------------------------------------------------------
@@ -71,7 +71,7 @@ entity db_bus is
     db_dir_o     : out std_logic
   );
 
-end db_bus;
+end t48_db_bus;
 
 
 use work.t48_pack.clk_active_c;
@@ -79,7 +79,7 @@ use work.t48_pack.res_active_c;
 use work.t48_pack.bus_idle_level_c;
 use work.t48_pack.to_stdLogic;
 
-architecture rtl of db_bus is
+architecture rtl of t48_db_bus is
 
   -- the BUS output register
   signal bus_q    : word_t;
@@ -150,6 +150,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.4  2005/06/09 22:16:26  arniml
+-- Implement db_dir_o glitch-safe
+--
 -- Revision 1.3  2004/10/25 20:30:18  arniml
 -- delay db_dir_o by one machine cycle
 -- this fixes the timing relation between BUS data and WR'

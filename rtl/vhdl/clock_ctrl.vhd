@@ -3,7 +3,7 @@
 -- The Clock Control unit.
 -- Clock States and Machine Cycles are generated here.
 --
--- $Id: clock_ctrl.vhd,v 1.8 2005-06-09 22:15:10 arniml Exp $
+-- $Id: clock_ctrl.vhd,v 1.9 2005-06-11 10:08:43 arniml Exp $
 --
 -- Copyright (c) 2004, 2005, Arnim Laeuger (arniml@opencores.org)
 --
@@ -49,7 +49,7 @@ use ieee.std_logic_1164.all;
 
 use work.t48_pack.all;
 
-entity clock_ctrl is
+entity t48_clock_ctrl is
 
   generic (
     -- divide XTAL1 by 3 to derive Clock States
@@ -77,13 +77,13 @@ entity clock_ctrl is
     wr_o           : out boolean
   );
 
-end clock_ctrl;
+end t48_clock_ctrl;
 
 
 library ieee;
 use ieee.numeric_std.all;
 
-architecture rtl of clock_ctrl is
+architecture rtl of t48_clock_ctrl is
 
   -- The three XTAL1 cycles.
   signal xtal_q  : unsigned(1 downto 0);
@@ -398,6 +398,11 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.8  2005/06/09 22:15:10  arniml
+-- Use en_clk_i instead of xtal3_s for generation of external signals.
+-- This is required when the core runs with full xtal clock instead
+-- of xtal/3 (xtal_div_3_g = 0).
+--
 -- Revision 1.7  2005/05/04 20:12:36  arniml
 -- Fix bug report:
 -- "Wrong clock applied to T0"

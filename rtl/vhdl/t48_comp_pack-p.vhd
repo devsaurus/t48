@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 --
--- $Id: t48_comp_pack-p.vhd,v 1.8 2005-05-04 20:12:37 arniml Exp $
+-- $Id: t48_comp_pack-p.vhd,v 1.9 2005-06-11 10:08:43 arniml Exp $
 --
 -- Copyright (c) 2004, 2005, Arnim Laeuger (arniml@opencores.org)
 --
@@ -11,12 +11,12 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-use work.alu_pack.alu_op_t;
-use work.cond_branch_pack.branch_conditions_t;
-use work.cond_branch_pack.comp_value_t;
-use work.decoder_pack.mnemonic_t;
-use work.dmem_ctrl_pack.dmem_addr_ident_t;
-use work.pmem_ctrl_pack.pmem_addr_ident_t;
+use work.t48_alu_pack.alu_op_t;
+use work.t48_cond_branch_pack.branch_conditions_t;
+use work.t48_cond_branch_pack.comp_value_t;
+use work.t48_decoder_pack.mnemonic_t;
+use work.t48_dmem_ctrl_pack.dmem_addr_ident_t;
+use work.t48_pmem_ctrl_pack.pmem_addr_ident_t;
 use work.t48_pack.dmem_addr_t;
 use work.t48_pack.pmem_addr_t;
 use work.t48_pack.mstate_t;
@@ -25,7 +25,7 @@ use work.t48_pack.nibble_t;
 
 package t48_comp_pack is
 
-  component alu
+  component t48_alu
     port (
       clk_i              : in  std_logic;
       res_i              : in  std_logic;
@@ -49,7 +49,7 @@ package t48_comp_pack is
     );
   end component;
 
-  component bus_mux
+  component t48_bus_mux
     port (
       alu_data_i : in  word_t;
       bus_data_i : in  word_t;
@@ -64,7 +64,7 @@ package t48_comp_pack is
     );
   end component;
 
-  component clock_ctrl
+  component t48_clock_ctrl
     generic (
       xtal_div_3_g   : integer := 1
     );
@@ -90,7 +90,7 @@ package t48_comp_pack is
     );
   end component;
 
-  component cond_branch
+  component t48_cond_branch
     port (
       clk_i          : in  std_logic;
       res_i          : in  std_logic;
@@ -110,7 +110,7 @@ package t48_comp_pack is
     );
   end component;
 
-  component db_bus
+  component t48_db_bus
     port (
       clk_i        : in  std_logic;
       res_i        : in  std_logic;
@@ -129,7 +129,7 @@ package t48_comp_pack is
     );
   end component;
 
-  component decoder
+  component t48_decoder
     generic (
       register_mnemonic_g   : integer := 1
     );
@@ -217,7 +217,7 @@ package t48_comp_pack is
     );
   end component;
 
-  component dmem_ctrl
+  component t48_dmem_ctrl
     port (
       clk_i             : in  std_logic;
       res_i             : in  std_logic;
@@ -236,7 +236,7 @@ package t48_comp_pack is
     );
   end component;
 
-  component int
+  component t48_int
     port (
       clk_i             : in  std_logic;
       res_i             : in  std_logic;
@@ -261,7 +261,7 @@ package t48_comp_pack is
     );
   end component;
 
-  component opc_table
+  component t48_opc_table
     port (
       opcode_i      : in  word_t;
       multi_cycle_o : out std_logic;
@@ -269,7 +269,7 @@ package t48_comp_pack is
     );
   end component;
 
-  component opc_decoder
+  component t48_opc_decoder
     generic (
       register_mnemonic_g : integer := 1
     );
@@ -286,7 +286,7 @@ package t48_comp_pack is
     );
   end component;
 
-  component timer
+  component t48_timer
     generic (
       sample_t1_state_g : integer := 4
     );
@@ -307,7 +307,7 @@ package t48_comp_pack is
     );
   end component;
 
-  component p1
+  component t48_p1
     port (
       clk_i        : in  std_logic;
       res_i        : in  std_logic;
@@ -323,7 +323,7 @@ package t48_comp_pack is
     );
   end component;
 
-  component p2
+  component t48_p2
     port (
       clk_i        : in  std_logic;
       res_i        : in  std_logic;
@@ -344,7 +344,7 @@ package t48_comp_pack is
     );
   end component;
 
-  component pmem_ctrl
+  component t48_pmem_ctrl
     port (
       clk_i             : in  std_logic;
       res_i             : in  std_logic;
@@ -364,7 +364,7 @@ package t48_comp_pack is
     );
   end component;
 
-  component psw
+  component t48_psw
     port (
       clk_i              : in  std_logic;
       res_i              : in  std_logic;

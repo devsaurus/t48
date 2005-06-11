@@ -3,7 +3,7 @@
 -- The T48 Bus Connector.
 -- Multiplexes all drivers of the T48 bus.
 --
--- $Id: bus_mux.vhd,v 1.1 2004-03-23 21:31:52 arniml Exp $
+-- $Id: bus_mux.vhd,v 1.2 2005-06-11 10:08:43 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -49,7 +49,7 @@ use ieee.std_logic_1164.all;
 
 use work.t48_pack.word_t;
 
-entity bus_mux is
+entity t48_bus_mux is
 
   port (
     alu_data_i : in  word_t;
@@ -64,12 +64,12 @@ entity bus_mux is
     data_o     : out word_t
   );
 
-end bus_mux;
+end t48_bus_mux;
 
 
 use work.t48_pack.bus_idle_level_c;
 
-architecture rtl of bus_mux is
+architecture rtl of t48_bus_mux is
 
 begin
 
@@ -104,5 +104,7 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2004/03/23 21:31:52  arniml
+-- initial check-in
 --
 -------------------------------------------------------------------------------

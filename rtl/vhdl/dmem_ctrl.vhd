@@ -3,7 +3,7 @@
 -- The Data Memory control unit.
 -- All accesses to the Data Memory are managed here.
 --
--- $Id: dmem_ctrl.vhd,v 1.3 2004-04-24 23:44:25 arniml Exp $
+-- $Id: dmem_ctrl.vhd,v 1.4 2005-06-11 10:08:43 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -49,9 +49,9 @@ use ieee.std_logic_1164.all;
 
 use work.t48_pack.dmem_addr_t;
 use work.t48_pack.word_t;
-use work.dmem_ctrl_pack.dmem_addr_ident_t;
+use work.t48_dmem_ctrl_pack.dmem_addr_ident_t;
 
-entity dmem_ctrl is
+entity t48_dmem_ctrl is
 
   port (
     -- Global Interface -------------------------------------------------------
@@ -73,7 +73,7 @@ entity dmem_ctrl is
     dmem_data_o       : out word_t
   );
 
-end dmem_ctrl;
+end t48_dmem_ctrl;
 
 
 library ieee;
@@ -84,9 +84,9 @@ use work.t48_pack.res_active_c;
 use work.t48_pack.bus_idle_level_c;
 use work.t48_pack.to_stdLogic;
 
-use work.dmem_ctrl_pack.all;
+use work.t48_dmem_ctrl_pack.all;
 
-architecture rtl of dmem_ctrl is
+architecture rtl of t48_dmem_ctrl is
 
   signal dmem_addr_s,
          dmem_addr_q  : dmem_addr_t;
@@ -204,11 +204,13 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.3  2004/04/24 23:44:25  arniml
+-- move from std_logic_arith to numeric_std
+--
 -- Revision 1.2  2004/04/18 18:58:29  arniml
 -- clean up sensitivity list
 --
 -- Revision 1.1  2004/03/23 21:31:52  arniml
 -- initial check-in
---
 --
 -------------------------------------------------------------------------------

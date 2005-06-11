@@ -2,7 +2,7 @@
 --
 -- T48 Microcontroller Core
 --
--- $Id: t48_core.vhd,v 1.8 2005-05-04 20:12:37 arniml Exp $
+-- $Id: t48_core.vhd,v 1.9 2005-06-11 10:08:43 arniml Exp $
 --
 -- Copyright (c) 2004, 2005, Arnim Laeuger (arniml@opencores.org)
 --
@@ -119,11 +119,11 @@ entity t48_core is
 end t48_core;
 
 
-use work.alu_pack.alu_op_t;
-use work.cond_branch_pack.branch_conditions_t;
-use work.cond_branch_pack.comp_value_t;
-use work.dmem_ctrl_pack.dmem_addr_ident_t;
-use work.pmem_ctrl_pack.pmem_addr_ident_t;
+use work.t48_alu_pack.alu_op_t;
+use work.t48_cond_branch_pack.branch_conditions_t;
+use work.t48_cond_branch_pack.comp_value_t;
+use work.t48_dmem_ctrl_pack.dmem_addr_ident_t;
+use work.t48_pmem_ctrl_pack.pmem_addr_ident_t;
 use work.t48_comp_pack.all;
 use work.t48_pack.bus_idle_level_c;
 use work.t48_pack.word_t;
@@ -276,7 +276,7 @@ begin
 
   en_clk_s <= to_boolean(en_clk_i);
 
-  alu_b : alu
+  alu_b : t48_alu
     port map (
       clk_i              => clk_i,
       res_i              => reset_i,
@@ -299,7 +299,7 @@ begin
       p60_temp_reg_i     => alu_p60_temp_reg_s
     );
 
-  bus_mux_b : bus_mux
+  bus_mux_b : t48_bus_mux
     port map (
       alu_data_i => alu_data_s,
       bus_data_i => bus_data_s,
@@ -313,7 +313,7 @@ begin
       data_o     => t48_data_s
     );
 
-  clock_ctrl_b : clock_ctrl
+  clock_ctrl_b : t48_clock_ctrl
     generic map (
       xtal_div_3_g   => xtal_div_3_g
     )
@@ -338,7 +338,7 @@ begin
       wr_o           => wr_s
     );
 
-  cond_branch_b : cond_branch
+  cond_branch_b : t48_cond_branch
     port map (
       clk_i          => clk_i,
       res_i          => reset_i,
@@ -358,7 +358,7 @@ begin
     );
 
   use_db_bus: if include_bus_g = 1 generate
-    db_bus_b : db_bus
+    db_bus_b : t48_db_bus
       port map (
         clk_i        => clk_i,
         res_i        => reset_i,
@@ -383,7 +383,7 @@ begin
     db_dir_o   <= '0';
   end generate;
 
-  decoder_b : decoder
+  decoder_b : t48_decoder
     generic map (
       register_mnemonic_g => register_mnemonic_g
     )
@@ -470,7 +470,7 @@ begin
       tim_overflow_i         => tim_overflow_s
     );
 
-  dmem_ctrl_b : dmem_ctrl
+  dmem_ctrl_b : t48_dmem_ctrl
     port map (
       clk_i             => clk_i,
       res_i             => reset_i,
@@ -489,7 +489,7 @@ begin
     );
 
   use_timer: if include_timer_g = 1 generate
-    timer_b : timer
+    timer_b : t48_timer
       generic map (
         sample_t1_state_g => sample_t1_state_g
       )
@@ -518,7 +518,7 @@ begin
   tim_overflow_s <= to_boolean(tim_of_s);
 
   use_p1: if include_port1_g = 1 generate
-    p1_b : p1
+    p1_b : t48_p1
       port map (
         clk_i        => clk_i,
         res_i        => reset_i,
@@ -541,7 +541,7 @@ begin
   end generate;
 
   use_p2: if include_port2_g = 1 generate
-    p2_b : p2
+    p2_b : t48_p2
       port map (
         clk_i        => clk_i,
         res_i        => reset_i,
@@ -568,7 +568,7 @@ begin
     p2_low_imp_o <= '0';
   end generate;
 
-  pmem_ctrl_b : pmem_ctrl
+  pmem_ctrl_b : t48_pmem_ctrl
     port map (
       clk_i             => clk_i,
       res_i             => reset_i,
@@ -587,7 +587,7 @@ begin
       pmem_data_i       => pmem_data_i
     );
 
-  psw_b : psw
+  psw_b : t48_psw
     port map (
       clk_i              => clk_i,
       res_i              => reset_i,
@@ -631,6 +631,12 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.8  2005/05/04 20:12:37  arniml
+-- Fix bug report:
+-- "Wrong clock applied to T0"
+-- t0_o is generated inside clock_ctrl with a separate flip-flop running
+-- with xtal_i
+--
 -- Revision 1.7  2004/05/01 11:58:04  arniml
 -- update notice about expander port instructions
 --

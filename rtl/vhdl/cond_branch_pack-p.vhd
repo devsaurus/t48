@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 --
--- $Id: cond_branch_pack-p.vhd,v 1.1 2004-03-23 21:31:52 arniml Exp $
+-- $Id: cond_branch_pack-p.vhd,v 1.2 2005-06-11 10:08:43 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -11,7 +11,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-package cond_branch_pack is
+package t48_cond_branch_pack is
 
   -----------------------------------------------------------------------------
   -- The branch conditions.
@@ -25,12 +25,14 @@ package cond_branch_pack is
 
   subtype comp_value_t is std_logic_vector(2 downto 0);
 
-end cond_branch_pack;
+end t48_cond_branch_pack;
 
 
 -------------------------------------------------------------------------------
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2004/03/23 21:31:52  arniml
+-- initial check-in
 --
 -------------------------------------------------------------------------------

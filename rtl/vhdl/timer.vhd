@@ -2,7 +2,7 @@
 --
 -- The Timer/Counter unit.
 --
--- $Id: timer.vhd,v 1.5 2004-07-11 16:51:33 arniml Exp $
+-- $Id: timer.vhd,v 1.6 2005-06-11 10:08:43 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -49,7 +49,7 @@ use ieee.std_logic_1164.all;
 use work.t48_pack.word_t;
 use work.t48_pack.mstate_t;
 
-entity timer is
+entity t48_timer is
 
   generic (
     -- state in which T1 is sampled (3 or 4)
@@ -75,7 +75,7 @@ entity timer is
     overflow_o    : out std_logic
   );
 
-end timer;
+end t48_timer;
 
 
 library ieee;
@@ -83,7 +83,7 @@ use ieee.numeric_std.all;
 
 use work.t48_pack.all;
 
-architecture rtl of timer is
+architecture rtl of t48_timer is
 
   -- the 8 bit counter core
   signal counter_q   : unsigned(word_t'range);
@@ -255,6 +255,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.5  2004/07/11 16:51:33  arniml
+-- cleanup copyright notice
+--
 -- Revision 1.4  2004/07/04 13:06:45  arniml
 -- counter_q is not cleared during reset
 -- this would match all different descriptions of the Counter as
@@ -270,6 +273,5 @@ end rtl;
 --
 -- Revision 1.1  2004/03/23 21:31:53  arniml
 -- initial check-in
---
 --
 -------------------------------------------------------------------------------

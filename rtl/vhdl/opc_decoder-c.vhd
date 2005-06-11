@@ -4,20 +4,20 @@
 -- Derives instruction mnemonics and multicycle information
 -- using the OPC table unit.
 --
--- $Id: opc_decoder-c.vhd,v 1.1 2004-03-23 21:31:52 arniml Exp $
+-- $Id: opc_decoder-c.vhd,v 1.2 2005-06-11 10:08:43 arniml Exp $
 --
 -- All rights reserved
 --
 -------------------------------------------------------------------------------
 
-configuration opc_decoder_rtl_c0 of opc_decoder is
+configuration t48_opc_decoder_rtl_c0 of t48_opc_decoder is
 
   for rtl
 
-    for opc_table_b: opc_table
-      use configuration work.opc_table_rtl_c0;
+    for opc_table_b: t48_opc_table
+      use configuration work.t48_opc_table_rtl_c0;
     end for;
 
   end for;
 
-end opc_decoder_rtl_c0;
+end t48_opc_decoder_rtl_c0;

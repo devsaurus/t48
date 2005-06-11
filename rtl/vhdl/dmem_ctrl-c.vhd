@@ -3,7 +3,7 @@
 -- The Data Memory control unit.
 -- All accesses to the Data Memory are managed here.
 --
--- $Id: dmem_ctrl-c.vhd,v 1.1 2004-03-23 21:31:52 arniml Exp $
+-- $Id: dmem_ctrl-c.vhd,v 1.2 2005-06-11 10:08:43 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -11,9 +11,9 @@
 --
 -------------------------------------------------------------------------------
 
-configuration dmem_ctrl_rtl_c0 of dmem_ctrl is
+configuration t48_dmem_ctrl_rtl_c0 of t48_dmem_ctrl is
 
   for rtl
   end for;
 
-end dmem_ctrl_rtl_c0;
+end t48_dmem_ctrl_rtl_c0;

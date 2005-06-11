@@ -4,7 +4,7 @@
 -- Decodes the given opcode to instruction mnemonics.
 -- Also derives the multicycle information.
 --
--- $Id: opc_table.vhd,v 1.3 2004-07-11 16:51:33 arniml Exp $
+-- $Id: opc_table.vhd,v 1.4 2005-06-11 10:08:43 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -49,9 +49,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 use work.t48_pack.word_t;
-use work.decoder_pack.mnemonic_t;
+use work.t48_decoder_pack.mnemonic_t;
 
-entity opc_table is
+entity t48_opc_table is
 
   port (
     opcode_i      : in  word_t;
@@ -59,12 +59,12 @@ entity opc_table is
     mnemonic_o    : out mnemonic_t
   );
 
-end opc_table;
+end t48_opc_table;
 
 
-use work.decoder_pack.all;
+use work.t48_decoder_pack.all;
 
-architecture rtl of opc_table is
+architecture rtl of t48_opc_table is
 
 begin
 
@@ -410,6 +410,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.3  2004/07/11 16:51:33  arniml
+-- cleanup copyright notice
+--
 -- Revision 1.2  2004/03/28 13:10:48  arniml
 -- merge MN_ANLD, MN_MOVD_PP_A and MN_ORLD_PP_A to OUTLD_PP_A
 --

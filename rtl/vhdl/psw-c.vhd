@@ -3,15 +3,15 @@
 -- The Program Status Word (PSW).
 -- Implements the PSW with its special bits.
 --
--- $Id: psw-c.vhd,v 1.1 2004-03-23 21:31:53 arniml Exp $
+-- $Id: psw-c.vhd,v 1.2 2005-06-11 10:08:43 arniml Exp $
 --
 -- All rights reserved
 --
 -------------------------------------------------------------------------------
 
-configuration psw_rtl_c0 of psw is
+configuration t48_psw_rtl_c0 of t48_psw is
 
   for rtl
   end for;
 
-end psw_rtl_c0;
+end t48_psw_rtl_c0;

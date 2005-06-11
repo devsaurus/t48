@@ -3,7 +3,7 @@
 -- The Decoder unit.
 -- It decodes the instruction opcodes and executes them.
 --
--- $Id: decoder.vhd,v 1.18 2005-06-09 22:18:28 arniml Exp $
+-- $Id: decoder.vhd,v 1.19 2005-06-11 10:08:43 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -49,12 +49,12 @@ use ieee.std_logic_1164.all;
 
 use work.t48_pack.word_t;
 use work.t48_pack.mstate_t;
-use work.alu_pack.alu_op_t;
-use work.cond_branch_pack.all;
-use work.dmem_ctrl_pack.all;
-use work.pmem_ctrl_pack.all;
+use work.t48_alu_pack.alu_op_t;
+use work.t48_cond_branch_pack.all;
+use work.t48_dmem_ctrl_pack.all;
+use work.t48_pmem_ctrl_pack.all;
 
-entity decoder is
+entity t48_decoder is
 
   generic (
     -- store mnemonic in flip-flops (registered-out)
@@ -156,21 +156,21 @@ entity decoder is
     tim_overflow_i         : in  boolean
   );
 
-end decoder;
+end t48_decoder;
 
 
 use work.t48_pack.all;
-use work.alu_pack.all;
-use work.decoder_pack.all;
+use work.t48_alu_pack.all;
+use work.t48_decoder_pack.all;
 
-use work.t48_comp_pack.opc_decoder;
-use work.t48_comp_pack.int;
+use work.t48_comp_pack.t48_opc_decoder;
+use work.t48_comp_pack.t48_int;
 
 -- pragma translate_off
 use work.t48_tb_pack.tb_istrobe_s;
 -- pragma translate_on
 
-architecture rtl of decoder is
+architecture rtl of t48_decoder is
 
   -- Enable fixing a bug of Quartus II 4.0
   constant enable_quartus_bugfix_c : boolean := true;
@@ -242,7 +242,7 @@ begin
   -----------------------------------------------------------------------------
   -- Opcode Decoder
   -----------------------------------------------------------------------------
-  opc_decoder_b : opc_decoder
+  opc_decoder_b : t48_opc_decoder
     generic map (
       register_mnemonic_g => register_mnemonic_g
     )
@@ -262,7 +262,7 @@ begin
   -----------------------------------------------------------------------------
   -- Interrupt Controller.
   -----------------------------------------------------------------------------
-  int_b : int
+  int_b : t48_int
     port map (
       clk_i             => clk_i,
       res_i             => res_i,
@@ -1952,6 +1952,10 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.18  2005/06/09 22:18:28  arniml
+-- Move latching of BUS to MSTATE2
+--   -> sample BUS at the end of RD'
+--
 -- Revision 1.17  2005/05/09 22:26:08  arniml
 -- remove obsolete output stack_high_o
 --

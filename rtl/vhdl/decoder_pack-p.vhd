@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 --
--- $Id: decoder_pack-p.vhd,v 1.2 2004-03-28 13:09:53 arniml Exp $
+-- $Id: decoder_pack-p.vhd,v 1.3 2005-06-11 10:08:43 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -8,7 +8,7 @@
 --
 -------------------------------------------------------------------------------
 
-package decoder_pack is
+package t48_decoder_pack is
 
   -----------------------------------------------------------------------------
   -- The Mnemonics.
@@ -71,13 +71,16 @@ package decoder_pack is
                       MN_XRL,
                       MN_XRL_A_DATA);
 
-end decoder_pack;
+end t48_decoder_pack;
 
 
 -------------------------------------------------------------------------------
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.2  2004/03/28 13:09:53  arniml
+-- merge MN_ANLD, MN_MOVD_PP_A and MN_ORLD_PP_A to OUTLD_PP_A
+--
 -- Revision 1.1  2004/03/23 21:31:52  arniml
 -- initial check-in
 --

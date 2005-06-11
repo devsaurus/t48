@@ -3,7 +3,7 @@
 -- The Port 2 unit.
 -- Implements the Port 2 logic.
 --
--- $Id: p2.vhd,v 1.6 2004-07-11 16:51:33 arniml Exp $
+-- $Id: p2.vhd,v 1.7 2005-06-11 10:08:43 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -50,7 +50,7 @@ use ieee.std_logic_1164.all;
 use work.t48_pack.word_t;
 use work.t48_pack.nibble_t;
 
-entity p2 is
+entity t48_p2 is
 
   port (
     -- Global Interface -------------------------------------------------------
@@ -74,14 +74,14 @@ entity p2 is
     p2_low_imp_o : out std_logic
   );
 
-end p2;
+end t48_p2;
 
 
 use work.t48_pack.clk_active_c;
 use work.t48_pack.res_active_c;
 use work.t48_pack.bus_idle_level_c;
 
-architecture rtl of p2 is
+architecture rtl of t48_p2 is
 
   -- the port output register
   signal p2_q   : word_t;
@@ -198,6 +198,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.6  2004/07/11 16:51:33  arniml
+-- cleanup copyright notice
+--
 -- Revision 1.5  2004/05/17 13:52:46  arniml
 -- Fix bug "ANL and ORL to P1/P2 read port status instead of port output register"
 --

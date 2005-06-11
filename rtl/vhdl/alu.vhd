@@ -3,7 +3,7 @@
 -- The Arithmetic Logic Unit (ALU).
 -- It contains the ALU core plus the Accumulator and the Temp Reg.
 --
--- $Id: alu.vhd,v 1.8 2004-04-24 23:43:56 arniml Exp $
+-- $Id: alu.vhd,v 1.9 2005-06-11 10:08:43 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -48,9 +48,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 use work.t48_pack.word_t;
-use work.alu_pack.alu_op_t;
+use work.t48_alu_pack.alu_op_t;
 
-entity alu is
+entity t48_alu is
 
   port (
     -- Global Interface -------------------------------------------------------
@@ -77,7 +77,7 @@ entity alu is
     p60_temp_reg_i     : in  boolean
   );
 
-end alu;
+end t48_alu;
 
 
 library ieee;
@@ -87,13 +87,13 @@ use work.t48_pack.clk_active_c;
 use work.t48_pack.res_active_c;
 use work.t48_pack.bus_idle_level_c;
 use work.t48_pack.nibble_t;
-use work.alu_pack.all;
+use work.t48_alu_pack.all;
 
 -- pragma translate_off
 use work.t48_tb_pack.tb_accu_s;
 -- pragma translate_on
 
-architecture rtl of alu is
+architecture rtl of t48_alu is
 
   -- the Accumulator and Temp Reg
   signal accumulator_q,
@@ -419,6 +419,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.8  2004/04/24 23:43:56  arniml
+-- move from std_logic_arith to numeric_std
+--
 -- Revision 1.7  2004/04/07 22:09:03  arniml
 -- remove unused signals
 --
