@@ -1,13 +1,13 @@
 
 README for the T48 uController project
 ======================================
-Version: $Date: 2004-09-16 20:45:12 $
+Version: $Date: 2005-06-19 15:59:48 $
 
 
 Introduction
 ------------
 
-The T48 µController core an is implementation of the MCS-48 microcontroller
+The T48 µController core is an implementation of the MCS-48 microcontroller
 family architecture. While being a controller core for SoC, it also aims for
 code-compatability and cycle-accuracy so that it can be used as a drop-in
 replacement for any MCS-48 controller.
