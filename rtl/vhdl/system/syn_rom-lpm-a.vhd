@@ -3,7 +3,7 @@
 -- A synchronous parametrizable ROM instantiating a standard ROM from
 -- the Altera LPM.
 --
--- $Id: syn_rom-lpm-a.vhd,v 1.1 2004-03-24 21:32:27 arniml Exp $
+-- $Id: syn_rom-lpm-a.vhd,v 1.2 2005-09-07 17:39:34 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -63,16 +63,19 @@ architecture lpm of syn_rom is
     port (
       address             : in  std_logic_vector(LPM_WIDTHAD-1 downto 0);
       inclock             : in  std_logic;
+      outclock            : in  std_logic;
       memenab             : in  std_logic;
       q                   : out std_logic_vector(LPM_WIDTH-1 downto 0)
     );
   end component;
 
-  signal one_s : std_logic;
+  signal one_s,
+         zero_s : std_logic;
 
 begin
 
-  one_s <= '1';
+  one_s  <= '1';
+  zero_s <= '0';
 
   rom_b : lpm_rom
     generic map (
@@ -88,6 +91,7 @@ begin
     port map (
       address  => rom_addr_i,
       inclock  => clk_i,
+      outclock => zero_s,               -- unused
       memenab  => one_s,
       q        => rom_data_o
     );
@@ -99,4 +103,7 @@ end lpm;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2004/03/24 21:32:27  arniml
+-- initial check-in
+--
 -------------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 --
 -- The testbench for t48_core.
 --
--- $Id: tb.vhd,v 1.10 2004-05-21 11:24:47 arniml Exp $
+-- $Id: tb.vhd,v 1.11 2005-09-07 17:39:40 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -87,6 +87,7 @@ architecture behav of tb is
     port (
       address             : in  std_logic_vector(LPM_WIDTHAD-1 downto 0);
       inclock             : in  std_logic;
+      outclock            : in  std_logic;
       memenab             : in  std_logic;
       q                   : out std_logic_vector(LPM_WIDTH-1 downto 0)
     );
@@ -162,6 +163,7 @@ begin
     port map (
       address  => rom_addr_s(10 downto 0),
       inclock  => xtal_s,
+      outclock => zero_s,               -- unused
       memenab  => one_s,
       q        => rom_data_s
     );
@@ -186,6 +188,7 @@ begin
     port map (
       address  => ext_rom_addr_s(10 downto 0),
       inclock  => xtal_s,
+      outclock => zero_s,               -- unused
       memenab  => one_s,
       q        => ext_rom_data_s
     );
@@ -554,6 +557,13 @@ end behav;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.10  2004/05/21 11:24:47  arniml
+-- split 4k internal ROM into
+--   + 2k internal ROM
+--   + 2k external ROM
+-- EA of t48_core is driven by MSB of internal ROM address
+-- if upper 2k block is selected, the system switches to EA mode on the fly
+--
 -- Revision 1.9  2004/05/17 14:43:33  arniml
 -- add testbench peripherals for P1 and P2
 -- this became necessary to observe a difference between externally applied
