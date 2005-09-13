@@ -1,11 +1,23 @@
 
 Known bugs of the T48 uController core
 ======================================
-Version: $Date: 2005-06-08 19:23:24 $
+Version: $Date: 2005-09-13 21:27:12 $
 
 
 Release 0.5 BETA
 ----------------
+
+*******************************************************************************
+Target address of JMP and CALL to Program Memory Bank 1 corrupted by interrupt
+
+An interrupt occuring during the execution of a JMP instruction, forces bit 11
+of the target address to 0. This corrupts target addresses that are located in
+Program Memory Bank 1.
+
+Fixed in:
+int.vhd 1.5
+New regression test: white_box/int_on_int
+Fix will be included in next release.
 
 *******************************************************************************
 MSB of Program Counter changed upon PC increment
@@ -39,6 +51,11 @@ Fix will be included in next release.
 
 Release 0.4 BETA
 ----------------
+
+*******************************************************************************
+Target address of JMP and CALL to Program Memory Bank 1 corrupted by interrupt
+
+See above.
 
 *******************************************************************************
 MSB of Program Counter changed upon PC increment
@@ -76,6 +93,11 @@ Fix will be included in next release.
 
 Release 0.3 BETA
 ----------------
+
+*******************************************************************************
+Target address of JMP and CALL to Program Memory Bank 1 corrupted by interrupt
+
+See above.
 
 *******************************************************************************
 MSB of Program Counter changed upon PC increment
