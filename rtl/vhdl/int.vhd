@@ -3,7 +3,7 @@
 -- The Interrupt Controller.
 -- It collects the interrupt sources and notifies the decoder.
 --
--- $Id: int.vhd,v 1.4 2005-06-11 10:08:43 arniml Exp $
+-- $Id: int.vhd,v 1.5 2005-09-13 21:00:16 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -227,7 +227,7 @@ begin
   ext_int_o         <= int_type_q = ext_int_c;
   tim_int_o         <= int_type_q = tim_int_c;
   int_pending_o     <= int_state_q = PENDING;
-  int_in_progress_o <= int_in_progress_q;
+  int_in_progress_o <= int_in_progress_q and int_state_q /= IDLE;
 
 end rtl;
 
@@ -236,6 +236,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.4  2005/06/11 10:08:43  arniml
+-- introduce prefix 't48_' for all packages, entities and configurations
+--
 -- Revision 1.3  2004/07/11 16:51:33  arniml
 -- cleanup copyright notice
 --
