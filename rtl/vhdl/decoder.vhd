@@ -3,7 +3,7 @@
 -- The Decoder unit.
 -- It decodes the instruction opcodes and executes them.
 --
--- $Id: decoder.vhd,v 1.19 2005-06-11 10:08:43 arniml Exp $
+-- $Id: decoder.vhd,v 1.20 2005-09-13 21:08:34 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -323,13 +323,17 @@ begin
 
     case clk_mstate_i is
       when MSTATE1 =>
-        if need_address_v and not int_pending_s then
+        if need_address_v then
           if ea_i = '0' then
-            pm_read_pmem_o  <= true;
+            if not int_pending_s then
+              pm_read_pmem_o <= true;
+            end if;
+
           else
-            bus_read_bus_s  <= true;
-            p2_output_pch_o <= true;
+            bus_read_bus_s   <= true;
+            p2_output_pch_o  <= true;
           end if;
+
         end if;
 
         if not clk_second_cycle_i then
@@ -1952,6 +1956,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.19  2005/06/11 10:08:43  arniml
+-- introduce prefix 't48_' for all packages, entities and configurations
+--
 -- Revision 1.18  2005/06/09 22:18:28  arniml
 -- Move latching of BUS to MSTATE2
 --   -> sample BUS at the end of RD'
