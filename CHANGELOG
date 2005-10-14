@@ -1,8 +1,11 @@
 
 Change log for the T48 uController core
 =======================================
-Version: $Date: 2005-05-08 15:51:47 $
+Version: $Date: 2005-10-14 23:25:41 $
 
+
+Release 0.6 BETA
+----------------
 
 * Bugfix for "Wrong clock applied to T0"
   Applied in clock_ctrl.vhd 1.7
@@ -17,6 +20,25 @@ Version: $Date: 2005-05-08 15:51:47 $
 
 * New system toplevel: t8050_wb.vhd
   Contains the Wishbone master.
+
+* Prefixed all design units with 't48_'.
+
+* Updates for running the core with full xtal clock. Should work now.
+
+* Move latching of BUS to MSTATE2 in decoder.vhd
+    -> sample BUS at the end of RD'
+
+* Fix a glitch on PCH when an interrupt occurs during external
+  program memory fetch in decoder.vhd
+
+* Bugfix for "Target address of JMP to Program Memory Bank 1 corrupted
+              by interrupt"
+  and        "Return address of CALL to Program Memory Bank 1 corrupted
+              by interrupt"
+  Applied in int.vhd 1.5
+
+* Bugfix for "MSB of Program Counter changed upon PC increment"
+  Applied in pmem_ctrl.vhd 1.4
 
 
 Release 0.5 BETA
