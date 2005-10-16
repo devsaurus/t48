@@ -1,7 +1,7 @@
 
 Change log for the T48 uController core
 =======================================
-Version: $Date: 2005-10-14 23:25:41 $
+Version: $Date: 2005-10-16 08:10:35 $
 
 
 Release 0.6 BETA
@@ -39,6 +39,8 @@ Release 0.6 BETA
 
 * Bugfix for "MSB of Program Counter changed upon PC increment"
   Applied in pmem_ctrl.vhd 1.4
+
+* Preliminary Integration Manual added.
 
 
 Release 0.5 BETA
