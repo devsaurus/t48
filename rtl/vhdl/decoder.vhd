@@ -3,7 +3,7 @@
 -- The Decoder unit.
 -- It decodes the instruction opcodes and executes them.
 --
--- $Id: decoder.vhd,v 1.20 2005-09-13 21:08:34 arniml Exp $
+-- $Id: decoder.vhd,v 1.21 2005-10-31 10:08:33 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -330,7 +330,9 @@ begin
             end if;
 
           else
-            bus_read_bus_s   <= true;
+            if not int_pending_s then
+              bus_read_bus_s <= true;
+            end if;
             p2_output_pch_o  <= true;
           end if;
 
@@ -1956,6 +1958,11 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.20  2005/09/13 21:08:34  arniml
+-- move check for int_pending_s into ea_i_='0' branch
+-- this fixes a glitch on PCH when an interrutp occurs
+-- during external program memory fetch
+--
 -- Revision 1.19  2005/06/11 10:08:43  arniml
 -- introduce prefix 't48_' for all packages, entities and configurations
 --
