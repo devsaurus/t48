@@ -3,7 +3,7 @@
 -- T8048 Microcontroller System
 -- 8050 toplevel with Wishbone interface
 --
--- $Id: t8050_wb.vhd,v 1.2 2005-06-11 10:16:05 arniml Exp $
+-- $Id: t8050_wb.vhd,v 1.3 2005-11-01 21:39:14 arniml Exp $
 --
 -- Copyright (c) 2005, Arnim Laeuger (arniml@opencores.org)
 --
@@ -55,33 +55,34 @@ entity t8050_wb is
 
   port (
     -- T48 Interface ----------------------------------------------------------
-    xtal_i       : in  std_logic;
-    reset_n_i    : in  std_logic;
-    t0_i         : in  std_logic;
-    t0_o         : out std_logic;
-    t0_dir_o     : out std_logic;
-    int_n_i      : in  std_logic;
-    ea_i         : in  std_logic;
-    rd_n_o       : out std_logic;
-    psen_n_o     : out std_logic;
-    wr_n_o       : out std_logic;
-    ale_o        : out std_logic;
-    t1_i         : in  std_logic;
-    p2_i         : in  std_logic_vector( 7 downto 0);
-    p2_o         : out std_logic_vector( 7 downto 0);
-    p2_low_imp_o : out std_logic;
-    p1_i         : in  std_logic_vector( 7 downto 0);
-    p1_o         : out std_logic_vector( 7 downto 0);
-    p1_low_imp_o : out std_logic;
-    prog_n_o     : out std_logic;
+    xtal_i        : in  std_logic;
+    reset_n_i     : in  std_logic;
+    t0_i          : in  std_logic;
+    t0_o          : out std_logic;
+    t0_dir_o      : out std_logic;
+    int_n_i       : in  std_logic;
+    ea_i          : in  std_logic;
+    rd_n_o        : out std_logic;
+    psen_n_o      : out std_logic;
+    wr_n_o        : out std_logic;
+    ale_o         : out std_logic;
+    t1_i          : in  std_logic;
+    p2_i          : in  std_logic_vector( 7 downto 0);
+    p2_o          : out std_logic_vector( 7 downto 0);
+    p2l_low_imp_o : out std_logic;
+    p2h_low_imp_o : out std_logic;
+    p1_i          : in  std_logic_vector( 7 downto 0);
+    p1_o          : out std_logic_vector( 7 downto 0);
+    p1_low_imp_o  : out std_logic;
+    prog_n_o      : out std_logic;
     -- Wishbone Interface -----------------------------------------------------
-    wb_cyc_o     : out std_logic;
-    wb_stb_o     : out std_logic;
-    wb_we_o      : out std_logic;
-    wb_adr_o     : out std_logic_vector(23 downto 0);
-    wb_ack_i     : in  std_logic;
-    wb_dat_i     : in  std_logic_vector( 7 downto 0);
-    wb_dat_o     : out std_logic_vector( 7 downto 0)
+    wb_cyc_o      : out std_logic;
+    wb_stb_o      : out std_logic;
+    wb_we_o       : out std_logic;
+    wb_adr_o      : out std_logic_vector(23 downto 0);
+    wb_ack_i      : in  std_logic;
+    wb_dat_i      : in  std_logic_vector( 7 downto 0);
+    wb_dat_o      : out std_logic_vector( 7 downto 0)
 
   );
 
@@ -148,37 +149,38 @@ begin
       sample_t1_state_g   => 4
     )
     port map (
-      xtal_i       => xtal_i,
-      reset_i      => reset_n_i,
-      t0_i         => t0_i,
-      t0_o         => t0_o,
-      t0_dir_o     => t0_dir_o,
-      int_n_i      => int_n_i,
-      ea_i         => ea_s,
-      rd_n_o       => rd_n_s,
-      psen_n_o     => psen_n_o,
-      wr_n_o       => wr_n_s,
-      ale_o        => ale_s,
-      db_i         => db_bus_to_t48,
-      db_o         => db_bus_from_t48,
-      db_dir_o     => open,
-      t1_i         => t1_i,
-      p2_i         => p2_in_s,
-      p2_o         => p2_out_s,
-      p2_low_imp_o => p2_low_imp_o,
-      p1_i         => p1_in_s,
-      p1_o         => p1_out_s,
-      p1_low_imp_o => p1_low_imp_o,
-      prog_n_o     => prog_n_o,
-      clk_i        => xtal_i,
-      en_clk_i     => en_clk_s,
-      xtal3_o      => xtal3_s,
-      dmem_addr_o  => dmem_addr_s,
-      dmem_we_o    => dmem_we_s,
-      dmem_data_i  => dmem_data_from_s,
-      dmem_data_o  => dmem_data_to_s,
-      pmem_addr_o  => pmem_addr_s,
-      pmem_data_i  => pmem_data_s
+      xtal_i        => xtal_i,
+      reset_i       => reset_n_i,
+      t0_i          => t0_i,
+      t0_o          => t0_o,
+      t0_dir_o      => t0_dir_o,
+      int_n_i       => int_n_i,
+      ea_i          => ea_s,
+      rd_n_o        => rd_n_s,
+      psen_n_o      => psen_n_o,
+      wr_n_o        => wr_n_s,
+      ale_o         => ale_s,
+      db_i          => db_bus_to_t48,
+      db_o          => db_bus_from_t48,
+      db_dir_o      => open,
+      t1_i          => t1_i,
+      p2_i          => p2_in_s,
+      p2_o          => p2_out_s,
+      p2l_low_imp_o => p2l_low_imp_o,
+      p2h_low_imp_o => p2h_low_imp_o,
+      p1_i          => p1_in_s,
+      p1_o          => p1_out_s,
+      p1_low_imp_o  => p1_low_imp_o,
+      prog_n_o      => prog_n_o,
+      clk_i         => xtal_i,
+      en_clk_i      => en_clk_s,
+      xtal3_o       => xtal3_s,
+      dmem_addr_o   => dmem_addr_s,
+      dmem_we_o     => dmem_we_s,
+      dmem_data_i   => dmem_data_from_s,
+      dmem_data_o   => dmem_data_to_s,
+      pmem_addr_o   => pmem_addr_s,
+      pmem_data_i   => pmem_data_s
     );
 
 
@@ -291,6 +293,9 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.2  2005/06/11 10:16:05  arniml
+-- introduce prefix 't48_' for wb_master entity and configuration
+--
 -- Revision 1.1  2005/05/08 10:36:59  arniml
 -- initial check-in
 --

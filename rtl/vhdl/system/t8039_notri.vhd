@@ -3,7 +3,7 @@
 -- T8039 Microcontroller System
 -- 8039 toplevel without tri-states
 --
--- $Id: t8039_notri.vhd,v 1.1 2004-12-03 19:42:34 arniml Exp $
+-- $Id: t8039_notri.vhd,v 1.2 2005-11-01 21:38:10 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -54,28 +54,29 @@ entity t8039_notri is
   );
 
   port (
-    xtal_i       : in  std_logic;
-    reset_n_i    : in  std_logic;
-    t0_i         : in  std_logic;
-    t0_o         : out std_logic;
-    t0_dir_o     : out std_logic;
-    int_n_i      : in  std_logic;
-    ea_i         : in  std_logic;
-    rd_n_o       : out std_logic;
-    psen_n_o     : out std_logic;
-    wr_n_o       : out std_logic;
-    ale_o        : out std_logic;
-    db_i         : in  std_logic_vector( 7 downto 0);
-    db_o         : out std_logic_vector( 7 downto 0);
-    db_dir_o     : out std_logic;
-    t1_i         : in  std_logic;
-    p2_i         : in  std_logic_vector( 7 downto 0);
-    p2_o         : out std_logic_vector( 7 downto 0);
-    p2_low_imp_o : out std_logic;
-    p1_i         : in  std_logic_vector( 7 downto 0);
-    p1_o         : out std_logic_vector( 7 downto 0);
-    p1_low_imp_o : out std_logic;
-    prog_n_o     : out std_logic
+    xtal_i        : in  std_logic;
+    reset_n_i     : in  std_logic;
+    t0_i          : in  std_logic;
+    t0_o          : out std_logic;
+    t0_dir_o      : out std_logic;
+    int_n_i       : in  std_logic;
+    ea_i          : in  std_logic;
+    rd_n_o        : out std_logic;
+    psen_n_o      : out std_logic;
+    wr_n_o        : out std_logic;
+    ale_o         : out std_logic;
+    db_i          : in  std_logic_vector( 7 downto 0);
+    db_o          : out std_logic_vector( 7 downto 0);
+    db_dir_o      : out std_logic;
+    t1_i          : in  std_logic;
+    p2_i          : in  std_logic_vector( 7 downto 0);
+    p2_o          : out std_logic_vector( 7 downto 0);
+    p2l_low_imp_o : out std_logic;
+    p2h_low_imp_o : out std_logic;
+    p1_i          : in  std_logic_vector( 7 downto 0);
+    p1_o          : out std_logic_vector( 7 downto 0);
+    p1_low_imp_o  : out std_logic;
+    prog_n_o      : out std_logic
   );
 
 end t8039_notri;
@@ -129,37 +130,38 @@ begin
       sample_t1_state_g   => 4
     )
     port map (
-      xtal_i       => xtal_i,
-      reset_i      => reset_n_i,
-      t0_i         => t0_i,
-      t0_o         => t0_o,
-      t0_dir_o     => t0_dir_o,
-      int_n_i      => int_n_i,
-      ea_i         => ea_i,
-      rd_n_o       => rd_n_o,
-      psen_n_o     => psen_n_o,
-      wr_n_o       => wr_n_o,
-      ale_o        => ale_o,
-      db_i         => db_i,
-      db_o         => db_o,
-      db_dir_o     => db_dir_o,
-      t1_i         => t1_i,
-      p2_i         => p2_in_s,
-      p2_o         => p2_out_s,
-      p2_low_imp_o => p2_low_imp_o,
-      p1_i         => p1_in_s,
-      p1_o         => p1_out_s,
-      p1_low_imp_o => p1_low_imp_o,
-      prog_n_o     => prog_n_o,
-      clk_i        => xtal_i,
-      en_clk_i     => xtal3_s,
-      xtal3_o      => xtal3_s,
-      dmem_addr_o  => dmem_addr_s,
-      dmem_we_o    => dmem_we_s,
-      dmem_data_i  => dmem_data_from_s,
-      dmem_data_o  => dmem_data_to_s,
-      pmem_addr_o  => open,
-      pmem_data_i  => pmem_data_s
+      xtal_i        => xtal_i,
+      reset_i       => reset_n_i,
+      t0_i          => t0_i,
+      t0_o          => t0_o,
+      t0_dir_o      => t0_dir_o,
+      int_n_i       => int_n_i,
+      ea_i          => ea_i,
+      rd_n_o        => rd_n_o,
+      psen_n_o      => psen_n_o,
+      wr_n_o        => wr_n_o,
+      ale_o         => ale_o,
+      db_i          => db_i,
+      db_o          => db_o,
+      db_dir_o      => db_dir_o,
+      t1_i          => t1_i,
+      p2_i          => p2_in_s,
+      p2_o          => p2_out_s,
+      p2l_low_imp_o => p2l_low_imp_o,
+      p2h_low_imp_o => p2h_low_imp_o,
+      p1_i          => p1_in_s,
+      p1_o          => p1_out_s,
+      p1_low_imp_o  => p1_low_imp_o,
+      prog_n_o      => prog_n_o,
+      clk_i         => xtal_i,
+      en_clk_i      => xtal3_s,
+      xtal3_o       => xtal3_s,
+      dmem_addr_o   => dmem_addr_s,
+      dmem_we_o     => dmem_we_s,
+      dmem_data_i   => dmem_data_from_s,
+      dmem_data_o   => dmem_data_to_s,
+      pmem_addr_o   => open,
+      pmem_data_i   => pmem_data_s
     );
 
 
@@ -200,4 +202,7 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2004/12/03 19:42:34  arniml
+-- initial check-in
+--
 -------------------------------------------------------------------------------
