@@ -2,7 +2,7 @@
 --
 -- The testbench for t8039.
 --
--- $Id: tb_t8039.vhd,v 1.1 2004-04-18 19:00:07 arniml Exp $
+-- $Id: tb_t8039.vhd,v 1.2 2005-11-01 21:22:28 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -177,7 +177,7 @@ begin
                     p2_b,
                     db_b)
   begin
-    ext_mem_addr_s(11 downto 8) <= p2_b(3 downto 0);
+    ext_mem_addr_s(11 downto 8) <= To_X01Z(p2_b(3 downto 0));
 
     if ale_s = '1' then
       if not is_X(db_b) then
@@ -286,4 +286,7 @@ end behav;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2004/04/18 19:00:07  arniml
+-- initial check-in
+--
 -------------------------------------------------------------------------------
