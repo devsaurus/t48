@@ -3,7 +3,7 @@
 -- The Decoder unit.
 -- It decodes the instruction opcodes and executes them.
 --
--- $Id: decoder.vhd,v 1.21 2005-10-31 10:08:33 arniml Exp $
+-- $Id: decoder.vhd,v 1.22 2005-11-01 21:25:37 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -66,6 +66,7 @@ entity t48_decoder is
     clk_i                  : in  std_logic;
     res_i                  : in  std_logic;
     en_clk_i               : in  boolean;
+    xtal_i                 : in  std_logic;
     ea_i                   : in  std_logic;
     ale_i                  : in  boolean;
     int_n_i                : in  std_logic;
@@ -131,7 +132,6 @@ entity t48_decoder is
     -- Port 2 Interface -------------------------------------------------------
     p2_read_reg_o          : out boolean;
     p2_output_pch_o        : out boolean;
-    p2_output_exp_o        : out boolean;
     -- Program Memory Controller Interface ------------------------------------
     pm_inc_pc_o            : out boolean;
     pm_write_pmem_addr_o   : out boolean;
@@ -219,6 +219,8 @@ architecture rtl of t48_decoder is
 
   signal dm_write_dmem_s   : boolean;
 
+  signal p2_output_exp_s   : boolean;
+
   -- interrupt handling
   signal jtf_executed_s    : boolean;
   signal en_tcnti_s        : boolean;
@@ -267,6 +269,7 @@ begin
       clk_i             => clk_i,
       res_i             => res_i,
       en_clk_i          => en_clk_i,
+      xtal_i            => xtal_i,
       clk_mstate_i      => clk_mstate_i,
       jtf_executed_i    => jtf_executed_s,
       tim_overflow_i    => tim_overflow_i,
@@ -375,7 +378,8 @@ begin
 
       when MSTATE5 =>
         if ea_i = '1' and
-           (need_address_v or last_cycle_s) then
+           (need_address_v or last_cycle_s) and
+           not p2_output_exp_s then
           p2_output_pch_o   <= true;
         end if;
 
@@ -509,7 +513,7 @@ begin
     p2_read_p2_o           <= false;
     p2_read_reg_o          <= false;
     p2_read_exp_o          <= false;
-    p2_output_exp_o        <= false;
+    p2_output_exp_s        <= false;
     psw_special_data_o     <= '0';
     psw_inc_stackp_o       <= false;
     psw_dec_stackp_o       <= false;
@@ -1362,13 +1366,13 @@ begin
             -- output expander port number on Port 2 while active edge of PROG
             -- write Accumulator to expander port
             when MSTATE4 =>
-              p2_output_exp_o <= true;
+              p2_output_exp_s <= true;
 
               alu_read_alu_o  <= true;
               p2_write_exp_o  <= true;
 
             when MSTATE5 =>
-              p2_output_exp_o <= true;
+              p2_output_exp_s <= true;
 
             when others =>
               null;
@@ -1378,7 +1382,7 @@ begin
         else
           -- hold expander port until inactive edge of PROG 
           if clk_mstate_i = MSTATE1 or clk_mstate_i = MSTATE2 then
-            p2_output_exp_o   <= true;
+            p2_output_exp_s   <= true;
           end if;
 
         end if;
@@ -1400,14 +1404,14 @@ begin
             -- output expander port number on Port 2 while active edge of PROG
             -- write 1's to expander port to set lower nibble of Port 2 to input
             when MSTATE4 =>
-              p2_output_exp_o        <= true;
+              p2_output_exp_s        <= true;
 
               data_s(nibble_t'range) <= (others => '1');
               read_dec_s             <= true;
               p2_write_exp_o         <= true;
 
             when MSTATE5 =>
-              p2_output_exp_o        <= true;
+              p2_output_exp_s        <= true;
 
             when others =>
               null;
@@ -1418,13 +1422,13 @@ begin
           case clk_mstate_i is
             -- hold expander port until inactive edge of PROG
             when MSTATE1 =>
-              p2_output_exp_o  <= true;
+              p2_output_exp_s  <= true;
 
             -- hold expander port until inactive edge of PROG
             -- write Accumulator with nibble of expander port
             when MSTATE2 =>
               p2_read_p2_o     <= true;
-              p2_output_exp_o  <= true;
+              p2_output_exp_s  <= true;
               p2_read_exp_o    <= true;
               alu_write_accu_o <= true;
 
@@ -1958,6 +1962,11 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.21  2005/10/31 10:08:33  arniml
+-- Suppress assertion of bus_read_bus_s when interrupt is pending.
+-- This should fix bug report
+-- "PROBLEM WHEN INT AND JMP"
+--
 -- Revision 1.20  2005/09/13 21:08:34  arniml
 -- move check for int_pending_s into ea_i_='0' branch
 -- this fixes a glitch on PCH when an interrutp occurs
