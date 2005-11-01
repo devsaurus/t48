@@ -3,7 +3,7 @@
 -- The Clock Control unit.
 -- Clock States and Machine Cycles are generated here.
 --
--- $Id: clock_ctrl.vhd,v 1.9 2005-06-11 10:08:43 arniml Exp $
+-- $Id: clock_ctrl.vhd,v 1.10 2005-11-01 21:24:21 arniml Exp $
 --
 -- Copyright (c) 2004, 2005, Arnim Laeuger (arniml@opencores.org)
 --
@@ -175,7 +175,9 @@ begin
 
     x1_s <= '1';
     x2_s <= '1';
-    x3_s <= '1';
+    x3_s <=   '1'
+            when en_clk_i else
+              '0';
     t0_o <= xtal_i;
 
   end generate;
@@ -216,7 +218,7 @@ begin
           end if;
 
         when MSTATE1 => 
-          if en_clk_i then              -- equivalent to xtal3_s
+          if xtal3_s then
              psen_q   <= false;
            end if;
 
@@ -229,20 +231,20 @@ begin
             -- the rest of the core.
             prog_q   <= false;
           end if;
-          if en_clk_i then              -- equivalent to xtal3_s
+          if xtal3_s then
             -- RD, WR are removed at the end of XTAL3 of second machine cycle
             rd_q     <= false;
             wr_q     <= false;
           end if;
 
         when MSTATE3 => 
-          -- ALE is set at the end of XTAL2 of every machine cycle
-          if xtal2_s then
+          -- ALE is set at the end of XTAL3 of every machine cycle
+          if xtal3_s then
             ale_q    <= true;
           end if;
 
         when MSTATE4 => 
-          if en_clk_i then              -- equivalent to xtal3_s
+          if xtal3_s then
             -- PSEN is set at the end of XTAL3
             if assert_psen_i then
               psen_q <= true;
@@ -250,9 +252,9 @@ begin
 
           end if;
 
-          -- PROG is set at the and of XTAL2
-          if xtal2_s and multi_cycle_q and not second_cycle_q and
-            assert_prog_i then
+          -- PROG is set at the end of XTAL3
+          if xtal3_s and
+             multi_cycle_q and not second_cycle_q and assert_prog_i then
             prog_q <= true;
           end if;
 
@@ -398,6 +400,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.9  2005/06/11 10:08:43  arniml
+-- introduce prefix 't48_' for all packages, entities and configurations
+--
 -- Revision 1.8  2005/06/09 22:15:10  arniml
 -- Use en_clk_i instead of xtal3_s for generation of external signals.
 -- This is required when the core runs with full xtal clock instead
