@@ -2,7 +2,7 @@
 --
 -- Interface Timing Checker.
 --
--- $Id: if_timing.vhd,v 1.5 2004-12-03 19:58:55 arniml Exp $
+-- $Id: if_timing.vhd,v 1.6 2005-11-01 21:20:36 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -309,6 +309,12 @@ begin
   prog_check: process (prog_n_i)
   begin
     case prog_n_i is
+      when '0' =>
+        -- tCP: Port Control Setup to PROG'
+        assert (now - last_p2_change_s) > (t_CY * 2/15 - 80 ns)
+          report "Timing violation of tCP on P2 vs PROG'!"
+          severity error;
+
       when '1' =>
         -- tPP: PROG Pulse Width
         assert (now - last_prog_n_fall_s) > (t_CY * 7/10 - 250 ns)
@@ -589,6 +595,9 @@ end behav;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.5  2004/12/03 19:58:55  arniml
+-- add others to case statement
+--
 -- Revision 1.4  2004/10/25 19:33:13  arniml
 -- remove tAW sanity check
 -- conflicts with OUTL A, BUS
