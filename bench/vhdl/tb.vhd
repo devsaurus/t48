@@ -2,7 +2,7 @@
 --
 -- The testbench for t48_core.
 --
--- $Id: tb.vhd,v 1.11 2005-09-07 17:39:40 arniml Exp $
+-- $Id: tb.vhd,v 1.12 2005-11-01 21:21:48 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -111,7 +111,8 @@ architecture behav of tb is
   signal p1_low_imp_s    : std_logic;
   signal p2_s            : std_logic_vector( 7 downto 0);
   signal t48_p2_s        : std_logic_vector( 7 downto 0);
-  signal p2_low_imp_s    : std_logic;
+  signal p2l_low_imp_s   : std_logic;
+  signal p2h_low_imp_s   : std_logic;
   signal psen_n_s        : std_logic;
   signal prog_n_s        : std_logic;
 
@@ -236,37 +237,38 @@ begin
       sample_t1_state_g   => 4
     )
     port map (
-      xtal_i       => xtal_s,
-      reset_i      => res_n_s,
-      t0_i         => p1_s(0),
-      t0_o         => open,
-      t0_dir_o     => open,
-      int_n_i      => int_n_s,
-      ea_i         => rom_addr_s(11),
-      rd_n_o       => rd_n_s,
-      psen_n_o     => psen_n_s,
-      wr_n_o       => wr_n_s,
-      ale_o        => ale_s,
-      db_i         => bus_s,
-      db_o         => t48_bus_s,
-      db_dir_o     => bus_dir_s,
-      t1_i         => p1_s(1),
-      p2_i         => p2_s,
-      p2_o         => t48_p2_s,
-      p2_low_imp_o => p2_low_imp_s,
-      p1_i         => p1_s,
-      p1_o         => t48_p1_s,
-      p1_low_imp_o => p1_low_imp_s,
-      prog_n_o     => prog_n_s,
-      clk_i        => xtal_s,
-      en_clk_i     => xtal3_s,
-      xtal3_o      => xtal3_s,
-      dmem_addr_o  => ram_addr_s,
-      dmem_we_o    => ram_we_s,
-      dmem_data_i  => ram_data_from_s,
-      dmem_data_o  => ram_data_to_s,
-      pmem_addr_o  => rom_addr_s,
-      pmem_data_i  => rom_data_s
+      xtal_i        => xtal_s,
+      reset_i       => res_n_s,
+      t0_i          => p1_s(0),
+      t0_o          => open,
+      t0_dir_o      => open,
+      int_n_i       => int_n_s,
+      ea_i          => rom_addr_s(11),
+      rd_n_o        => rd_n_s,
+      psen_n_o      => psen_n_s,
+      wr_n_o        => wr_n_s,
+      ale_o         => ale_s,
+      db_i          => bus_s,
+      db_o          => t48_bus_s,
+      db_dir_o      => bus_dir_s,
+      t1_i          => p1_s(1),
+      p2_i          => p2_s,
+      p2_o          => t48_p2_s,
+      p2l_low_imp_o => p2l_low_imp_s,
+      p2h_low_imp_o => p2h_low_imp_s,
+      p1_i          => p1_s,
+      p1_o          => t48_p1_s,
+      p1_low_imp_o  => p1_low_imp_s,
+      prog_n_o      => prog_n_s,
+      clk_i         => xtal_s,
+      en_clk_i      => xtal3_s,
+      xtal3_o       => xtal3_s,
+      dmem_addr_o   => ram_addr_s,
+      dmem_we_o     => ram_we_s,
+      dmem_data_i   => ram_data_from_s,
+      dmem_data_o   => ram_data_to_s,
+      pmem_addr_o   => rom_addr_s,
+      pmem_data_i   => rom_data_s
     );
 
   if_timing_b : if_timing
@@ -288,10 +290,11 @@ begin
   ports: process (t48_p1_s,
                   p1_low_imp_s,
                   t48_p2_s,
-                  p2_low_imp_s)
-    function t48_port_f(t48_p   : std_logic_vector(7 downto 0);
+                  p2l_low_imp_s,
+                  p2h_low_imp_s)
+    function t48_port_f(t48_p   : std_logic_vector;
                         low_imp : std_logic) return std_logic_vector is
-      variable p_v : std_logic_vector(7 downto 0);
+      variable p_v : std_logic_vector(t48_p'range);
     begin
       if low_imp = '1' then
         p_v := t48_p;
@@ -315,8 +318,10 @@ begin
     p1_s <= t48_port_f(t48_p   => t48_p1_s,
                        low_imp => p1_low_imp_s);
 
-    p2_s <= t48_port_f(t48_p   => t48_p2_s,
-                       low_imp => p2_low_imp_s);
+    p2_s(3 downto 0) <= t48_port_f(t48_p   => t48_p2_s(3 downto 0),
+                                   low_imp => p2l_low_imp_s);
+    p2_s(7 downto 4) <= t48_port_f(t48_p   => t48_p2_s(7 downto 4),
+                                   low_imp => p2h_low_imp_s);
 
   end process ports;
   --
@@ -557,6 +562,9 @@ end behav;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.11  2005/09/07 17:39:40  arniml
+-- fix missing assignment to outclock
+--
 -- Revision 1.10  2004/05/21 11:24:47  arniml
 -- split 4k internal ROM into
 --   + 2k internal ROM
