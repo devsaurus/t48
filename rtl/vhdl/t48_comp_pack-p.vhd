@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 --
--- $Id: t48_comp_pack-p.vhd,v 1.9 2005-06-11 10:08:43 arniml Exp $
+-- $Id: t48_comp_pack-p.vhd,v 1.10 2005-11-01 21:29:00 arniml Exp $
 --
 -- Copyright (c) 2004, 2005, Arnim Laeuger (arniml@opencores.org)
 --
@@ -137,6 +137,7 @@ package t48_comp_pack is
       clk_i                  : in  std_logic;
       res_i                  : in  std_logic;
       en_clk_i               : in  boolean;
+      xtal_i                 : in  std_logic;
       ea_i                   : in  std_logic;
       ale_i                  : in  boolean;
       int_n_i                : in  std_logic;
@@ -199,7 +200,6 @@ package t48_comp_pack is
       p2_read_reg_o          : out boolean;
       p2_read_exp_o          : out boolean;
       p2_output_pch_o        : out boolean;
-      p2_output_exp_o        : out boolean;
       pm_inc_pc_o            : out boolean;
       pm_write_pmem_addr_o   : out boolean;
       pm_addr_type_o         : out pmem_addr_ident_t;
@@ -241,6 +241,7 @@ package t48_comp_pack is
       clk_i             : in  std_logic;
       res_i             : in  std_logic;
       en_clk_i          : in  boolean;
+      xtal_i            : in  std_logic;
       clk_mstate_i      : in  mstate_t;
       jtf_executed_i    : in  boolean;
       tim_overflow_i    : in  boolean;
@@ -325,22 +326,23 @@ package t48_comp_pack is
 
   component t48_p2
     port (
-      clk_i        : in  std_logic;
-      res_i        : in  std_logic;
-      en_clk_i     : in  boolean;
-      data_i       : in  word_t;
-      data_o       : out word_t;
-      write_p2_i   : in  boolean;
-      write_exp_i  : in  boolean;
-      read_p2_i    : in  boolean;
-      read_reg_i   : in  boolean;
-      read_exp_i   : in  boolean;
-      output_pch_i : in  boolean;
-      output_exp_i : in  boolean;
-      pch_i        : in  nibble_t;
-      p2_i         : in  word_t;
-      p2_o         : out word_t;
-      p2_low_imp_o : out std_logic
+      clk_i         : in  std_logic;
+      res_i         : in  std_logic;
+      en_clk_i      : in  boolean;
+      xtal_i        : in  std_logic;
+      data_i        : in  word_t;
+      data_o        : out word_t;
+      write_p2_i    : in  boolean;
+      write_exp_i   : in  boolean;
+      read_p2_i     : in  boolean;
+      read_reg_i    : in  boolean;
+      read_exp_i    : in  boolean;
+      output_pch_i  : in  boolean;
+      pch_i         : in  nibble_t;
+      p2_i          : in  word_t;
+      p2_o          : out word_t;
+      p2l_low_imp_o : out std_logic;
+      p2h_low_imp_o : out std_logic
     );
   end component;
 
