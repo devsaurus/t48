@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 --
--- $Id: t48_system_comp_pack-p.vhd,v 1.6 2005-06-11 10:16:05 arniml Exp $
+-- $Id: t48_system_comp_pack-p.vhd,v 1.7 2005-11-01 21:37:10 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -40,28 +40,29 @@ package t48_system_comp_pack is
     );
 
     port (
-      xtal_i       : in  std_logic;
-      reset_n_i    : in  std_logic;
-      t0_i         : in  std_logic;
-      t0_o         : out std_logic;
-      t0_dir_o     : out std_logic;
-      int_n_i      : in  std_logic;
-      ea_i         : in  std_logic;
-      rd_n_o       : out std_logic;
-      psen_n_o     : out std_logic;
-      wr_n_o       : out std_logic;
-      ale_o        : out std_logic;
-      db_i         : in  std_logic_vector( 7 downto 0);
-      db_o         : out std_logic_vector( 7 downto 0);
-      db_dir_o     : out std_logic;
-      t1_i         : in  std_logic;
-      p2_i         : in  std_logic_vector( 7 downto 0);
-      p2_o         : out std_logic_vector( 7 downto 0);
-      p2_low_imp_o : out std_logic;
-      p1_i         : in  std_logic_vector( 7 downto 0);
-      p1_o         : out std_logic_vector( 7 downto 0);
-      p1_low_imp_o : out std_logic;
-      prog_n_o     : out std_logic
+      xtal_i        : in  std_logic;
+      reset_n_i     : in  std_logic;
+      t0_i          : in  std_logic;
+      t0_o          : out std_logic;
+      t0_dir_o      : out std_logic;
+      int_n_i       : in  std_logic;
+      ea_i          : in  std_logic;
+      rd_n_o        : out std_logic;
+      psen_n_o      : out std_logic;
+      wr_n_o        : out std_logic;
+      ale_o         : out std_logic;
+      db_i          : in  std_logic_vector( 7 downto 0);
+      db_o          : out std_logic_vector( 7 downto 0);
+      db_dir_o      : out std_logic;
+      t1_i          : in  std_logic;
+      p2_i          : in  std_logic_vector( 7 downto 0);
+      p2_o          : out std_logic_vector( 7 downto 0);
+      p2l_low_imp_o : out std_logic;
+      p2h_low_imp_o : out std_logic;
+      p1_i          : in  std_logic_vector( 7 downto 0);
+      p1_o          : out std_logic_vector( 7 downto 0);
+      p1_low_imp_o  : out std_logic;
+      prog_n_o      : out std_logic
     );
   end component;
 
@@ -71,28 +72,29 @@ package t48_system_comp_pack is
     );
 
     port (
-      xtal_i       : in  std_logic;
-      reset_n_i    : in  std_logic;
-      t0_i         : in  std_logic;
-      t0_o         : out std_logic;
-      t0_dir_o     : out std_logic;
-      int_n_i      : in  std_logic;
-      ea_i         : in  std_logic;
-      rd_n_o       : out std_logic;
-      psen_n_o     : out std_logic;
-      wr_n_o       : out std_logic;
-      ale_o        : out std_logic;
-      db_i         : in  std_logic_vector( 7 downto 0);
-      db_o         : out std_logic_vector( 7 downto 0);
-      db_dir_o     : out std_logic;
-      t1_i         : in  std_logic;
-      p2_i         : in  std_logic_vector( 7 downto 0);
-      p2_o         : out std_logic_vector( 7 downto 0);
-      p2_low_imp_o : out std_logic;
-      p1_i         : in  std_logic_vector( 7 downto 0);
-      p1_o         : out std_logic_vector( 7 downto 0);
-      p1_low_imp_o : out std_logic;
-      prog_n_o     : out std_logic
+      xtal_i        : in  std_logic;
+      reset_n_i     : in  std_logic;
+      t0_i          : in  std_logic;
+      t0_o          : out std_logic;
+      t0_dir_o      : out std_logic;
+      int_n_i       : in  std_logic;
+      ea_i          : in  std_logic;
+      rd_n_o        : out std_logic;
+      psen_n_o      : out std_logic;
+      wr_n_o        : out std_logic;
+      ale_o         : out std_logic;
+      db_i          : in  std_logic_vector( 7 downto 0);
+      db_o          : out std_logic_vector( 7 downto 0);
+      db_dir_o      : out std_logic;
+      t1_i          : in  std_logic;
+      p2_i          : in  std_logic_vector( 7 downto 0);
+      p2_o          : out std_logic_vector( 7 downto 0);
+      p2l_low_imp_o : out std_logic;
+      p2h_low_imp_o : out std_logic;
+      p1_i          : in  std_logic_vector( 7 downto 0);
+      p1_o          : out std_logic_vector( 7 downto 0);
+      p1_low_imp_o  : out std_logic;
+      prog_n_o      : out std_logic
     );
   end component;
 
@@ -102,32 +104,33 @@ package t48_system_comp_pack is
     );
 
     port (
-      xtal_i       : in  std_logic;
-      reset_n_i    : in  std_logic;
-      t0_i         : in  std_logic;
-      t0_o         : out std_logic;
-      t0_dir_o     : out std_logic;
-      int_n_i      : in  std_logic;
-      ea_i         : in  std_logic;
-      rd_n_o       : out std_logic;
-      psen_n_o     : out std_logic;
-      wr_n_o       : out std_logic;
-      ale_o        : out std_logic;
-      t1_i         : in  std_logic;
-      p2_i         : in  std_logic_vector( 7 downto 0);
-      p2_o         : out std_logic_vector( 7 downto 0);
-      p2_low_imp_o : out std_logic;
-      p1_i         : in  std_logic_vector( 7 downto 0);
-      p1_o         : out std_logic_vector( 7 downto 0);
-      p1_low_imp_o : out std_logic;
-      prog_n_o     : out std_logic;
-      wb_cyc_o     : out std_logic;
-      wb_stb_o     : out std_logic;
-      wb_we_o      : out std_logic;
-      wb_adr_o     : out std_logic_vector(23 downto 0);
-      wb_ack_i     : in  std_logic;
-      wb_dat_i     : in  std_logic_vector( 7 downto 0);
-      wb_dat_o     : out std_logic_vector( 7 downto 0)
+      xtal_i        : in  std_logic;
+      reset_n_i     : in  std_logic;
+      t0_i          : in  std_logic;
+      t0_o          : out std_logic;
+      t0_dir_o      : out std_logic;
+      int_n_i       : in  std_logic;
+      ea_i          : in  std_logic;
+      rd_n_o        : out std_logic;
+      psen_n_o      : out std_logic;
+      wr_n_o        : out std_logic;
+      ale_o         : out std_logic;
+      t1_i          : in  std_logic;
+      p2_i          : in  std_logic_vector( 7 downto 0);
+      p2_o          : out std_logic_vector( 7 downto 0);
+      p2l_low_imp_o : out std_logic;
+      p2h_low_imp_o : out std_logic;
+      p1_i          : in  std_logic_vector( 7 downto 0);
+      p1_o          : out std_logic_vector( 7 downto 0);
+      p1_low_imp_o  : out std_logic;
+      prog_n_o      : out std_logic;
+      wb_cyc_o      : out std_logic;
+      wb_stb_o      : out std_logic;
+      wb_we_o       : out std_logic;
+      wb_adr_o      : out std_logic_vector(23 downto 0);
+      wb_ack_i      : in  std_logic;
+      wb_dat_i      : in  std_logic_vector( 7 downto 0);
+      wb_dat_o      : out std_logic_vector( 7 downto 0)
     );
   end component;
 
