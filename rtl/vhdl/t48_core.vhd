@@ -2,7 +2,7 @@
 --
 -- T48 Microcontroller Core
 --
--- $Id: t48_core.vhd,v 1.9 2005-06-11 10:08:43 arniml Exp $
+-- $Id: t48_core.vhd,v 1.10 2005-11-01 21:32:58 arniml Exp $
 --
 -- Copyright (c) 2004, 2005, Arnim Laeuger (arniml@opencores.org)
 --
@@ -82,38 +82,39 @@ entity t48_core is
 
   port (
     -- T48 Interface ----------------------------------------------------------
-    xtal_i       : in  std_logic;
-    reset_i      : in  std_logic;
-    t0_i         : in  std_logic;
-    t0_o         : out std_logic;
-    t0_dir_o     : out std_logic;
-    int_n_i      : in  std_logic;
-    ea_i         : in  std_logic;
-    rd_n_o       : out std_logic;
-    psen_n_o     : out std_logic;
-    wr_n_o       : out std_logic;
-    ale_o        : out std_logic;
-    db_i         : in  std_logic_vector( 7 downto 0);
-    db_o         : out std_logic_vector( 7 downto 0);
-    db_dir_o     : out std_logic;
-    t1_i         : in  std_logic;
-    p2_i         : in  std_logic_vector( 7 downto 0);
-    p2_o         : out std_logic_vector( 7 downto 0);
-    p2_low_imp_o : out std_logic;
-    p1_i         : in  std_logic_vector( 7 downto 0);
-    p1_o         : out std_logic_vector( 7 downto 0);
-    p1_low_imp_o : out std_logic;
-    prog_n_o     : out std_logic;
+    xtal_i        : in  std_logic;
+    reset_i       : in  std_logic;
+    t0_i          : in  std_logic;
+    t0_o          : out std_logic;
+    t0_dir_o      : out std_logic;
+    int_n_i       : in  std_logic;
+    ea_i          : in  std_logic;
+    rd_n_o        : out std_logic;
+    psen_n_o      : out std_logic;
+    wr_n_o        : out std_logic;
+    ale_o         : out std_logic;
+    db_i          : in  std_logic_vector( 7 downto 0);
+    db_o          : out std_logic_vector( 7 downto 0);
+    db_dir_o      : out std_logic;
+    t1_i          : in  std_logic;
+    p2_i          : in  std_logic_vector( 7 downto 0);
+    p2_o          : out std_logic_vector( 7 downto 0);
+    p2l_low_imp_o : out std_logic;
+    p2h_low_imp_o : out std_logic;
+    p1_i          : in  std_logic_vector( 7 downto 0);
+    p1_o          : out std_logic_vector( 7 downto 0);
+    p1_low_imp_o  : out std_logic;
+    prog_n_o      : out std_logic;
     -- Core Interface ---------------------------------------------------------
-    clk_i        : in  std_logic;
-    en_clk_i     : in  std_logic;
-    xtal3_o      : out std_logic;
-    dmem_addr_o  : out std_logic_vector( 7 downto 0);
-    dmem_we_o    : out std_logic;
-    dmem_data_i  : in  std_logic_vector( 7 downto 0);
-    dmem_data_o  : out std_logic_vector( 7 downto 0);
-    pmem_addr_o  : out std_logic_vector(11 downto 0);
-    pmem_data_i  : in  std_logic_vector( 7 downto 0)
+    clk_i         : in  std_logic;
+    en_clk_i      : in  std_logic;
+    xtal3_o       : out std_logic;
+    dmem_addr_o   : out std_logic_vector( 7 downto 0);
+    dmem_we_o     : out std_logic;
+    dmem_data_i   : in  std_logic_vector( 7 downto 0);
+    dmem_data_o   : out std_logic_vector( 7 downto 0);
+    pmem_addr_o   : out std_logic_vector(11 downto 0);
+    pmem_data_i   : in  std_logic_vector( 7 downto 0)
   );
 
 end t48_core;
@@ -207,7 +208,6 @@ architecture struct of t48_core is
   signal p2_read_reg_s   : boolean;
   signal p2_read_exp_s   : boolean;
   signal p2_output_pch_s : boolean;
-  signal p2_output_exp_s : boolean;
   signal p2_data_s       : word_t;
 
   -- Program Memory Controller signals
@@ -391,6 +391,7 @@ begin
       clk_i                  => clk_i,
       res_i                  => reset_i,
       en_clk_i               => en_clk_s,
+      xtal_i                 => xtal_i,
       ea_i                   => ea_i,
       ale_i                  => ale_s,
       int_n_i                => int_n_i,
@@ -453,7 +454,6 @@ begin
       p2_read_reg_o          => p2_read_reg_s,
       p2_read_exp_o          => p2_read_exp_s,
       p2_output_pch_o        => p2_output_pch_s,
-      p2_output_exp_o        => p2_output_exp_s,
       pm_inc_pc_o            => pm_inc_pc_s,
       pm_write_pmem_addr_o   => pm_write_pmem_addr_s,
       pm_addr_type_o         => pm_addr_type_s,
@@ -543,29 +543,31 @@ begin
   use_p2: if include_port2_g = 1 generate
     p2_b : t48_p2
       port map (
-        clk_i        => clk_i,
-        res_i        => reset_i,
-        en_clk_i     => en_clk_s,
-        data_i       => t48_data_s,
-        data_o       => p2_data_s,
-        write_p2_i   => p2_write_p2_s,
-        write_exp_i  => p2_write_exp_s,
-        read_p2_i    => p2_read_p2_s,
-        read_reg_i   => p2_read_reg_s,
-        read_exp_i   => p2_read_exp_s,
-        output_pch_i => p2_output_pch_s,
-        output_exp_i => p2_output_exp_s,
-        pch_i        => pmem_addr_s(11 downto 8),
-        p2_i         => p2_i,
-        p2_o         => p2_o,
-        p2_low_imp_o => p2_low_imp_o
+        clk_i         => clk_i,
+        res_i         => reset_i,
+        en_clk_i      => en_clk_s,
+        xtal_i        => xtal_i,
+        data_i        => t48_data_s,
+        data_o        => p2_data_s,
+        write_p2_i    => p2_write_p2_s,
+        write_exp_i   => p2_write_exp_s,
+        read_p2_i     => p2_read_p2_s,
+        read_reg_i    => p2_read_reg_s,
+        read_exp_i    => p2_read_exp_s,
+        output_pch_i  => p2_output_pch_s,
+        pch_i         => pmem_addr_s(11 downto 8),
+        p2_i          => p2_i,
+        p2_o          => p2_o,
+        p2l_low_imp_o => p2l_low_imp_o,
+        p2h_low_imp_o => p2h_low_imp_o
       );
   end generate;
 
   skip_p2: if include_port2_g = 0 generate
-    p2_data_s    <= (others => bus_idle_level_c);
-    p2_o         <= (others => '0');
-    p2_low_imp_o <= '0';
+    p2_data_s     <= (others => bus_idle_level_c);
+    p2_o          <= (others => '0');
+    p2l_low_imp_o <= '0';
+    p2h_low_imp_o <= '0';
   end generate;
 
   pmem_ctrl_b : t48_pmem_ctrl
@@ -631,6 +633,9 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.9  2005/06/11 10:08:43  arniml
+-- introduce prefix 't48_' for all packages, entities and configurations
+--
 -- Revision 1.8  2005/05/04 20:12:37  arniml
 -- Fix bug report:
 -- "Wrong clock applied to T0"
