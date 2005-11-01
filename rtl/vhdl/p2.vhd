@@ -3,7 +3,7 @@
 -- The Port 2 unit.
 -- Implements the Port 2 logic.
 --
--- $Id: p2.vhd,v 1.7 2005-06-11 10:08:43 arniml Exp $
+-- $Id: p2.vhd,v 1.8 2005-11-01 21:27:55 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -54,24 +54,25 @@ entity t48_p2 is
 
   port (
     -- Global Interface -------------------------------------------------------
-    clk_i        : in  std_logic;
-    res_i        : in  std_logic;
-    en_clk_i     : in  boolean;
+    clk_i         : in  std_logic;
+    res_i         : in  std_logic;
+    en_clk_i      : in  boolean;
+    xtal_i        : in  std_logic;
     -- T48 Bus Interface ------------------------------------------------------
-    data_i       : in  word_t;
-    data_o       : out word_t;
-    write_p2_i   : in  boolean;
-    write_exp_i  : in  boolean;
-    read_p2_i    : in  boolean;
-    read_reg_i   : in  boolean;
-    read_exp_i   : in  boolean;
+    data_i        : in  word_t;
+    data_o        : out word_t;
+    write_p2_i    : in  boolean;
+    write_exp_i   : in  boolean;
+    read_p2_i     : in  boolean;
+    read_reg_i    : in  boolean;
+    read_exp_i    : in  boolean;
     -- Port 2 Interface -------------------------------------------------------
-    output_pch_i : in  boolean;
-    output_exp_i : in  boolean;
-    pch_i        : in  nibble_t;
-    p2_i         : in  word_t;
-    p2_o         : out word_t;
-    p2_low_imp_o : out std_logic
+    output_pch_i  : in  boolean;
+    pch_i         : in  nibble_t;
+    p2_i          : in  word_t;
+    p2_o          : out word_t;
+    p2l_low_imp_o : out std_logic;
+    p2h_low_imp_o : out std_logic
   );
 
 end t48_p2;
@@ -86,11 +87,14 @@ architecture rtl of t48_p2 is
   -- the port output register
   signal p2_q   : word_t;
 
-  -- the low impedance marker
-  signal low_imp_q : std_logic;
+  -- the low impedance markers
+  signal l_low_imp_q,
+         h_low_imp_q      : std_logic;
 
-  -- the expander register
-  signal exp_q  : nibble_t;
+  signal en_clk_q         : boolean;
+  signal l_low_imp_del_q,
+         h_low_imp_del_q  : std_logic;
+  signal output_pch_q     : boolean;
 
 begin
 
@@ -104,21 +108,26 @@ begin
   begin
     if res_i = res_active_c then
       p2_q          <= (others => '1');
-      low_imp_q     <= '0';
-      exp_q         <= (others => '0');
+      l_low_imp_q   <= '0';
+      h_low_imp_q   <= '0';
 
     elsif clk_i'event and clk_i = clk_active_c then
       if en_clk_i then
+        -- default: reset low impedance marker
+        l_low_imp_q <= '0';
+        h_low_imp_q <= '0';
 
         if write_p2_i then
-          p2_q      <= data_i;
-          low_imp_q <= '1';
-        else
-          low_imp_q <= '0';
-        end if;
+          -- write whole P2
+          p2_q        <= data_i;
+          l_low_imp_q <= '1';
+          h_low_imp_q <= '1';
 
-        if write_exp_i then
-          exp_q     <= data_i(exp_q'range);
+        elsif write_exp_i then
+          -- write lower nibble of P2
+          p2_q(nibble_t'range) <= data_i(nibble_t'range);
+          l_low_imp_q          <= '1';
+
         end if;
 
       end if;
@@ -135,21 +144,53 @@ begin
   --
   -- Purpose:
   --   Generates the output byte vector for Port 2.
+  --   It is a synchronous process clocked with XTAL. This ensures that
+  --   P2 data and low impedance markers are free of glitches and stabilize
+  --   during the same clock/machine state.
+  --   On the other hand, P2 is delayed by 1 XTAL cycle.
   --
-  p2_port: process (p2_q,
-                    exp_q,
-                    output_exp_i,
-                    pch_i,
-                    output_pch_i)
+  p2_port: process (res_i, xtal_i)
   begin
-    p2_o                   <= p2_q;
+    if res_i = res_active_c then
+      p2_o            <= (others => '1');
+      l_low_imp_del_q <= '0';
+      h_low_imp_del_q <= '0';
+      output_pch_q    <= false;
+      en_clk_q        <= false;
 
-    if output_exp_i then
-      p2_o(nibble_t'range) <= exp_q;
-    end if;
+    elsif xtal_i'event and xtal_i = clk_active_c then
+      -- delay clock enable by one XTAL period
+      en_clk_q               <= en_clk_i;
 
-    if output_pch_i then
-      p2_o(nibble_t'range) <= pch_i;
+      p2_o                   <= p2_q;
+      output_pch_q           <= output_pch_i;
+
+      if output_pch_i then
+        p2_o(nibble_t'range) <= pch_i;
+      end if;
+
+      -- generate low impedance trigger for one XTAL clock period after
+      -- global clock enable when
+      -- a) switching to or from PCH
+      -- b) l_low_imp_q is active
+      if en_clk_q and
+         ((output_pch_q xor output_pch_i) or
+          l_low_imp_q = '1') then
+        l_low_imp_del_q <= '1';
+      else
+        l_low_imp_del_q <= '0';
+      end if;
+
+      -- generate low impedance trigger for on XTAL clock period after
+      -- global clock enable when
+      -- h_low_imp_q is active
+      if en_clk_q and
+         h_low_imp_q = '1' then
+        h_low_imp_del_q <= '1';
+      else
+        h_low_imp_del_q <= '0';
+      end if;
+
     end if;
 
   end process p2_port;
@@ -189,7 +230,8 @@ begin
   -----------------------------------------------------------------------------
   -- Output Mapping.
   -----------------------------------------------------------------------------
-  p2_low_imp_o <= low_imp_q;
+  p2l_low_imp_o <= l_low_imp_del_q;
+  p2h_low_imp_o <= h_low_imp_del_q;
 
 end rtl;
 
@@ -198,6 +240,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.7  2005/06/11 10:08:43  arniml
+-- introduce prefix 't48_' for all packages, entities and configurations
+--
 -- Revision 1.6  2004/07/11 16:51:33  arniml
 -- cleanup copyright notice
 --
