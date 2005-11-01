@@ -3,7 +3,7 @@
 -- The Interrupt Controller.
 -- It collects the interrupt sources and notifies the decoder.
 --
--- $Id: int.vhd,v 1.5 2005-09-13 21:00:16 arniml Exp $
+-- $Id: int.vhd,v 1.6 2005-11-01 21:26:24 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -55,6 +55,7 @@ entity t48_int is
     clk_i             : in  std_logic;
     res_i             : in  std_logic;
     en_clk_i          : in  boolean;
+    xtal_i            : in  std_logic;
     clk_mstate_i      : in  mstate_t;
     jtf_executed_i    : in  boolean;
     tim_overflow_i    : in  boolean;
@@ -157,9 +158,7 @@ begin
       timer_flag_q       <= false;
       timer_overflow_q   <= false;
       timer_int_enable_q <= false;
-      int_q              <= false;
       int_enable_q       <= false;
-      ale_q              <= false;
       int_type_q         <= '0';
       int_state_q        <= IDLE;
       int_in_progress_q  <= false;
@@ -167,8 +166,6 @@ begin
     elsif clk_i'event and clk_i = clk_active_c then
       if en_clk_i then
 
-        ale_q       <= ale_i;
- 
         int_state_q <= int_state_s;
 
         if jtf_executed_i then
@@ -188,11 +185,6 @@ begin
           timer_int_enable_q <= false;
         elsif en_tcnti_i then
           timer_int_enable_q <= true;
-        end if;
-
-        if last_cycle_i and
-          ale_q  and not ale_i  then
-          int_q <= not to_boolean(int_n_i);
         end if;
 
         if dis_i_i then
@@ -221,6 +213,33 @@ begin
 
 
   -----------------------------------------------------------------------------
+  -- Process xtal_regs
+  --
+  -- Purpose:
+  --   Implements the sequential registers clocked with XTAL.
+  --
+  xtal_regs: process (res_i, xtal_i)
+  begin
+    if res_i = res_active_c then
+      int_q <= false;
+      ale_q <= false;
+
+    elsif xtal_i'event and xtal_i = clk_active_c then
+      ale_q       <= ale_i;
+
+      if last_cycle_i and
+        ale_q  and not ale_i  then
+        int_q <= not to_boolean(int_n_i);
+      end if;
+
+
+    end if;
+  end process xtal_regs;
+  --
+  -----------------------------------------------------------------------------
+
+
+  -----------------------------------------------------------------------------
   -- Output Mapping.
   -----------------------------------------------------------------------------
   tf_o              <= to_stdLogic(timer_flag_q);
@@ -236,6 +255,14 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.5  2005/09/13 21:00:16  arniml
+-- Fix bug reports:
+-- "Target address of JMP to Program Memory Bank 1 corrupted by interrupt"
+-- "Return address of CALL to Program Memory Bank 1 corrupted by interrupt"
+-- int_in_progress_o was active one cycle before int_pending_o is
+-- asserted. this confused the mb multiplexer which determines the state of
+-- the memory bank selection flag
+--
 -- Revision 1.4  2005/06/11 10:08:43  arniml
 -- introduce prefix 't48_' for all packages, entities and configurations
 --
