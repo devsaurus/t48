@@ -1,11 +1,51 @@
 
 Known bugs of the T48 uController core
 ======================================
-Version: $Date: 2005-09-13 21:27:12 $
+Version: $Date: 2005-11-02 21:16:34 $
+
+
+Release 0.6 BETA
+----------------
+
+*******************************************************************************
+P2 Port value restored after expander access
+
+After access to expander interface (ANLD Pp; MOVD A,Pp; MOVD Pp,A; ORLD Pp)
+the port value of P2 is restored. This is wrong according to chapter "Port 2
+Operations" of the "Expanded MCS-48 System" manual. It states that previously
+latched I/O information will be removed and not restored.
+
+Fixed in:
+p2.vhd 1.8
+Fix will be included in next release.
+
+*******************************************************************************
+Problem when INT and JMP
+
+When code is executed from Memory Bank 1, the injected CALL triggered by the
+interrupt does not always vector to address 3. This happens because of a bus
+collision between the decoder unit and the db_bus unit. The resulting address
+can be either:
+* 000h, 001h, 002h, 003h for external and timer interrupt
+* 004h, 005h, 006h, 007h for timer interrupt
+
+The problem was introduced in release 0.6 BETA when the glitch on PCH was
+fixed.
+
+Fixed in:
+decoder.vhd 1.21
+New regression test: int_on_mb1
+Fix will be included in next release.
+
 
 
 Release 0.5 BETA
 ----------------
+
+*******************************************************************************
+P2 Port value restored after expander access
+
+See above.
 
 *******************************************************************************
 Target address of JMP and CALL to Program Memory Bank 1 corrupted by interrupt
@@ -53,6 +93,11 @@ Release 0.4 BETA
 ----------------
 
 *******************************************************************************
+P2 Port value restored after expander access
+
+See above.
+
+*******************************************************************************
 Target address of JMP and CALL to Program Memory Bank 1 corrupted by interrupt
 
 See above.
@@ -93,6 +138,11 @@ Fix will be included in next release.
 
 Release 0.3 BETA
 ----------------
+
+*******************************************************************************
+P2 Port value restored after expander access
+
+See above.
 
 *******************************************************************************
 Target address of JMP and CALL to Program Memory Bank 1 corrupted by interrupt
@@ -140,6 +190,11 @@ Release 0.2 BETA
 ----------------
 
 *******************************************************************************
+P2 Port value restored after expander access
+
+See above.
+
+*******************************************************************************
 MSB of Program Counter changed upon PC increment
 
 See above.
@@ -184,6 +239,11 @@ Fix will be included in next release.
 
 Release 0.1 BETA
 ----------------
+
+*******************************************************************************
+P2 Port value restored after expander access
+
+See above.
 
 *******************************************************************************
 MSB of Program Counter changed upon PC increment
