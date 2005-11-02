@@ -2,7 +2,7 @@
 --
 -- T8039 Microcontroller System
 --
--- $Id: t8039.vhd,v 1.4 2005-11-01 21:37:45 arniml Exp $
+-- $Id: t8039.vhd,v 1.5 2005-11-02 23:41:43 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -128,16 +128,21 @@ begin
                    p1_b, p1_s, p1_low_imp_s,
                    p2_b, p2_s, p2l_low_imp_s, p2h_low_imp_s)
 
-    function open_collector_f(sig : std_logic) return std_logic is
-      variable sig_v : std_logic;
+    function port_bidir_f(port_value : in std_logic_vector;
+                          low_imp    : in std_logic) return std_logic_vector is
+      variable result_v : std_logic_vector(port_value'range);
     begin
-      sig_v   := 'Z';
+      for idx in port_value'high downto port_value'low loop
+        if low_imp = '1' then
+          result_v(idx) := port_value(idx);
+        elsif port_value(idx) = '0' then
+          result_v(idx) := '0';
+        else
+          result_v(idx) := 'Z';
+        end if;
+      end loop;
 
-      if sig = '0' then
-        sig_v := '0';
-      end if;
-
-      return sig_v;
+      return result_v;
     end;
 
   begin
@@ -156,24 +161,14 @@ begin
     end if;
 
     -- Port 1 -----------------------------------------------------------------
-    for i in p1_b'range loop
-      p1_b(i) <= open_collector_f(p1_s(i));
-    end loop;
---     if p1_low_imp_s = '1' then
---       p1_b <= p1_s;
---     else
---       p1_b <= (others => 'Z');
---     end if;
+    p1_b <= port_bidir_f(port_value => p1_s,
+                         low_imp => p1_low_imp_s);
 
     -- Port 2 -----------------------------------------------------------------
-    for i in p2_b'range loop
-      p2_b(i) <= open_collector_f(p2_s(i));
-    end loop;
---     if p2_low_imp_s = '1' then
---       p2_b <= p2_b_s;
---     else
---       p2_b <= (others => 'Z');
---     end if;
+    p2_b(3 downto 0) <= port_bidir_f(port_value => p2_s(3 downto 0),
+                                     low_imp    => p2l_low_imp_s);
+    p2_b(7 downto 4) <= port_bidir_f(port_value => p2_s(7 downto 4),
+                                     low_imp    => p2h_low_imp_s);
 
   end process bidirs;
   --
@@ -186,6 +181,9 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.4  2005/11/01 21:37:45  arniml
+-- wire signals for P2 low impedance marker issue
+--
 -- Revision 1.3  2004/12/03 19:43:12  arniml
 -- added hierarchy t8039_notri
 --
