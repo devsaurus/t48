@@ -3,7 +3,7 @@
 -- The Decoder unit.
 -- It decodes the instruction opcodes and executes them.
 --
--- $Id: decoder.vhd,v 1.22 2005-11-01 21:25:37 arniml Exp $
+-- $Id: decoder.vhd,v 1.23 2005-11-07 19:25:01 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -305,7 +305,8 @@ begin
                           ea_i,
                           assert_psen_s,
                           branch_taken_q,
-                          int_pending_s)
+                          int_pending_s,
+                          p2_output_exp_s)
 
    variable need_address_v      : boolean;
 
@@ -1962,6 +1963,10 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.22  2005/11/01 21:25:37  arniml
+-- * suppress p2_output_pch_o when p2_output_exp is active
+-- * wire xtal_i to interrupt module
+--
 -- Revision 1.21  2005/10/31 10:08:33  arniml
 -- Suppress assertion of bus_read_bus_s when interrupt is pending.
 -- This should fix bug report
