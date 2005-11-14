@@ -3,7 +3,7 @@
 -- The Decoder unit.
 -- It decodes the instruction opcodes and executes them.
 --
--- $Id: decoder.vhd,v 1.23 2005-11-07 19:25:01 arniml Exp $
+-- $Id: decoder.vhd,v 1.24 2005-11-14 21:12:29 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -198,45 +198,47 @@ architecture rtl of t48_decoder is
 
   -- Flag 1
   signal clear_f1_s,
-         cpl_f1_s          : boolean;
-  signal f1_q              : std_logic;
+         cpl_f1_s           : boolean;
+  signal f1_q               : std_logic;
   -- memory bank select
   signal clear_mb_s,
-         set_mb_s          : boolean;
-  signal mb_q              : std_logic;
+         set_mb_s           : boolean;
+  signal mb_q               : std_logic;
 
   -- T0 direction selection
-  signal ent0_clk_s        : boolean;
-  signal t0_dir_q          : std_logic;
+  signal ent0_clk_s         : boolean;
+  signal t0_dir_q           : std_logic;
 
-  signal data_s            : word_t;
-  signal read_dec_s        : boolean;
+  signal data_s             : word_t;
+  signal read_dec_s         : boolean;
 
-  signal tf_s              : std_logic;
+  signal tf_s               : std_logic;
 
-  signal bus_read_bus_s    : boolean;
-  signal add_read_bus_s    : boolean;
+  signal bus_read_bus_s     : boolean;
+  signal add_read_bus_s     : boolean;
 
-  signal dm_write_dmem_s   : boolean;
+  signal dm_write_dmem_s    : boolean;
 
-  signal p2_output_exp_s   : boolean;
+  signal p2_output_exp_s    : boolean;
+
+  signal movx_first_cycle_s : boolean;
 
   -- interrupt handling
-  signal jtf_executed_s    : boolean;
-  signal en_tcnti_s        : boolean;
-  signal dis_tcnti_s       : boolean;
-  signal en_i_s            : boolean;
-  signal dis_i_s           : boolean;
-  signal tim_int_s         : boolean;
-  signal retr_executed_s   : boolean;
-  signal int_executed_s    : boolean;
-  signal int_pending_s     : boolean;
-  signal int_in_progress_s : boolean;
+  signal jtf_executed_s     : boolean;
+  signal en_tcnti_s         : boolean;
+  signal dis_tcnti_s        : boolean;
+  signal en_i_s             : boolean;
+  signal dis_i_s            : boolean;
+  signal tim_int_s          : boolean;
+  signal retr_executed_s    : boolean;
+  signal int_executed_s     : boolean;
+  signal int_pending_s      : boolean;
+  signal int_in_progress_s  : boolean;
 
   -- pragma translate_off
-  signal istrobe_res_q     : std_logic;
-  signal istrobe_q         : std_logic;
-  signal injected_int_q    : std_logic;
+  signal istrobe_res_q      : std_logic;
+  signal istrobe_q          : std_logic;
+  signal injected_int_q     : std_logic;
   -- pragma translate_on
 
 begin
@@ -306,7 +308,8 @@ begin
                           assert_psen_s,
                           branch_taken_q,
                           int_pending_s,
-                          p2_output_exp_s)
+                          p2_output_exp_s,
+                          movx_first_cycle_s)
 
    variable need_address_v      : boolean;
 
@@ -380,7 +383,11 @@ begin
       when MSTATE5 =>
         if ea_i = '1' and
            (need_address_v or last_cycle_s) and
-           not p2_output_exp_s then
+           -- Suppress output of PCH when either
+           -- a) expander port is driven on P2, has priority
+           not p2_output_exp_s and
+           -- b) first cycle of MOVX, don't disturb external access
+           not movx_first_cycle_s then
           p2_output_pch_o   <= true;
         end if;
 
@@ -532,6 +539,7 @@ begin
     add_write_pmem_addr_s  <= false;
     ent0_clk_s             <= false;
     add_read_bus_s         <= false;
+    movx_first_cycle_s     <= false;
 
     -- the Program Memory Bank Flag is held low when interrupts are in progress
     -- according to the MCS-48 User's Manual
@@ -1478,6 +1486,7 @@ begin
         end if;
 
         if not clk_second_cycle_i then
+          movx_first_cycle_s     <= true;
           case clk_mstate_i is
             -- read dmem and put contents on BUS as external address
             when MSTATE3 =>
@@ -1963,6 +1972,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.23  2005/11/07 19:25:01  arniml
+-- fix sensitivity list
+--
 -- Revision 1.22  2005/11/01 21:25:37  arniml
 -- * suppress p2_output_pch_o when p2_output_exp is active
 -- * wire xtal_i to interrupt module
