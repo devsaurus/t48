@@ -3,7 +3,7 @@
 -- A synchronous parametrizable RAM instantiating a standard RAM from
 -- the Altera LPM.
 --
--- $Id: syn_ram-lpm-a.vhd,v 1.3 2005-09-07 17:39:34 arniml Exp $
+-- $Id: syn_ram-lpm-a.vhd,v 1.4 2005-11-14 21:12:57 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -94,7 +94,7 @@ begin
       address  => ram_addr_i,
       we       => ram_we_i,
       inclock  => clk_i,
-      outclock => zero_s,               -- unused
+      outclock => clk_i,
       q        => ram_data_o
     );
 
@@ -105,6 +105,9 @@ end lpm;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.3  2005/09/07 17:39:34  arniml
+-- fix missing assignment to outclock
+--
 -- Revision 1.2  2004/04/07 22:09:08  arniml
 -- remove unused signals
 --
