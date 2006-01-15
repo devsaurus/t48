@@ -1,7 +1,32 @@
 
 Change log for the T48 uController core
 =======================================
-Version: $Date: 2005-10-16 08:10:35 $
+Version: $Date: 2006-01-15 20:56:57 $
+
+
+Release 0.6.1 BETA
+------------------
+
+* Bugfix for "PROBLEM WHEN INT AND JMP"
+  Suppress assertion of bus_read_bus_s when interrupt is pending.
+  Applied in decoder.vhd 1.21
+
+* Bugfix for "P2 Port value restored after expander access"
+  Applied in p2.vhd 1.8
+
+* change low impedance markers for P2
+  separate marker for low and high part
+
+* shift assertion of ALE and PROG to xtal3
+
+* properly drive P1 and P2 with low impedance markers
+
+* suppress p2_output_pch_o when MOVX operation is accessing the
+  external memory
+
+* suppress p2_output_pch_o when p2_output_exp is active
+
+* operate ale_q and int_q with xtal_i after shift of ALE assertion to XTAL3
 
 
 Release 0.6 BETA
