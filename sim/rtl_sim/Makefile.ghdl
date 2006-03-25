@@ -5,7 +5,7 @@
 # It sets all variables needed for VHDL code compilation with Makefile.hier.
 #
 #
-# Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
+# Copyright (c) 2004-2006 Arnim Laeuger (arniml@opencores.org)
 #
 # All rights reserved
 #
@@ -26,7 +26,7 @@ CLEAN     = ghdl --clean --std=87 --workdir=$(LIB_WORK); \
 
 ANALYZE   = ghdl -a --std=87 --workdir=$(LIB_WORK) $(GCOV)
 
-ELABORATE = ghdl -e --std=87 --workdir=$(LIB_WORK) $(GCOV_LINK)
+ELABORATE = ghdl -e -Wl,-s --std=87 --workdir=$(LIB_WORK) $(GCOV_LINK)
 
 MAKE_LIB  = mkdir -p $(LIB_WORK)
 
@@ -127,16 +127,13 @@ tb_t8039_elab = tb_t8039_behav_c0
 # Tool-specific elaboration rules
 #
 $(tb_elab) : $(tb_behav_c0)
-	$(ELABORATE) tb_behav_c0; \
-	strip tb_behav_c0
+	$(ELABORATE) tb_behav_c0
 
 $(tb_t8048_elab) : $(tb_t8048_behav_c0)
-	$(ELABORATE) tb_t8048_behav_c0; \
-	strip tb_t8048_behav_c0
+	$(ELABORATE) tb_t8048_behav_c0
 
 $(tb_t8039_elab) : $(tb_t8039_behav_c0)
-	$(ELABORATE) tb_t8039_behav_c0; \
-	strip tb_t8039_behav_c0
+	$(ELABORATE) tb_t8039_behav_c0
 
 .PHONY: elaborate
 elaborate: $(LIB_WORK) $(tb_elab) $(tb_t8048_elab) $(tb_t8039_elab)

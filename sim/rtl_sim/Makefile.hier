@@ -25,7 +25,7 @@
 #  Various VHDL design units.
 #
 #
-# Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
+# Copyright (c) 2004-2006, Arnim Laeuger (arniml@opencores.org)
 #
 # All rights reserved
 #
@@ -51,52 +51,52 @@ $(alu) : $(RTL_DIR)/alu.vhd \
 		$(alu_pack) \
 		$(t48_pack) \
 		$(t48_tb_pack)
-	$(ANALYZE) $(RTL_DIR)/alu.vhd
+	$(ANALYZE) $<
 
 $(alu_pack) : $(RTL_DIR)/alu_pack-p.vhd \
 		$(t48_pack)
-	$(ANALYZE) $(RTL_DIR)/alu_pack-p.vhd
+	$(ANALYZE) $<
 
 $(alu_rtl_c0) : $(RTL_DIR)/alu-c.vhd \
 		$(alu)
-	$(ANALYZE) $(RTL_DIR)/alu-c.vhd
+	$(ANALYZE) $<
 
 $(bus_mux) : $(RTL_DIR)/bus_mux.vhd \
 		$(t48_pack)
-	$(ANALYZE) $(RTL_DIR)/bus_mux.vhd
+	$(ANALYZE) $<
 
 $(bus_mux_rtl_c0) : $(RTL_DIR)/bus_mux-c.vhd \
 		$(bus_mux-rtl) \
 		$(bus_mux)
-	$(ANALYZE) $(RTL_DIR)/bus_mux-c.vhd
+	$(ANALYZE) $<
 
 $(clock_ctrl) : $(RTL_DIR)/clock_ctrl.vhd \
 		$(t48_pack)
-	$(ANALYZE) $(RTL_DIR)/clock_ctrl.vhd
+	$(ANALYZE) $<
 
 $(clock_ctrl_rtl_c0) : $(RTL_DIR)/clock_ctrl-c.vhd \
 		$(clock_ctrl)
-	$(ANALYZE) $(RTL_DIR)/clock_ctrl-c.vhd
+	$(ANALYZE) $<
 
 $(cond_branch) : $(RTL_DIR)/cond_branch.vhd \
 		$(cond_branch_pack) \
 		$(t48_pack)
-	$(ANALYZE) $(RTL_DIR)/cond_branch.vhd
+	$(ANALYZE) $<
 
 $(cond_branch_pack) : $(RTL_DIR)/cond_branch_pack-p.vhd
-	$(ANALYZE) $(RTL_DIR)/cond_branch_pack-p.vhd
+	$(ANALYZE) $<
 
 $(cond_branch_rtl_c0) : $(RTL_DIR)/cond_branch-c.vhd \
 		$(cond_branch)
-	$(ANALYZE) $(RTL_DIR)/cond_branch-c.vhd
+	$(ANALYZE) $<
 
 $(db_bus) : $(RTL_DIR)/db_bus.vhd \
 		$(t48_pack)
-	$(ANALYZE) $(RTL_DIR)/db_bus.vhd
+	$(ANALYZE) $<
 
 $(db_bus_rtl_c0) : $(RTL_DIR)/db_bus-c.vhd \
 		$(db_bus)
-	$(ANALYZE) $(RTL_DIR)/db_bus-c.vhd
+	$(ANALYZE) $<
 
 $(decoder) : $(RTL_DIR)/decoder.vhd \
 		$(pmem_ctrl_pack) \
@@ -107,42 +107,42 @@ $(decoder) : $(RTL_DIR)/decoder.vhd \
 		$(t48_comp_pack) \
 		$(t48_tb_pack) \
 		$(decoder_pack)
-	$(ANALYZE) $(RTL_DIR)/decoder.vhd
+	$(ANALYZE) $<
 
 $(decoder_pack) : $(RTL_DIR)/decoder_pack-p.vhd
-	$(ANALYZE) $(RTL_DIR)/decoder_pack-p.vhd
+	$(ANALYZE) $<
 
 $(decoder_rtl_c0) : $(RTL_DIR)/decoder-c.vhd \
 		$(opc_decoder_rtl_c0) \
 		$(int_rtl_c0) \
 		$(decoder)
-	$(ANALYZE) $(RTL_DIR)/decoder-c.vhd
+	$(ANALYZE) $<
 
 $(dmem_ctrl) : $(RTL_DIR)/dmem_ctrl.vhd \
 		$(dmem_ctrl_pack) \
 		$(t48_pack)
-	$(ANALYZE) $(RTL_DIR)/dmem_ctrl.vhd
+	$(ANALYZE) $<
 
 $(dmem_ctrl_pack) : $(RTL_DIR)/dmem_ctrl_pack-p.vhd
-	$(ANALYZE) $(RTL_DIR)/dmem_ctrl_pack-p.vhd
+	$(ANALYZE) $<
 
 $(dmem_ctrl_rtl_c0) : $(RTL_DIR)/dmem_ctrl-c.vhd \
 		$(dmem_ctrl)
-	$(ANALYZE) $(RTL_DIR)/dmem_ctrl-c.vhd
+	$(ANALYZE) $<
 
 $(int) : $(RTL_DIR)/int.vhd \
 		$(t48_pack)
-	$(ANALYZE) $(RTL_DIR)/int.vhd
+	$(ANALYZE) $<
 
 $(int_rtl_c0) : $(RTL_DIR)/int-c.vhd \
 		$(int)
-	$(ANALYZE) $(RTL_DIR)/int-c.vhd
+	$(ANALYZE) $<
 
 $(lpm_ram_dq) : $(RTL_DIR)/system/lpm_ram_dq.vhd
-	$(ANALYZE) $(RTL_DIR)/system/lpm_ram_dq.vhd
+	$(ANALYZE) $<
 
 $(lpm_rom) : $(RTL_DIR)/system/lpm_rom.vhd
-	$(ANALYZE) $(RTL_DIR)/system/lpm_rom.vhd
+	$(ANALYZE) $<
 
 $(opc_decoder) : $(RTL_DIR)/opc_decoder.vhd \
 		$(decoder_pack) \
@@ -152,81 +152,81 @@ $(opc_decoder) : $(RTL_DIR)/opc_decoder.vhd \
 		$(cond_branch_pack) \
 		$(alu_pack) \
 		$(t48_comp_pack)
-	$(ANALYZE) $(RTL_DIR)/opc_decoder.vhd
+	$(ANALYZE) $<
 
 $(opc_decoder_rtl_c0) : $(RTL_DIR)/opc_decoder-c.vhd \
 		$(opc_table_rtl_c0) \
 		$(opc_decoder)
-	$(ANALYZE) $(RTL_DIR)/opc_decoder-c.vhd
+	$(ANALYZE) $<
 
 $(opc_table) : $(RTL_DIR)/opc_table.vhd \
 		$(decoder_pack) \
 		$(t48_pack)
-	$(ANALYZE) $(RTL_DIR)/opc_table.vhd
+	$(ANALYZE) $<
 
 $(opc_table_rtl_c0) : $(RTL_DIR)/opc_table-c.vhd \
 		$(opc_table)
-	$(ANALYZE) $(RTL_DIR)/opc_table-c.vhd
+	$(ANALYZE) $<
 
 $(p1) : $(RTL_DIR)/p1.vhd \
 		$(t48_pack)
-	$(ANALYZE) $(RTL_DIR)/p1.vhd
+	$(ANALYZE) $<
 
 $(p1_rtl_c0) : $(RTL_DIR)/p1-c.vhd \
 		$(p1)
-	$(ANALYZE) $(RTL_DIR)/p1-c.vhd
+	$(ANALYZE) $<
 
 $(p2) : $(RTL_DIR)/p2.vhd \
 		$(t48_pack)
-	$(ANALYZE) $(RTL_DIR)/p2.vhd
+	$(ANALYZE) $<
 
 $(p2_rtl_c0) : $(RTL_DIR)/p2-c.vhd \
 		$(p2)
-	$(ANALYZE) $(RTL_DIR)/p2-c.vhd
+	$(ANALYZE) $<
 
 $(pmem_ctrl) : $(RTL_DIR)/pmem_ctrl.vhd \
 		$(pmem_ctrl_pack) \
 		$(t48_pack)
-	$(ANALYZE) $(RTL_DIR)/pmem_ctrl.vhd
+	$(ANALYZE) $<
 
 $(pmem_ctrl_pack) : $(RTL_DIR)/pmem_ctrl_pack-p.vhd
-	$(ANALYZE) $(RTL_DIR)/pmem_ctrl_pack-p.vhd
+	$(ANALYZE) $<
 
 $(pmem_ctrl_rtl_c0) : $(RTL_DIR)/pmem_ctrl-c.vhd \
 		$(pmem_ctrl)
-	$(ANALYZE) $(RTL_DIR)/pmem_ctrl-c.vhd
+	$(ANALYZE) $<
 
 $(psw) : $(RTL_DIR)/psw.vhd \
 		$(t48_pack)
-	$(ANALYZE) $(RTL_DIR)/psw.vhd
+	$(ANALYZE) $<
 
 $(psw_rtl_c0) : $(RTL_DIR)/psw-c.vhd \
 		$(psw)
-	$(ANALYZE) $(RTL_DIR)/psw-c.vhd
+	$(ANALYZE) $<
 
 $(syn_ram) : $(RTL_DIR)/system/syn_ram-e.vhd
-	$(ANALYZE) $(RTL_DIR)/system/syn_ram-e.vhd
+	$(ANALYZE) $<
 
 $(syn_ram-lpm-a) : $(RTL_DIR)/system/syn_ram-lpm-a.vhd \
 		$(syn_ram)
-	$(ANALYZE) $(RTL_DIR)/system/syn_ram-lpm-a.vhd
+	$(ANALYZE) $<
 
 $(syn_ram_lpm_c0) : $(RTL_DIR)/system/syn_ram-lpm-c.vhd \
 		$(lpm_ram_dq) \
 		$(syn_ram-lpm-a)
-	$(ANALYZE) $(RTL_DIR)/system/syn_ram-lpm-c.vhd
+	$(ANALYZE) $<
 
 $(syn_rom) : $(RTL_DIR)/system/syn_rom-e.vhd
-	$(ANALYZE) $(RTL_DIR)/system/syn_rom-e.vhd
+	$(ANALYZE) $<
 
 $(syn_rom-lpm-a) : $(RTL_DIR)/system/syn_rom-lpm-a.vhd \
 		$(syn_rom)
-	$(ANALYZE) $(RTL_DIR)/system/syn_rom-lpm-a.vhd
+	$(ANALYZE) $<
 
 $(syn_rom_lpm_c0) : $(RTL_DIR)/system/syn_rom-lpm-c.vhd \
 		$(lpm_rom) \
 		$(syn_rom-lpm-a)
-	$(ANALYZE) $(RTL_DIR)/system/syn_rom-lpm-c.vhd
+	$(ANALYZE) $<
 
 $(t48_comp_pack) : $(RTL_DIR)/t48_comp_pack-p.vhd \
 		$(pmem_ctrl_pack) \
@@ -235,7 +235,7 @@ $(t48_comp_pack) : $(RTL_DIR)/t48_comp_pack-p.vhd \
 		$(cond_branch_pack) \
 		$(t48_pack) \
 		$(alu_pack)
-	$(ANALYZE) $(RTL_DIR)/t48_comp_pack-p.vhd
+	$(ANALYZE) $<
 
 $(t48_core) : $(RTL_DIR)/t48_core.vhd \
 		$(decoder_pack) \
@@ -245,10 +245,10 @@ $(t48_core) : $(RTL_DIR)/t48_core.vhd \
 		$(cond_branch_pack) \
 		$(t48_pack) \
 		$(alu_pack)
-	$(ANALYZE) $(RTL_DIR)/t48_core.vhd
+	$(ANALYZE) $<
 
 $(t48_core_comp_pack) : $(RTL_DIR)/t48_core_comp_pack-p.vhd
-	$(ANALYZE) $(RTL_DIR)/t48_core_comp_pack-p.vhd
+	$(ANALYZE) $<
 
 $(t48_core_struct_c0) : $(RTL_DIR)/t48_core-c.vhd \
 		$(psw_rtl_c0) \
@@ -272,17 +272,17 @@ $(t48_core_struct_c0) : $(RTL_DIR)/t48_core-c.vhd \
 		$(alu_pack) \
 		$(t48_core-struct) \
 		$(t48_core)
-	$(ANALYZE) $(RTL_DIR)/t48_core-c.vhd
+	$(ANALYZE) $<
 
 $(t48_pack) : $(RTL_DIR)/t48_pack-p.vhd
-	$(ANALYZE) $(RTL_DIR)/t48_pack-p.vhd
+	$(ANALYZE) $<
 
 $(t48_tb_pack) : $(RTL_DIR)/t48_tb_pack-p.vhd
-	$(ANALYZE) $(RTL_DIR)/t48_tb_pack-p.vhd
+	$(ANALYZE) $<
 
 $(t8048_notri) : $(RTL_DIR)/system/t8048_notri.vhd \
 		$(t48_core_comp_pack)
-	$(ANALYZE) $(RTL_DIR)/system/t8048_notri.vhd
+	$(ANALYZE) $<
 
 $(t8048_notri_struct_c0) : $(RTL_DIR)/system/t8048_notri-c.vhd \
 		$(t48_core_struct_c0) \
@@ -290,50 +290,50 @@ $(t8048_notri_struct_c0) : $(RTL_DIR)/system/t8048_notri-c.vhd \
 		$(syn_rom_lpm_c0) \
 		$(t48_core_comp_pack) \
 		$(t8048_notri)
-	$(ANALYZE) $(RTL_DIR)/system/t8048_notri-c.vhd
+	$(ANALYZE) $<
 
 $(t48_system_comp_pack) : $(RTL_DIR)/system/t48_system_comp_pack-p.vhd
-	$(ANALYZE) $(RTL_DIR)/system/t48_system_comp_pack-p.vhd
+	$(ANALYZE) $<
 
 $(t8048) : $(RTL_DIR)/system/t8048.vhd \
 		$(t48_system_comp_pack)
-	$(ANALYZE) $(RTL_DIR)/system/t8048.vhd
+	$(ANALYZE) $<
 
 $(t8048_struct_c0) : $(RTL_DIR)/system/t8048-c.vhd \
 		$(t8048_notri_struct_c0) \
 		$(t8048)
-	$(ANALYZE) $(RTL_DIR)/system/t8048-c.vhd
+	$(ANALYZE) $<
 
 $(t8039_notri) : $(RTL_DIR)/system/t8039_notri.vhd \
 		$(t48_core_comp_pack)
-	$(ANALYZE) $(RTL_DIR)/system/t8039_notri.vhd
+	$(ANALYZE) $<
 
 $(t8039_notri_struct_c0) : $(RTL_DIR)/system/t8039_notri-c.vhd \
 		$(t48_core_struct_c0) \
 		$(syn_ram_lpm_c0) \
 		$(t8039_notri)
-	$(ANALYZE) $(RTL_DIR)/system/t8039_notri-c.vhd
+	$(ANALYZE) $<
 
 $(t8039) : $(RTL_DIR)/system/t8039.vhd \
 		$(t48_system_comp_pack)
-	$(ANALYZE) $(RTL_DIR)/system/t8039.vhd
+	$(ANALYZE) $<
 
 $(t8039_struct_c0) : $(RTL_DIR)/system/t8039-c.vhd \
 		$(t8039_notri_struct_c0) \
 		$(t8039)
-	$(ANALYZE) $(RTL_DIR)/system/t8039-c.vhd
+	$(ANALYZE) $<
 
 $(if_timing) : $(BENCH_DIR)/if_timing.vhd
-	$(ANALYZE) $(BENCH_DIR)/if_timing.vhd
+	$(ANALYZE) $<
 
 $(if_timing_behav_c0) : $(BENCH_DIR)/if_timing-c.vhd \
 		$(if_timing)
-	$(ANALYZE) $(BENCH_DIR)/if_timing-c.vhd
+	$(ANALYZE) $<
 
 $(tb) : $(BENCH_DIR)/tb.vhd \
 		$(t48_tb_pack) \
 		$(t48_core_comp_pack)
-	$(ANALYZE) $(BENCH_DIR)/tb.vhd
+	$(ANALYZE) $<
 
 $(tb_behav_c0) : $(BENCH_DIR)/tb-c.vhd \
 		$(if_timing_behav_c0) \
@@ -344,12 +344,12 @@ $(tb_behav_c0) : $(BENCH_DIR)/tb-c.vhd \
 		$(t48_core_comp_pack) \
 		$(tb-behav) \
 		$(tb)
-	$(ANALYZE) $(BENCH_DIR)/tb-c.vhd
+	$(ANALYZE) $<
 
 $(tb_t8039) : $(BENCH_DIR)/tb_t8039.vhd \
 		$(t48_tb_pack) \
 		$(t48_core_comp_pack)
-	$(ANALYZE) $(BENCH_DIR)/tb_t8039.vhd
+	$(ANALYZE) $<
 
 $(tb_t8039_behav_c0) : $(BENCH_DIR)/tb_t8039-c.vhd \
 		$(t8039_struct_c0) \
@@ -358,12 +358,12 @@ $(tb_t8039_behav_c0) : $(BENCH_DIR)/tb_t8039-c.vhd \
 		$(t48_tb_pack) \
 		$(t48_core_comp_pack) \
 		$(tb_t8039)
-	$(ANALYZE) $(BENCH_DIR)/tb_t8039-c.vhd
+	$(ANALYZE) $<
 
 $(tb_t8048) : $(BENCH_DIR)/tb_t8048.vhd \
 		$(t48_tb_pack) \
 		$(t48_core_comp_pack)
-	$(ANALYZE) $(BENCH_DIR)/tb_t8048.vhd
+	$(ANALYZE) $<
 
 $(tb_t8048_behav_c0) : $(BENCH_DIR)/tb_t8048-c.vhd \
 		$(t8048_struct_c0) \
@@ -372,14 +372,14 @@ $(tb_t8048_behav_c0) : $(BENCH_DIR)/tb_t8048-c.vhd \
 		$(t48_tb_pack) \
 		$(t48_core_comp_pack) \
 		$(tb_t8048)
-	$(ANALYZE) $(BENCH_DIR)/tb_t8048-c.vhd
+	$(ANALYZE) $<
 
 $(timer) : $(RTL_DIR)/timer.vhd \
 		$(t48_pack)
-	$(ANALYZE) $(RTL_DIR)/timer.vhd
+	$(ANALYZE) $<
 
 $(timer_rtl_c0) : $(RTL_DIR)/timer-c.vhd \
 		$(timer-rtl) \
 		$(t48_pack) \
 		$(timer)
-	$(ANALYZE) $(RTL_DIR)/timer-c.vhd
+	$(ANALYZE) $<
