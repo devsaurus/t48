@@ -3,7 +3,7 @@
 -- The Data Memory control unit.
 -- All accesses to the Data Memory are managed here.
 --
--- $Id: dmem_ctrl.vhd,v 1.4 2005-06-11 10:08:43 arniml Exp $
+-- $Id: dmem_ctrl.vhd,v 1.5 2006-06-20 01:07:16 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -154,9 +154,11 @@ begin
   --
   -- Purpose:
   --   Implements the Data Memory Address Register.
-  --   This register is necessary to hold the address during a write operation
+  --   This register is required to hold the address during a write operation
   --   as we cannot hold the address in the input register of the
   --   synchronous RAM (no clock suppression/gating).
+  --
+  --   NOTE: May be obsoleted by clock enable feature of generic RTL RAM.
   --
   dmem_addr_reg: process (res_i, clk_i)
   begin
@@ -204,6 +206,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.4  2005/06/11 10:08:43  arniml
+-- introduce prefix 't48_' for all packages, entities and configurations
+--
 -- Revision 1.3  2004/04/24 23:44:25  arniml
 -- move from std_logic_arith to numeric_std
 --
