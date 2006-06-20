@@ -3,7 +3,7 @@
 -- The Clock Control unit.
 -- Clock States and Machine Cycles are generated here.
 --
--- $Id: clock_ctrl.vhd,v 1.10 2005-11-01 21:24:21 arniml Exp $
+-- $Id: clock_ctrl.vhd,v 1.11 2006-06-20 00:46:38 arniml Exp $
 --
 -- Copyright (c) 2004, 2005, Arnim Laeuger (arniml@opencores.org)
 --
@@ -59,6 +59,7 @@ entity t48_clock_ctrl is
   port (
     clk_i          : in  std_logic;
     xtal_i         : in  std_logic;
+    xtal_en_i      : in  boolean;
     res_i          : in  std_logic;
     en_clk_i       : in  boolean;
     xtal3_o        : out boolean;
@@ -138,30 +139,32 @@ begin
         t0_q   <= '0';
 
       elsif xtal_i'event and xtal_i = clk_active_c then
-        if xtal_q < 2 then
-          xtal_q <= xtal_q + 1;
-        else
-          xtal_q <= TO_UNSIGNED(0, 2);
-        end if;
+        if xtal_en_i then
+          if xtal_q < 2 then
+            xtal_q <= xtal_q + 1;
+          else
+            xtal_q <= TO_UNSIGNED(0, 2);
+          end if;
 
-        if xtal3_s then
-          t0_q <= '1';
-        else
-          t0_q <= '0';
+          if xtal3_s then
+            t0_q <= '1';
+          else
+            t0_q <= '0';
+          end if;
+
         end if;
 
       end if;
-
     end process xtal;
 
     x1_s <=   '1'
-            when xtal_q = 0 else
+            when xtal_q = 0 and xtal_en_i else
               '0';
     x2_s <=   '1'
-            when xtal_q = 1 else
+            when xtal_q = 1 and xtal_en_i else
               '0';
     x3_s <=   '1'
-            when xtal_q = 2 else
+            when xtal_q = 2 and xtal_en_i else
               '0';
     t0_o <= t0_q;
 
@@ -173,10 +176,14 @@ begin
   no_xtal_div: if xtal_div_3_g = 0 generate
     xtal_q <= TO_UNSIGNED(0, 2);
 
-    x1_s <= '1';
-    x2_s <= '1';
+    x1_s <=   '1'
+            when xtal_en_i else
+              '0';
+    x2_s <=   '1'
+            when xtal_en_i else
+              '0';
     x3_s <=   '1'
-            when en_clk_i else
+            when xtal_en_i else
               '0';
     t0_o <= xtal_i;
 
@@ -400,6 +407,10 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.10  2005/11/01 21:24:21  arniml
+-- * shift assertion of ALE and PROG to xtal3
+-- * correct change of revision 1.8
+--
 -- Revision 1.9  2005/06/11 10:08:43  arniml
 -- introduce prefix 't48_' for all packages, entities and configurations
 --
