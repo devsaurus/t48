@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 --
--- $Id: t48_system_comp_pack-p.vhd,v 1.7 2005-11-01 21:37:10 arniml Exp $
+-- $Id: t48_system_comp_pack-p.vhd,v 1.8 2006-06-20 00:47:08 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -41,6 +41,7 @@ package t48_system_comp_pack is
 
     port (
       xtal_i        : in  std_logic;
+      xtal_en_i     : in  std_logic;
       reset_n_i     : in  std_logic;
       t0_i          : in  std_logic;
       t0_o          : out std_logic;
@@ -73,6 +74,7 @@ package t48_system_comp_pack is
 
     port (
       xtal_i        : in  std_logic;
+      xtal_en_i     : in  std_logic;
       reset_n_i     : in  std_logic;
       t0_i          : in  std_logic;
       t0_o          : out std_logic;

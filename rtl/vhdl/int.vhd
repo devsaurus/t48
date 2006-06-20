@@ -3,7 +3,7 @@
 -- The Interrupt Controller.
 -- It collects the interrupt sources and notifies the decoder.
 --
--- $Id: int.vhd,v 1.6 2005-11-01 21:26:24 arniml Exp $
+-- $Id: int.vhd,v 1.7 2006-06-20 00:46:03 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -56,6 +56,7 @@ entity t48_int is
     res_i             : in  std_logic;
     en_clk_i          : in  boolean;
     xtal_i            : in  std_logic;
+    xtal_en_i         : in  boolean;
     clk_mstate_i      : in  mstate_t;
     jtf_executed_i    : in  boolean;
     tim_overflow_i    : in  boolean;
@@ -225,14 +226,15 @@ begin
       ale_q <= false;
 
     elsif xtal_i'event and xtal_i = clk_active_c then
-      ale_q       <= ale_i;
+      if xtal_en_i then
+        ale_q   <= ale_i;
 
-      if last_cycle_i and
-        ale_q  and not ale_i  then
-        int_q <= not to_boolean(int_n_i);
+        if last_cycle_i and
+          ale_q  and not ale_i  then
+          int_q <= not to_boolean(int_n_i);
+        end if;
+
       end if;
-
-
     end if;
   end process xtal_regs;
   --
@@ -255,6 +257,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.6  2005/11/01 21:26:24  arniml
+-- operate ale_q and int_q with xtal_i after shift of ALE assertion to XTAL3
+--
 -- Revision 1.5  2005/09/13 21:00:16  arniml
 -- Fix bug reports:
 -- "Target address of JMP to Program Memory Bank 1 corrupted by interrupt"

@@ -3,7 +3,7 @@
 -- The Decoder unit.
 -- It decodes the instruction opcodes and executes them.
 --
--- $Id: decoder.vhd,v 1.24 2005-11-14 21:12:29 arniml Exp $
+-- $Id: decoder.vhd,v 1.25 2006-06-20 00:46:03 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -67,6 +67,7 @@ entity t48_decoder is
     res_i                  : in  std_logic;
     en_clk_i               : in  boolean;
     xtal_i                 : in  std_logic;
+    xtal_en_i              : in  boolean;
     ea_i                   : in  std_logic;
     ale_i                  : in  boolean;
     int_n_i                : in  std_logic;
@@ -272,6 +273,7 @@ begin
       res_i             => res_i,
       en_clk_i          => en_clk_i,
       xtal_i            => xtal_i,
+      xtal_en_i         => xtal_en_i,
       clk_mstate_i      => clk_mstate_i,
       jtf_executed_i    => jtf_executed_s,
       tim_overflow_i    => tim_overflow_i,
@@ -1972,6 +1974,10 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.24  2005/11/14 21:12:29  arniml
+-- suppress p2_output_pch_o when MOVX operation is accessing the
+-- external memory
+--
 -- Revision 1.23  2005/11/07 19:25:01  arniml
 -- fix sensitivity list
 --

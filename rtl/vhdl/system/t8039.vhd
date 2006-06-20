@@ -2,7 +2,7 @@
 --
 -- T8039 Microcontroller System
 --
--- $Id: t8039.vhd,v 1.5 2005-11-02 23:41:43 arniml Exp $
+-- $Id: t8039.vhd,v 1.6 2006-06-20 00:47:08 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -82,7 +82,11 @@ architecture struct of t8039 is
   signal p1_s             : std_logic_vector( 7 downto 0);
   signal p1_low_imp_s     : std_logic;
 
+  signal vdd_s            : std_logic;
+
 begin
+
+  vdd_s <= '1';
 
   t8039_notri_b : t8039_notri
     generic map (
@@ -93,6 +97,7 @@ begin
 
     port map (
       xtal_i        => xtal_i,
+      xtal_en_i     => vdd_s,
       reset_n_i     => reset_n_i,
       t0_i          => t0_b,
       t0_o          => t0_s,
@@ -181,6 +186,9 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.5  2005/11/02 23:41:43  arniml
+-- properly drive P1 and P2 with low impedance markers
+--
 -- Revision 1.4  2005/11/01 21:37:45  arniml
 -- wire signals for P2 low impedance marker issue
 --

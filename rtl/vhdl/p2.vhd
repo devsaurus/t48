@@ -3,7 +3,7 @@
 -- The Port 2 unit.
 -- Implements the Port 2 logic.
 --
--- $Id: p2.vhd,v 1.8 2005-11-01 21:27:55 arniml Exp $
+-- $Id: p2.vhd,v 1.9 2006-06-20 00:46:04 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -58,6 +58,7 @@ entity t48_p2 is
     res_i         : in  std_logic;
     en_clk_i      : in  boolean;
     xtal_i        : in  std_logic;
+    xtal_en_i     : in  boolean;
     -- T48 Bus Interface ------------------------------------------------------
     data_i        : in  word_t;
     data_o        : out word_t;
@@ -159,40 +160,41 @@ begin
       en_clk_q        <= false;
 
     elsif xtal_i'event and xtal_i = clk_active_c then
-      -- delay clock enable by one XTAL period
-      en_clk_q               <= en_clk_i;
+      if xtal_en_i then
+        -- delay clock enable by one XTAL period
+        en_clk_q               <= en_clk_i;
 
-      p2_o                   <= p2_q;
-      output_pch_q           <= output_pch_i;
+        p2_o                   <= p2_q;
+        output_pch_q           <= output_pch_i;
 
-      if output_pch_i then
-        p2_o(nibble_t'range) <= pch_i;
+        if output_pch_i then
+          p2_o(nibble_t'range) <= pch_i;
+        end if;
+
+        -- generate low impedance trigger for one XTAL clock period after
+        -- global clock enable when
+        -- a) switching to or from PCH
+        -- b) l_low_imp_q is active
+        if en_clk_q and
+          ((output_pch_q xor output_pch_i) or
+           l_low_imp_q = '1') then
+          l_low_imp_del_q <= '1';
+        else
+          l_low_imp_del_q <= '0';
+        end if;
+
+        -- generate low impedance trigger for on XTAL clock period after
+        -- global clock enable when
+        -- h_low_imp_q is active
+        if en_clk_q and
+          h_low_imp_q = '1' then
+          h_low_imp_del_q <= '1';
+        else
+          h_low_imp_del_q <= '0';
+        end if;
+
       end if;
-
-      -- generate low impedance trigger for one XTAL clock period after
-      -- global clock enable when
-      -- a) switching to or from PCH
-      -- b) l_low_imp_q is active
-      if en_clk_q and
-         ((output_pch_q xor output_pch_i) or
-          l_low_imp_q = '1') then
-        l_low_imp_del_q <= '1';
-      else
-        l_low_imp_del_q <= '0';
-      end if;
-
-      -- generate low impedance trigger for on XTAL clock period after
-      -- global clock enable when
-      -- h_low_imp_q is active
-      if en_clk_q and
-         h_low_imp_q = '1' then
-        h_low_imp_del_q <= '1';
-      else
-        h_low_imp_del_q <= '0';
-      end if;
-
     end if;
-
   end process p2_port;
   --
   -----------------------------------------------------------------------------
@@ -240,6 +242,12 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.8  2005/11/01 21:27:55  arniml
+-- * change low impedance markers for P2
+--   separate marker for low and high part
+-- * p2_o output is also registered to prevent combinational
+--   output to pads
+--
 -- Revision 1.7  2005/06/11 10:08:43  arniml
 -- introduce prefix 't48_' for all packages, entities and configurations
 --

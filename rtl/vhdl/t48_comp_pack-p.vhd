@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 --
--- $Id: t48_comp_pack-p.vhd,v 1.10 2005-11-01 21:29:00 arniml Exp $
+-- $Id: t48_comp_pack-p.vhd,v 1.11 2006-06-20 00:46:04 arniml Exp $
 --
 -- Copyright (c) 2004, 2005, Arnim Laeuger (arniml@opencores.org)
 --
@@ -71,6 +71,7 @@ package t48_comp_pack is
     port (
       clk_i          : in  std_logic;
       xtal_i         : in  std_logic;
+      xtal_en_i      : in  boolean;
       res_i          : in  std_logic;
       en_clk_i       : in  boolean;
       xtal3_o        : out boolean;
@@ -138,6 +139,7 @@ package t48_comp_pack is
       res_i                  : in  std_logic;
       en_clk_i               : in  boolean;
       xtal_i                 : in  std_logic;
+      xtal_en_i              : in  boolean;
       ea_i                   : in  std_logic;
       ale_i                  : in  boolean;
       int_n_i                : in  std_logic;
@@ -242,6 +244,7 @@ package t48_comp_pack is
       res_i             : in  std_logic;
       en_clk_i          : in  boolean;
       xtal_i            : in  std_logic;
+      xtal_en_i         : in  boolean;
       clk_mstate_i      : in  mstate_t;
       jtf_executed_i    : in  boolean;
       tim_overflow_i    : in  boolean;
@@ -330,6 +333,7 @@ package t48_comp_pack is
       res_i         : in  std_logic;
       en_clk_i      : in  boolean;
       xtal_i        : in  std_logic;
+      xtal_en_i     : in  boolean;
       data_i        : in  word_t;
       data_o        : out word_t;
       write_p2_i    : in  boolean;

@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 --
--- $Id: t48_core_comp_pack-p.vhd,v 1.3 2005-11-01 21:33:41 arniml Exp $
+-- $Id: t48_core_comp_pack-p.vhd,v 1.4 2006-06-20 00:46:04 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -26,6 +26,7 @@ package t48_core_comp_pack is
 
     port (
       xtal_i        : in  std_logic;
+      xtal_en_i     : in  std_logic;
       reset_i       : in  std_logic;
       t0_i          : in  std_logic;
       t0_o          : out std_logic;

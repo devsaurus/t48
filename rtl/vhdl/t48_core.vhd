@@ -2,7 +2,7 @@
 --
 -- T48 Microcontroller Core
 --
--- $Id: t48_core.vhd,v 1.10 2005-11-01 21:32:58 arniml Exp $
+-- $Id: t48_core.vhd,v 1.11 2006-06-20 00:46:04 arniml Exp $
 --
 -- Copyright (c) 2004, 2005, Arnim Laeuger (arniml@opencores.org)
 --
@@ -83,6 +83,7 @@ entity t48_core is
   port (
     -- T48 Interface ----------------------------------------------------------
     xtal_i        : in  std_logic;
+    xtal_en_i     : in  std_logic;
     reset_i       : in  std_logic;
     t0_i          : in  std_logic;
     t0_o          : out std_logic;
@@ -137,6 +138,7 @@ architecture struct of t48_core is
 
   signal t48_data_s : word_t;
 
+  signal xtal_en_s  : boolean;
   signal en_clk_s   : boolean;
 
   -- ALU signals
@@ -274,7 +276,8 @@ begin
   -- pragma translate_on
 
 
-  en_clk_s <= to_boolean(en_clk_i);
+  xtal_en_s <= to_boolean(xtal_en_i);
+  en_clk_s  <= to_boolean(en_clk_i);
 
   alu_b : t48_alu
     port map (
@@ -320,6 +323,7 @@ begin
     port map (
       clk_i          => clk_i,
       xtal_i         => xtal_i,
+      xtal_en_i      => xtal_en_s,
       res_i          => reset_i,
       en_clk_i       => en_clk_s,
       xtal3_o        => xtal3_s,
@@ -392,6 +396,7 @@ begin
       res_i                  => reset_i,
       en_clk_i               => en_clk_s,
       xtal_i                 => xtal_i,
+      xtal_en_i              => xtal_en_s,
       ea_i                   => ea_i,
       ale_i                  => ale_s,
       int_n_i                => int_n_i,
@@ -547,6 +552,7 @@ begin
         res_i         => reset_i,
         en_clk_i      => en_clk_s,
         xtal_i        => xtal_i,
+        xtal_en_i     => xtal_en_s,
         data_i        => t48_data_s,
         data_o        => p2_data_s,
         write_p2_i    => p2_write_p2_s,
@@ -633,6 +639,9 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.10  2005/11/01 21:32:58  arniml
+-- wire signals for P2 low impeddance marker issue
+--
 -- Revision 1.9  2005/06/11 10:08:43  arniml
 -- introduce prefix 't48_' for all packages, entities and configurations
 --

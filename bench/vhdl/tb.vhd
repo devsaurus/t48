@@ -2,7 +2,7 @@
 --
 -- The testbench for t48_core.
 --
--- $Id: tb.vhd,v 1.12 2005-11-01 21:21:48 arniml Exp $
+-- $Id: tb.vhd,v 1.13 2006-06-20 00:45:26 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -238,6 +238,7 @@ begin
     )
     port map (
       xtal_i        => xtal_s,
+      xtal_en_i     => one_s,
       reset_i       => res_n_s,
       t0_i          => p1_s(0),
       t0_o          => open,
@@ -562,6 +563,9 @@ end behav;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.12  2005/11/01 21:21:48  arniml
+-- split low impedance markers for P2
+--
 -- Revision 1.11  2005/09/07 17:39:40  arniml
 -- fix missing assignment to outclock
 --

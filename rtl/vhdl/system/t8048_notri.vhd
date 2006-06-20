@@ -3,7 +3,7 @@
 -- T8048 Microcontroller System
 -- 8048 toplevel without tri-states
 --
--- $Id: t8048_notri.vhd,v 1.4 2005-11-01 21:38:48 arniml Exp $
+-- $Id: t8048_notri.vhd,v 1.5 2006-06-20 00:47:08 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -55,6 +55,7 @@ entity t8048_notri is
 
   port (
     xtal_i        : in  std_logic;
+    xtal_en_i     : in  std_logic;
     reset_n_i     : in  std_logic;
     t0_i          : in  std_logic;
     t0_o          : out std_logic;
@@ -133,6 +134,7 @@ begin
     )
     port map (
       xtal_i        => xtal_i,
+      xtal_en_i     => xtal_en_i,
       reset_i       => reset_n_i,
       t0_i          => t0_i,
       t0_o          => t0_o,
@@ -244,6 +246,9 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.4  2005/11/01 21:38:48  arniml
+-- wire signals for P2 low impedance marker issue
+--
 -- Revision 1.3  2004/12/02 22:08:42  arniml
 -- introduced generic gate_port_input_g
 -- forces masking of P1 and P2 input bus
