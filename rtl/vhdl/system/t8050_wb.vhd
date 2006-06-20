@@ -3,7 +3,7 @@
 -- T8048 Microcontroller System
 -- 8050 toplevel with Wishbone interface
 --
--- $Id: t8050_wb.vhd,v 1.3 2005-11-01 21:39:14 arniml Exp $
+-- $Id: t8050_wb.vhd,v 1.4 2006-06-20 00:58:49 arniml Exp $
 --
 -- Copyright (c) 2005, Arnim Laeuger (arniml@opencores.org)
 --
@@ -119,7 +119,7 @@ architecture struct of t8050_wb is
          db_bus_from_t48 : std_logic_vector( 7 downto 0);
 
   signal wb_en_clk_s      : std_logic;
-  signal en_clk_s         : std_logic;
+  signal xtal_en_s        : std_logic;
 
   signal p1_in_s,
          p1_out_s         : std_logic_vector( 7 downto 0);
@@ -150,6 +150,7 @@ begin
     )
     port map (
       xtal_i        => xtal_i,
+      xtal_en_i     => xtal_en_s,
       reset_i       => reset_n_i,
       t0_i          => t0_i,
       t0_o          => t0_o,
@@ -173,7 +174,7 @@ begin
       p1_low_imp_o  => p1_low_imp_o,
       prog_n_o      => prog_n_o,
       clk_i         => xtal_i,
-      en_clk_i      => en_clk_s,
+      en_clk_i      => xtal3_s,
       xtal3_o       => xtal3_s,
       dmem_addr_o   => dmem_addr_s,
       dmem_we_o     => dmem_we_s,
@@ -208,7 +209,7 @@ begin
   -----------------------------------------------------------------------------
   -- Generate clock enable
   -----------------------------------------------------------------------------
-  en_clk_s <= xtal3_s and wb_en_clk_s;
+  xtal_en_s <= wb_en_clk_s;
 
 
   -----------------------------------------------------------------------------
@@ -293,6 +294,9 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.3  2005/11/01 21:39:14  arniml
+-- wire signals for P2 low impedance marker issue
+--
 -- Revision 1.2  2005/06/11 10:16:05  arniml
 -- introduce prefix 't48_' for wb_master entity and configuration
 --
