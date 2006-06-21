@@ -3,7 +3,7 @@
 -- T8039 Microcontroller System
 -- 8039 toplevel without tri-states
 --
--- $Id: t8039_notri.vhd,v 1.3 2006-06-20 00:47:08 arniml Exp $
+-- $Id: t8039_notri.vhd,v 1.4 2006-06-21 01:02:35 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -87,8 +87,7 @@ library ieee;
 use ieee.numeric_std.all;
 
 use work.t48_core_comp_pack.t48_core;
-use work.t48_core_comp_pack.syn_rom;
-use work.t48_core_comp_pack.syn_ram;
+use work.t48_core_comp_pack.generic_ram_ena;
 
 architecture struct of t8039_notri is
 
@@ -104,7 +103,11 @@ architecture struct of t8039_notri is
   signal p2_in_s,
          p2_out_s         : std_logic_vector( 7 downto 0);
 
+  signal vdd_s            : std_logic;
+
 begin
+
+  vdd_s <= '1';
 
   -----------------------------------------------------------------------------
   -- Check generics for valid values.
@@ -184,17 +187,18 @@ begin
   p2_o <= p2_out_s;
 
 
-  ram_128_b : syn_ram
+  ram_128_b : generic_ram_ena
     generic map (
-      address_width_g => 7
+      addr_width_g => 7,
+      data_width_g => 8
     )
     port map (
-      clk_i      => xtal_i,
-      res_i      => reset_n_i,
-      ram_addr_i => dmem_addr_s(6 downto 0),
-      ram_data_i => dmem_data_to_s,
-      ram_we_i   => dmem_we_s,
-      ram_data_o => dmem_data_from_s
+      clk_i => xtal_i,
+      a_i   => dmem_addr_s(6 downto 0),
+      we_i  => dmem_we_s,
+      ena_i => vdd_s,
+      d_i   => dmem_data_to_s,
+      d_o   => dmem_data_from_s
     );
 
 end struct;
@@ -204,6 +208,9 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.3  2006/06/20 00:47:08  arniml
+-- new input xtal_en_i
+--
 -- Revision 1.2  2005/11/01 21:38:10  arniml
 -- wire signals for P2 low impedance marker issue
 --
