@@ -22,7 +22,7 @@ GCOV_LINK =
 LIB_WORK  = ghdl-work
 
 CLEAN     = ghdl --clean --std=87 --workdir=$(LIB_WORK); \
-            rm -f tb_*_c0 *.gcno *.gcda *.gcov UNUSED
+            rm -f tb_*_c0 *.gcno *.gcda *.gcov *.hex UNUSED
 
 ANALYZE   = ghdl -a --std=87 --workdir=$(LIB_WORK) $(GCOV)
 
@@ -57,13 +57,15 @@ t48_core_struct_c0 = $(LIB_WORK)/t48_core-c.o
 t48_core = $(LIB_WORK)/t48_core.o
 t48_core_comp_pack = $(LIB_WORK)/t48_core_comp_pack-p.o
 t48_comp_pack = $(LIB_WORK)/t48_comp_pack-p.o
-syn_rom = $(LIB_WORK)/syn_rom-e.o
-syn_rom-lpm-a = $(LIB_WORK)/syn_rom-lpm-a.o
-syn_rom_lpm_c0 = $(LIB_WORK)/syn_rom-lpm-c.o
 lpm_rom = $(LIB_WORK)/lpm_rom.o
-syn_ram = $(LIB_WORK)/syn_ram-e.o
-syn_ram-lpm-a = $(LIB_WORK)/syn_ram-lpm-a.o
-syn_ram_lpm_c0 = $(LIB_WORK)/syn_ram-lpm-c.o
+t48_rom = $(LIB_WORK)/t48_rom-e.o
+t48_rom_lpm_a = $(LIB_WORK)/t48_rom-lpm-a.o
+t48_rom_lpm_c0 = $(LIB_WORK)/t48_rom-lpm-c.o
+t49_rom = $(LIB_WORK)/t49_rom-e.o
+t49_rom_lpm_a = $(LIB_WORK)/t49_rom-lpm-a.o
+t49_rom_lpm_c0 = $(LIB_WORK)/t49_rom-lpm-c.o
+generic_ram_ena = $(LIB_WORK)/generic_ram_ena.o
+generic_ram_ena_rtl_c0 = $(LIB_WORK)/generic_ram_ena-c.o
 lpm_ram_dq = $(LIB_WORK)/lpm_ram_dq.o
 psw_rtl_c0 = $(LIB_WORK)/psw-c.o
 psw = $(LIB_WORK)/psw.o
