@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 --
--- $Id: t48_core_comp_pack-p.vhd,v 1.4 2006-06-20 00:46:04 arniml Exp $
+-- $Id: t48_core_comp_pack-p.vhd,v 1.5 2006-06-21 01:03:28 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -61,28 +61,34 @@ package t48_core_comp_pack is
     );
   end component;
 
-  component syn_rom
+  component generic_ram_ena
     generic (
-      address_width_g : positive := 10
+      addr_width_g : integer := 10;
+      data_width_g : integer := 8
     );
     port (
+      clk_i : in  std_logic;
+      a_i   : in  std_logic_vector(addr_width_g-1 downto 0);
+      we_i  : in  std_logic;
+      ena_i : in  std_logic;
+      d_i   : in  std_logic_vector(data_width_g-1 downto 0);
+      d_o   : out std_logic_vector(data_width_g-1 downto 0)
+    );
+  end component;
+
+  component t48_rom
+    port (
       clk_i      : in  std_logic;
-      rom_addr_i : in  std_logic_vector(address_width_g-1 downto 0);
+      rom_addr_i : in  std_logic_vector(9 downto 0);
       rom_data_o : out std_logic_vector(7 downto 0)
     );
   end component;
 
-  component syn_ram
-    generic (
-      address_width_g : positive := 8
-    );
+  component t49_rom
     port (
       clk_i      : in  std_logic;
-      res_i      : in  std_logic;
-      ram_addr_i : in  std_logic_vector(address_width_g-1 downto 0);
-      ram_data_i : in  std_logic_vector(7 downto 0);
-      ram_we_i   : in  std_logic;
-      ram_data_o : out std_logic_vector(7 downto 0)
+      rom_addr_i : in  std_logic_vector(10 downto 0);
+      rom_data_o : out std_logic_vector( 7 downto 0)
     );
   end component;
 
