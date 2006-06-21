@@ -4,7 +4,7 @@
 #
 # run_regression.pl
 #
-# $Id: run_regression.pl,v 1.8 2004-09-12 00:30:53 arniml Exp $
+# $Id: run_regression.pl,v 1.9 2006-06-21 01:05:34 arniml Exp $
 #
 # Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 #
@@ -99,28 +99,27 @@ while (($cell, $tag) = each(%cells)) {
 
         $dump_compare_cell = -e 'no_dump_compare' ? 0 : $dump_compare;
 
-        system('sh', '-c', 'rm -f $SIM_DIR/t48_rom.hex');
-        system('sh', '-c', 'make -f $VERIF_DIR/include/Makefile.cell clean');
-        system('sh', '-c', 'make -f $VERIF_DIR/include/Makefile.cell simu clean');
+        system('rm -f $SIM_DIR/t48_rom.hex');
+        system('make -f $VERIF_DIR/include/Makefile.cell clean');
+        system('make -f $VERIF_DIR/include/Makefile.cell all clean');
         if ($? == 0) {
             chdir($ENV{'SIM_DIR'});
-            system('sh', '-c', 'ls -l t48_rom.hex');
-            system('sh', '-c', $dump_compare_cell > 0 ? $vhdl_simulator_vcd : $vhdl_simulator);
+#            system('sh', '-c', 'ls -l t48_rom.hex');
+            system($dump_compare_cell > 0 ? $vhdl_simulator_vcd : $vhdl_simulator);
 
             if ($dump_compare_cell) {
-                system('sh', '-c', 'rm -f dump sim.dump vhdl.dump');
-                system('sh', '-c',
-                       'vcd2vec.pl -s ../../sw/dump_compare.signals < temp.vcd | vec2dump.pl > vhdl.dump');
-                system('sh', '-c', 'i8039 -f t48_rom.hex -x t48_ext_rom.hex -d > dump');
-                system('sh', '-c', 'egrep \':.+\|\' dump | sed -e \'s/[^|]*. *//\' > sim.dump');
-                system('sh', '-c', 'diff -b -q sim.dump vhdl.dump');
+                system('rm -f dump sim.dump vhdl.dump');
+                system('vcd2vec.pl -s ../../sw/dump_compare.signals < temp.vcd | vec2dump.pl > vhdl.dump');
+                system('i8039 -f t48_rom.hex -x t48_ext_rom.hex -d > dump');
+                system('egrep \':.+\|\' dump | sed -e \'s/[^|]*. *//\' > sim.dump');
+                system('diff -b -q sim.dump vhdl.dump');
                 print("Dump Compare: ");
                 if ($? == 0) {
                     print("PASS\n");
                 } else {
                     print("FAIL\n");
                 }
-                system('sh', '-c', 'rm -f dump sim.dump vhdl.dump temp.vcd');
+                system('rm -f dump sim.dump vhdl.dump temp.vcd');
             } elsif ($dump_compare) {
                 print("Dump Compare: Excluded\n");
             }
