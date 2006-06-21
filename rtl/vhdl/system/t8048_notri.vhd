@@ -3,7 +3,7 @@
 -- T8048 Microcontroller System
 -- 8048 toplevel without tri-states
 --
--- $Id: t8048_notri.vhd,v 1.5 2006-06-20 00:47:08 arniml Exp $
+-- $Id: t8048_notri.vhd,v 1.6 2006-06-21 01:02:16 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -87,8 +87,8 @@ library ieee;
 use ieee.numeric_std.all;
 
 use work.t48_core_comp_pack.t48_core;
-use work.t48_core_comp_pack.syn_rom;
-use work.t48_core_comp_pack.syn_ram;
+use work.t48_core_comp_pack.t48_rom;
+use work.t48_core_comp_pack.generic_ram_ena;
 
 architecture struct of t8048_notri is
 
@@ -110,7 +110,11 @@ architecture struct of t8048_notri is
   signal p2_in_s,
          p2_out_s         : std_logic_vector( 7 downto 0);
 
+  signal vdd_s            : std_logic;
+
 begin
+
+  vdd_s <= '1';
 
   -----------------------------------------------------------------------------
   -- Check generics for valid values.
@@ -216,27 +220,25 @@ begin
   -----------------------------------------------------------------------------
 
 
-  rom_1k_b : syn_rom
-    generic map (
-      address_width_g => rom_addr_width_c
-    )
+  rom_1k_b : t48_rom
     port map (
       clk_i      => xtal_i,
       rom_addr_i => pmem_addr_s(rom_addr_width_c-1 downto 0),
       rom_data_o => pmem_data_s
     );
 
-  ram_64_b : syn_ram
+  ram_64_b : generic_ram_ena
     generic map (
-      address_width_g => 6
+      addr_width_g => 6,
+      data_width_g => 8
     )
     port map (
-      clk_i      => xtal_i,
-      res_i      => reset_n_i,
-      ram_addr_i => dmem_addr_s(5 downto 0),
-      ram_data_i => dmem_data_to_s,
-      ram_we_i   => dmem_we_s,
-      ram_data_o => dmem_data_from_s
+      clk_i => xtal_i,
+      a_i   => dmem_addr_s(5 downto 0),
+      we_i  => dmem_we_s,
+      ena_i => vdd_s,
+      d_i   => dmem_data_to_s,
+      d_o   => dmem_data_from_s
     );
 
 end struct;
@@ -246,6 +248,9 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.5  2006/06/20 00:47:08  arniml
+-- new input xtal_en_i
+--
 -- Revision 1.4  2005/11/01 21:38:48  arniml
 -- wire signals for P2 low impedance marker issue
 --
