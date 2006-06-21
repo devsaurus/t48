@@ -2,7 +2,7 @@
 --
 -- The testbench for t8039.
 --
--- $Id: tb_t8039.vhd,v 1.2 2005-11-01 21:22:28 arniml Exp $
+-- $Id: tb_t8039.vhd,v 1.3 2006-06-21 01:04:05 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -50,8 +50,8 @@ entity tb_t8039 is
 
 end tb_t8039;
 
-use work.t48_core_comp_pack.syn_ram;
-use work.t48_core_comp_pack.syn_rom;
+use work.t48_core_comp_pack.generic_ram_ena;
+use work.t48_system_comp_pack.t8039;
 
 use work.t48_tb_pack.all;
 
@@ -60,22 +60,23 @@ architecture behav of tb_t8039 is
   -- clock period, 11 MHz
   constant period_c : time := 90 ns;
 
-  component t8039
+  component lpm_rom
+    generic (
+      LPM_WIDTH           : positive;
+      LPM_TYPE            : string    := "LPM_ROM";
+      LPM_WIDTHAD         : positive;
+      LPM_NUMWORDS        : natural   := 0;
+      LPM_FILE            : string;
+      LPM_ADDRESS_CONTROL : string    := "REGISTERED";
+      LPM_OUTDATA         : string    := "REGISTERED";
+      LPM_HINT            : string    := "UNUSED"
+    );
     port (
-      xtal_i    : in    std_logic;
-      reset_n_i : in    std_logic;
-      t0_b      : inout std_logic;
-      int_n_i   : in    std_logic;
-      ea_i      : in    std_logic;
-      rd_n_o    : out   std_logic;
-      psen_n_o  : out   std_logic;
-      wr_n_o    : out   std_logic;
-      ale_o     : out   std_logic;
-      db_b      : inout std_logic_vector( 7 downto 0);
-      t1_i      : in    std_logic;
-      p2_b      : inout std_logic_vector( 7 downto 0);
-      p1_b      : inout std_logic_vector( 7 downto 0);
-      prog_n_o  : out   std_logic
+      address             : in  std_logic_vector(LPM_WIDTHAD-1 downto 0);
+      inclock             : in  std_logic;
+      outclock            : in  std_logic;
+      memenab             : in  std_logic;
+      q                   : out std_logic_vector(LPM_WIDTH-1 downto 0)
     );
   end component;
 
@@ -114,27 +115,41 @@ begin
   p2_b   <= (others => 'H');
   p1_b   <= (others => 'H');
 
-  ext_rom_b : syn_rom
+  -----------------------------------------------------------------------------
+  -- External ROM, 4k bytes
+  -- Initialized by file t3x_ext_rom.hex.
+  -----------------------------------------------------------------------------
+  ext_rom_b : lpm_rom
     generic map (
-      address_width_g => 12
+      LPM_WIDTH           => 8,
+      LPM_TYPE            => "LPM_ROM",
+      LPM_WIDTHAD         => 12,
+      LPM_NUMWORDS        => 2 ** 12,
+      LPM_FILE            => "rom_t3x_ext.hex",
+      LPM_ADDRESS_CONTROL => "REGISTERED",
+      LPM_OUTDATA         => "UNREGISTERED",
+      LPM_HINT            => "UNUSED"
     )
     port map (
-      clk_i      => xtal_s,
-      rom_addr_i => ext_mem_addr_s,
-      rom_data_o => ext_rom_data_s
+      address  => ext_mem_addr_s,
+      inclock  => xtal_s,
+      outclock => zero_s,               -- unused
+      memenab  => one_s,
+      q        => ext_rom_data_s
     );
 
-  ext_ram_b : syn_ram
+  ext_ram_b : generic_ram_ena
     generic map (
-      address_width_g => 8
+      addr_width_g => 8,
+      data_width_g => 8
     )
     port map (
-      clk_i      => zero_s,
-      res_i      => res_n_s,
-      ram_addr_i => ext_mem_addr_s(7 downto 0),
-      ram_data_i => db_b,
-      ram_we_i   => ext_ram_we_s,
-      ram_data_o => ext_ram_data_from_s
+      clk_i => xtal_s,
+      a_i   => ext_mem_addr_s(7 downto 0),
+      we_i  => ext_ram_we_s,
+      ena_i => one_s,
+      d_i   => db_b,
+      d_o   => ext_ram_data_from_s
     );
 
   t8039_b : t8039
@@ -286,6 +301,9 @@ end behav;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.2  2005/11/01 21:22:28  arniml
+-- fix address assignment
+--
 -- Revision 1.1  2004/04/18 19:00:07  arniml
 -- initial check-in
 --

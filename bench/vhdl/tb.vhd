@@ -2,7 +2,7 @@
 --
 -- The testbench for t48_core.
 --
--- $Id: tb.vhd,v 1.13 2006-06-20 00:45:26 arniml Exp $
+-- $Id: tb.vhd,v 1.14 2006-06-21 01:04:05 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -148,7 +148,7 @@ begin
 
   -----------------------------------------------------------------------------
   -- Internal ROM, 2k bytes
-  -- Initialized by file t48_rom.hex.
+  -- Initialized by file rom_t49.hex.
   -----------------------------------------------------------------------------
   rom_internal_2k : lpm_rom
     generic map (
@@ -156,7 +156,7 @@ begin
       LPM_TYPE            => "LPM_ROM",
       LPM_WIDTHAD         => 11,
       LPM_NUMWORDS        => 2 ** 11,
-      LPM_FILE            => "t48_rom.hex",
+      LPM_FILE            => "rom_t49.hex",
       LPM_ADDRESS_CONTROL => "REGISTERED",
       LPM_OUTDATA         => "UNREGISTERED",
       LPM_HINT            => "UNUSED"
@@ -171,7 +171,7 @@ begin
 
   -----------------------------------------------------------------------------
   -- External ROM, 2k bytes
-  -- Initialized by file t48_ext_rom.hex.
+  -- Initialized by file rom_t49_ext.hex.
   -----------------------------------------------------------------------------
   ext_rom_addr_s(11 downto 8) <= t48_p2_s(3 downto 0);
   ext_rom_addr_s( 7 downto 0) <= ext_mem_addr_q;
@@ -181,7 +181,7 @@ begin
       LPM_TYPE            => "LPM_ROM",
       LPM_WIDTHAD         => 11,
       LPM_NUMWORDS        => 2 ** 11,
-      LPM_FILE            => "t48_ext_rom.hex",
+      LPM_FILE            => "rom_t49_ext.hex",
       LPM_ADDRESS_CONTROL => "REGISTERED",
       LPM_OUTDATA         => "UNREGISTERED",
       LPM_HINT            => "UNUSED"
@@ -197,33 +197,35 @@ begin
   -----------------------------------------------------------------------------
   -- Internal RAM, 256 bytes
   -----------------------------------------------------------------------------
-  ram_256 : syn_ram
+  ram_256 : generic_ram_ena
     generic map (
-      address_width_g => 8
+      addr_width_g => 8,
+      data_width_g => 8
     )
     port map (
-      clk_i      => xtal_s,
-      res_i      => res_n_s,
-      ram_addr_i => ram_addr_s,
-      ram_data_i => ram_data_to_s,
-      ram_we_i   => ram_we_s,
-      ram_data_o => ram_data_from_s
+      clk_i => xtal_s,
+      a_i   => ram_addr_s,
+      we_i  => ram_we_s,
+      ena_i => one_s,
+      d_i   => ram_data_to_s,
+      d_o   => ram_data_from_s
     );
 
   -----------------------------------------------------------------------------
   -- External RAM, 256 bytes
   -----------------------------------------------------------------------------
-  ext_ram_b : syn_ram
+  ext_ram_b : generic_ram_ena
     generic map (
-      address_width_g => 8
+      addr_width_g => 8,
+      data_width_g => 8
     )
     port map (
-      clk_i      => xtal_s,
-      res_i      => res_n_s,
-      ram_addr_i => ext_mem_addr_q,
-      ram_data_i => bus_s,
-      ram_we_i   => ext_ram_we_q,
-      ram_data_o => ext_ram_data_from_s
+      clk_i => xtal_s,
+      a_i   => ext_mem_addr_q,
+      we_i  => ext_ram_we_q,
+      ena_i => one_s,
+      d_i   => bus_s,
+      d_o   => ext_ram_data_from_s
     );
 
   t48_core_b : t48_core
@@ -563,6 +565,9 @@ end behav;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.13  2006/06/20 00:45:26  arniml
+-- new input xtal_en_i
+--
 -- Revision 1.12  2005/11/01 21:21:48  arniml
 -- split low impedance markers for P2
 --

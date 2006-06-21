@@ -2,7 +2,7 @@
 --
 -- The testbench for t8048.
 --
--- $Id: tb_t8048.vhd,v 1.4 2004-04-18 19:00:58 arniml Exp $
+-- $Id: tb_t8048.vhd,v 1.5 2006-06-21 01:04:05 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -50,7 +50,7 @@ entity tb_t8048 is
 
 end tb_t8048;
 
-use work.t48_core_comp_pack.syn_ram;
+use work.t48_core_comp_pack.generic_ram_ena;
 
 use work.t48_tb_pack.all;
 
@@ -112,17 +112,18 @@ begin
   p2_b   <= (others => 'H');
   p1_b   <= (others => 'H');
 
-  ext_ram_b : syn_ram
+  ext_ram_b : generic_ram_ena
     generic map (
-      address_width_g => 8
+      addr_width_g => 8,
+      data_width_g => 8
     )
     port map (
-      clk_i      => zero_s,
-      res_i      => res_n_s,
-      ram_addr_i => ext_ram_addr_s,
-      ram_data_i => db_b,
-      ram_we_i   => ext_ram_we_s,
-      ram_data_o => ext_ram_data_from_s
+      clk_i => zero_s,
+      a_i   => ext_ram_addr_s,
+      we_i  => ext_ram_we_s,
+      ena_i => one_s,
+      d_i   => db_b,
+      d_o   => ext_ram_data_from_s
     );
 
   t8048_b : t8048
@@ -259,6 +260,9 @@ end behav;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.4  2004/04/18 19:00:58  arniml
+-- connect T0 and T1 to P1
+--
 -- Revision 1.3  2004/04/14 20:57:44  arniml
 -- wait for instruction strobe after final end-of-simulation detection
 -- this ensures that the last mov instruction is part of the dump and
