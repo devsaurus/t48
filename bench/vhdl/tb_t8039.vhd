@@ -2,7 +2,7 @@
 --
 -- The testbench for t8039.
 --
--- $Id: tb_t8039.vhd,v 1.3 2006-06-21 01:04:05 arniml Exp $
+-- $Id: tb_t8039.vhd,v 1.4 2006-06-22 00:21:58 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -86,12 +86,6 @@ architecture behav of tb_t8039 is
   signal ale_s           : std_logic;
   signal psen_n_s        : std_logic;
   signal prog_n_s        : std_logic;
-  signal rom_addr_s      : std_logic_vector(11 downto 0);
-  signal rom_data_s      : std_logic_vector( 7 downto 0);
-  signal ram_data_to_s   : std_logic_vector( 7 downto 0);
-  signal ram_data_from_s : std_logic_vector( 7 downto 0);
-  signal ram_addr_s      : std_logic_vector( 7 downto 0);
-  signal ram_we_s        : std_logic;
 
   signal p1_b : std_logic_vector( 7 downto 0);
   signal p2_b : std_logic_vector( 7 downto 0);
@@ -194,7 +188,7 @@ begin
   begin
     ext_mem_addr_s(11 downto 8) <= To_X01Z(p2_b(3 downto 0));
 
-    if ale_s = '1' then
+    if ale_s'event and ale_s = '0' then
       if not is_X(db_b) then
         ext_mem_addr_s(7 downto 0) <= db_b;
       else
@@ -203,12 +197,11 @@ begin
     end if;
 
     if wr_n_s'event and wr_n_s = '1' then
+      ext_ram_we_s <= '0';
+    end if;
+    if wr_n_s'event and wr_n_s = '0' then
       ext_ram_we_s <= '1';
     end if;
-
---    if clk_s'event then
---      ext_ram_we_s <= '0';
---    end if;
 
   end process ext_mem;
   --
@@ -301,6 +294,9 @@ end behav;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.3  2006/06/21 01:04:05  arniml
+-- replaced syn_ram and syn_rom with generic_ram_ena and t48_rom/t49_rom/t3x_rom
+--
 -- Revision 1.2  2005/11/01 21:22:28  arniml
 -- fix address assignment
 --
