@@ -2,7 +2,7 @@
 --
 -- The testbench for t8048.
 --
--- $Id: tb_t8048.vhd,v 1.5 2006-06-21 01:04:05 arniml Exp $
+-- $Id: tb_t8048.vhd,v 1.6 2006-06-22 00:21:28 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -51,6 +51,7 @@ entity tb_t8048 is
 end tb_t8048;
 
 use work.t48_core_comp_pack.generic_ram_ena;
+use work.t48_system_comp_pack.t8048;
 
 use work.t48_tb_pack.all;
 
@@ -59,22 +60,23 @@ architecture behav of tb_t8048 is
   -- clock period, 11 MHz
   constant period_c : time := 90 ns;
 
-  component t8048
+  component lpm_rom
+    generic (
+      LPM_WIDTH           : positive;
+      LPM_TYPE            : string    := "LPM_ROM";
+      LPM_WIDTHAD         : positive;
+      LPM_NUMWORDS        : natural   := 0;
+      LPM_FILE            : string;
+      LPM_ADDRESS_CONTROL : string    := "REGISTERED";
+      LPM_OUTDATA         : string    := "REGISTERED";
+      LPM_HINT            : string    := "UNUSED"
+    );
     port (
-      xtal_i    : in    std_logic;
-      reset_n_i : in    std_logic;
-      t0_b      : inout std_logic;
-      int_n_i   : in    std_logic;
-      ea_i      : in    std_logic;
-      rd_n_o    : out   std_logic;
-      psen_n_o  : out   std_logic;
-      wr_n_o    : out   std_logic;
-      ale_o     : out   std_logic;
-      db_b      : inout std_logic_vector( 7 downto 0);
-      t1_i      : in    std_logic;
-      p2_b      : inout std_logic_vector( 7 downto 0);
-      p1_b      : inout std_logic_vector( 7 downto 0);
-      prog_n_o  : out   std_logic
+      address             : in  std_logic_vector(LPM_WIDTHAD-1 downto 0);
+      inclock             : in  std_logic;
+      outclock            : in  std_logic;
+      memenab             : in  std_logic;
+      q                   : out std_logic_vector(LPM_WIDTH-1 downto 0)
     );
   end component;
 
@@ -84,20 +86,15 @@ architecture behav of tb_t8048 is
   signal ale_s           : std_logic;
   signal psen_n_s        : std_logic;
   signal prog_n_s        : std_logic;
-  signal rom_addr_s      : std_logic_vector(11 downto 0);
-  signal rom_data_s      : std_logic_vector( 7 downto 0);
-  signal ram_data_to_s   : std_logic_vector( 7 downto 0);
-  signal ram_data_from_s : std_logic_vector( 7 downto 0);
-  signal ram_addr_s      : std_logic_vector( 7 downto 0);
-  signal ram_we_s        : std_logic;
 
   signal p1_b : std_logic_vector( 7 downto 0);
   signal p2_b : std_logic_vector( 7 downto 0);
 
   signal db_b                : std_logic_vector( 7 downto 0);
-  signal ext_ram_addr_s      : std_logic_vector( 7 downto 0);
+  signal ext_mem_addr_s      : std_logic_vector(11 downto 0);
   signal ext_ram_data_from_s : std_logic_vector( 7 downto 0);
   signal ext_ram_we_s        : std_logic;
+  signal ext_rom_data_s      : std_logic_vector( 7 downto 0);
   signal rd_n_s              : std_logic;
   signal wr_n_s              : std_logic;
 
@@ -112,14 +109,37 @@ begin
   p2_b   <= (others => 'H');
   p1_b   <= (others => 'H');
 
+  -----------------------------------------------------------------------------
+  -- External ROM, 3k bytes
+  -- Initialized by file t48_ext_rom.hex.
+  -----------------------------------------------------------------------------
+  ext_rom_b : lpm_rom
+    generic map (
+      LPM_WIDTH           => 8,
+      LPM_TYPE            => "LPM_ROM",
+      LPM_WIDTHAD         => 12,
+      LPM_NUMWORDS        => 3 * (2 ** 10),
+      LPM_FILE            => "rom_t48_ext.hex",
+      LPM_ADDRESS_CONTROL => "REGISTERED",
+      LPM_OUTDATA         => "UNREGISTERED",
+      LPM_HINT            => "UNUSED"
+    )
+    port map (
+      address  => ext_mem_addr_s,
+      inclock  => xtal_s,
+      outclock => zero_s,               -- unused
+      memenab  => one_s,
+      q        => ext_rom_data_s
+    );
+
   ext_ram_b : generic_ram_ena
     generic map (
       addr_width_g => 8,
       data_width_g => 8
     )
     port map (
-      clk_i => zero_s,
-      a_i   => ext_ram_addr_s,
+      clk_i => xtal_s,
+      a_i   => ext_mem_addr_s(7 downto 0),
       we_i  => ext_ram_we_s,
       ena_i => one_s,
       d_i   => db_b,
@@ -145,29 +165,43 @@ begin
     );
 
 
+  -----------------------------------------------------------------------------
+  -- Read from external memory
+  --
+  db_b <=   ext_rom_data_s
+          when psen_n_s = '0' else
+            (others => 'Z');
+  db_b <=   ext_ram_data_from_s
+          when rd_n_s = '0' else
+            (others => 'Z');
+  --
+  -----------------------------------------------------------------------------
+
 
   -----------------------------------------------------------------------------
   -- External RAM access signals
   --
   ext_ram: process (wr_n_s,
                     ale_s,
+                    p2_b,
                     db_b)
   begin
+    ext_mem_addr_s(11 downto 8) <= To_X01Z(p2_b(3 downto 0));
+
     if ale_s'event and ale_s = '0' then
       if not is_X(db_b) then
-        ext_ram_addr_s <= db_b;
+        ext_mem_addr_s(7 downto 0) <= db_b;
       else
-        ext_ram_addr_s <= (others => '0');
+        ext_mem_addr_s(7 downto 0) <= (others => '0');
       end if;
     end if;
 
     if wr_n_s'event and wr_n_s = '1' then
+      ext_ram_we_s <= '0';
+    end if;
+    if wr_n_s'event and wr_n_s = '0' then
       ext_ram_we_s <= '1';
     end if;
-
---    if clk_s'event then
---      ext_ram_we_s <= '0';
---    end if;
 
   end process ext_ram;
   --
@@ -260,6 +294,9 @@ end behav;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.5  2006/06/21 01:04:05  arniml
+-- replaced syn_ram and syn_rom with generic_ram_ena and t48_rom/t49_rom/t3x_rom
+--
 -- Revision 1.4  2004/04/18 19:00:58  arniml
 -- connect T0 and T1 to P1
 --
