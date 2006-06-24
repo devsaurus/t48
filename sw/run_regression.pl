@@ -4,7 +4,7 @@
 #
 # run_regression.pl
 #
-# $Id: run_regression.pl,v 1.9 2006-06-21 01:05:34 arniml Exp $
+# $Id: run_regression.pl,v 1.10 2006-06-24 00:52:24 arniml Exp $
 #
 # Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 #
@@ -54,12 +54,17 @@ my $dump_compare_cell = 0;
 # Commands to call the different VHDL simulators.
 # 
 # GHDL
-my $ghdl_simulator     = './tb_behav_c0 --assert-level=error';
-my $ghdl_simulator_vcd = $ghdl_simulator.' --vcd=temp.vcd';
+my %ghdl_simulators    = ('gen' => './tb_behav_c0',
+                          't48' => './tb_t8048_behav_c0',
+                          't39' => './tb_t8039_behav_c0');
+my $ghdl_simulator_opt = '--assert-level=error --stop-time=20ms';
+my $ghdl_simulator_vcd = './tb_behav_c0 --assert-level=error --vcd=temp.vcd';
 #
 # Choose simulator:
-my $vhdl_simulator     = $ghdl_simulator;
+my %vhdl_simulators    = %ghdl_simulators;
+my $vhdl_simulator_opt = $ghdl_simulator_opt;
 my $vhdl_simulator_vcd = $ghdl_simulator_vcd;
+my ($vhdl_simulator_tag, $vhdl_simulator);
 #
 ##############################################################################
 
@@ -99,15 +104,14 @@ while (($cell, $tag) = each(%cells)) {
 
         $dump_compare_cell = -e 'no_dump_compare' ? 0 : $dump_compare;
 
-        system('rm -f $SIM_DIR/t48_rom.hex');
+        system('rm -f $SIM_DIR/*.hex');
         system('make -f $VERIF_DIR/include/Makefile.cell clean');
         system('make -f $VERIF_DIR/include/Makefile.cell all clean');
         if ($? == 0) {
             chdir($ENV{'SIM_DIR'});
-#            system('sh', '-c', 'ls -l t48_rom.hex');
-            system($dump_compare_cell > 0 ? $vhdl_simulator_vcd : $vhdl_simulator);
 
             if ($dump_compare_cell) {
+                system($vhdl_simulator_vcd);
                 system('rm -f dump sim.dump vhdl.dump');
                 system('vcd2vec.pl -s ../../sw/dump_compare.signals < temp.vcd | vec2dump.pl > vhdl.dump');
                 system('i8039 -f t48_rom.hex -x t48_ext_rom.hex -d > dump');
@@ -122,6 +126,14 @@ while (($cell, $tag) = each(%cells)) {
                 system('rm -f dump sim.dump vhdl.dump temp.vcd');
             } elsif ($dump_compare) {
                 print("Dump Compare: Excluded\n");
+            } else {
+                # run all enabled simulators
+                while (($vhdl_simulator_tag, $vhdl_simulator) = each %vhdl_simulators) {
+                    if (! -e "$cell_dir/no_$vhdl_simulator_tag") {
+                        print("Executing simulator $vhdl_simulator_tag\n");
+                        system($vhdl_simulator." ".$vhdl_simulator_opt);
+                    }
+                }
             }
 
         } else {
