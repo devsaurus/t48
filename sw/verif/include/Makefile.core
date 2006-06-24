@@ -22,8 +22,9 @@ $(SIM_DIR)/rom_t3x_ext.hex: $(MODULE).p
 
 $(SIM_DIR)/rom_t48.hex: $(MODULE).p
 	p2hex -r 0-1023 $< $@
+# lowest 1k of external ROM will not be used
 $(SIM_DIR)/rom_t48_ext.hex: $(MODULE).p
-	p2hex -a -r 1024-4095 $< $@
+	p2hex -r 1024-4095 $< $@
 
 $(SIM_DIR)/rom_t49.hex: $(MODULE).p
 	p2hex -r 0-2047 $< $@
