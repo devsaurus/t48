@@ -2,7 +2,7 @@
 --
 -- The testbench for t8048.
 --
--- $Id: tb_t8048.vhd,v 1.6 2006-06-22 00:21:28 arniml Exp $
+-- $Id: tb_t8048.vhd,v 1.7 2006-06-24 00:51:50 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -49,6 +49,7 @@ use ieee.std_logic_1164.all;
 entity tb_t8048 is
 
 end tb_t8048;
+
 
 use work.t48_core_comp_pack.generic_ram_ena;
 use work.t48_system_comp_pack.t8048;
@@ -186,6 +187,7 @@ begin
                     p2_b,
                     db_b)
   begin
+    -- lowest 1k of external ROM is not used
     ext_mem_addr_s(11 downto 8) <= To_X01Z(p2_b(3 downto 0));
 
     if ale_s'event and ale_s = '0' then
@@ -294,6 +296,9 @@ end behav;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.6  2006/06/22 00:21:28  arniml
+-- added external ROM
+--
 -- Revision 1.5  2006/06/21 01:04:05  arniml
 -- replaced syn_ram and syn_rom with generic_ram_ena and t48_rom/t49_rom/t3x_rom
 --
