@@ -1,7 +1,7 @@
 
 README for the T48 uController project
 ======================================
-Version: $Date: 2005-06-19 15:59:48 $
+Version: $Date: 2006-07-06 00:08:49 $
 
 
 Introduction
@@ -129,6 +129,7 @@ where <simulator> denotes one of the supported simulators:
     http://ghdl.free.fr/
 
   * Makefile.simili
+    DISCONTINUED
     VHDL Simili, a VHDL simulator by Symphony EDA
     http://www.symphonyeda.com/
 
