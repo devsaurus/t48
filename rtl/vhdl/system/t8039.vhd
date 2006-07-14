@@ -2,7 +2,8 @@
 --
 -- T8039 Microcontroller System
 --
--- $Id: t8039.vhd,v 1.6 2006-06-20 00:47:08 arniml Exp $
+-- $Id: t8039.vhd,v 1.7 2006-07-14 01:13:32 arniml Exp $
+-- $Name: not supported by cvs2svn $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -186,6 +187,9 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.6  2006/06/20 00:47:08  arniml
+-- new input xtal_en_i
+--
 -- Revision 1.5  2005/11/02 23:41:43  arniml
 -- properly drive P1 and P2 with low impedance markers
 --

@@ -3,7 +3,8 @@
 -- T8048 Microcontroller System
 -- 8048 toplevel without tri-states
 --
--- $Id: t8048_notri.vhd,v 1.6 2006-06-21 01:02:16 arniml Exp $
+-- $Id: t8048_notri.vhd,v 1.7 2006-07-14 01:13:32 arniml Exp $
+-- $Name: not supported by cvs2svn $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -248,6 +249,9 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.6  2006/06/21 01:02:16  arniml
+-- replaced syn_rom and syn_ram with t48_rom and generic_ram_ena
+--
 -- Revision 1.5  2006/06/20 00:47:08  arniml
 -- new input xtal_en_i
 --
