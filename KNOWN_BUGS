@@ -1,11 +1,31 @@
 
 Known bugs of the T48 uController core
 ======================================
-Version: $Date: 2005-11-02 21:16:34 $
+Version: $Date: 2006-07-14 01:06:36 $
+
+
+Release 0.6.1 BETA
+------------------
+
+*******************************************************************************
+Deassertion of PROG too early
+
+PROG is deasserted in XTAL2 cycle which might lead to read data being already
+invalid (tri-stated) when the core samples P2[3:0] at the end of XTAL3.
+
+Fixed in:
+clock_ctrl.vhd 1.12
+Fix will be included in next release.
+
 
 
 Release 0.6 BETA
 ----------------
+
+*******************************************************************************
+Deassertion of PROG too early
+
+See above.
 
 *******************************************************************************
 P2 Port value restored after expander access
@@ -41,6 +61,11 @@ Fix will be included in next release.
 
 Release 0.5 BETA
 ----------------
+
+*******************************************************************************
+Deassertion of PROG too early
+
+See above.
 
 *******************************************************************************
 P2 Port value restored after expander access
