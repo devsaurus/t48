@@ -2,7 +2,8 @@
 --
 -- T48 Microcontroller Core
 --
--- $Id: t48_core.vhd,v 1.11 2006-06-20 00:46:04 arniml Exp $
+-- $Id: t48_core.vhd,v 1.12 2006-07-14 01:12:08 arniml Exp $
+-- $Name: not supported by cvs2svn $
 --
 -- Copyright (c) 2004, 2005, Arnim Laeuger (arniml@opencores.org)
 --
@@ -46,9 +47,6 @@
 --
 -- Compared to the original MCS-48 architecture, the following limitations
 -- apply:
---
---   * Nibble-wide instructions addressing expander port implemented but
---     not verified in detail.
 --
 --   * Single-step mode not implemented.
 --     Not selected for future implementation.
@@ -639,6 +637,9 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.11  2006/06/20 00:46:04  arniml
+-- new input xtal_en_i
+--
 -- Revision 1.10  2005/11/01 21:32:58  arniml
 -- wire signals for P2 low impeddance marker issue
 --
