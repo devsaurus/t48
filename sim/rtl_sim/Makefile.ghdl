@@ -34,6 +34,19 @@ MAKE_LIB  = mkdir -p $(LIB_WORK)
 ##############################################################################
 # The analyze targets
 #
+tb_t8243_behav_c0 = $(LIB_WORK)/tb_t8243-c.o
+tb_t8243 = $(LIB_WORK)/tb_t8243.o
+tb_t8048_t8243_behav_c0 = $(LIB_WORK)/tb_t8048_t8243-c.o
+tb_t8048_t8243 = $(LIB_WORK)/tb_t8048_t8243.o
+t8243_struct_c0 = $(LIB_WORK)/t8243-c.o
+t8243 = $(LIB_WORK)/t8243.o
+t8243_async_notri_struct_c0 = $(LIB_WORK)/t8243_async_notri-c.o
+t8243_async_notri = $(LIB_WORK)/t8243_async_notri.o
+t8243_sync_notri_struct_c0 = $(LIB_WORK)/t8243_sync_notri-c.o
+t8243_sync_notri = $(LIB_WORK)/t8243_sync_notri.o
+t8243_core_rtl_c0 = $(LIB_WORK)/t8243_core-c.o
+t8243_core = $(LIB_WORK)/t8243_core.o
+t8243_comp_pack = $(LIB_WORK)/t8243_comp_pack-p.o
 tb_t8039_behav_c0 = $(LIB_WORK)/tb_t8039-c.o
 tb_t8039 = $(LIB_WORK)/tb_t8039.o
 tb_t8048_behav_c0 = $(LIB_WORK)/tb_t8048-c.o
@@ -118,9 +131,11 @@ all: elaborate
 ##############################################################################
 # The elaboration targets
 #
-tb_elab       = tb_behav_c0
-tb_t8048_elab = tb_t8048_behav_c0
-tb_t8039_elab = tb_t8039_behav_c0
+tb_elab             = tb_behav_c0
+tb_t8048_elab       = tb_t8048_behav_c0
+tb_t8039_elab       = tb_t8039_behav_c0
+tb_t8048_t8243_elab = tb_t8048_t8243_behav_c0
+tb_t8243_elab       = tb_t8243_behav_c0
 #
 ##############################################################################
 
@@ -137,8 +152,15 @@ $(tb_t8048_elab) : $(tb_t8048_behav_c0)
 $(tb_t8039_elab) : $(tb_t8039_behav_c0)
 	$(ELABORATE) tb_t8039_behav_c0
 
+$(tb_t8048_t8243_elab) : $(tb_t8048_t8243_behav_c0)
+	$(ELABORATE) tb_t8048_t8243_behav_c0
+
+$(tb_t8243_elab) : $(tb_t8243_behav_c0)
+	$(ELABORATE) tb_t8243_behav_c0
+
 .PHONY: elaborate
-elaborate: $(LIB_WORK) $(tb_elab) $(tb_t8048_elab) $(tb_t8039_elab)
+elaborate: $(LIB_WORK) $(tb_elab) $(tb_t8048_elab) $(tb_t8039_elab) \
+           $(tb_t8048_t8243_elab) $(tb_t8243_elab)
 #
 ##############################################################################
 

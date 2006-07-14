@@ -32,6 +32,7 @@
 ##############################################################################
 
 RTL_DIR   = $(PROJECT_DIR)/rtl/vhdl
+T8243_DIR = $(RTL_DIR)/t8243
 BENCH_DIR = $(PROJECT_DIR)/bench/vhdl
 
 
@@ -344,7 +345,6 @@ $(tb_behav_c0) : $(BENCH_DIR)/tb-c.vhd    \
 		$(lpm_rom)                \
 		$(t48_tb_pack)            \
 		$(t48_core_comp_pack)     \
-		$(tb-behav)               \
 		$(tb)
 	$(ANALYZE) $<
 
@@ -384,4 +384,74 @@ $(timer_rtl_c0) : $(RTL_DIR)/timer-c.vhd \
 		$(timer-rtl)             \
 		$(t48_pack)              \
 		$(timer)
+	$(ANALYZE) $<
+
+$(t8243_comp_pack) : $(T8243_DIR)/t8243_comp_pack-p.vhd
+	$(ANALYZE) $<
+
+$(t8243_core) : $(T8243_DIR)/t8243_core.vhd
+	$(ANALYZE) $<
+
+$(t8243_core_rtl_c0) : $(T8243_DIR)/t8243_core-c.vhd \
+                       $(t8243_core)
+	$(ANALYZE) $<
+
+$(t8243_sync_notri) : $(T8243_DIR)/t8243_sync_notri.vhd \
+                      $(t8243_comp_pack)
+	$(ANALYZE) $<
+
+$(t8243_sync_notri_struct_c0) : $(T8243_DIR)/t8243_sync_notri-c.vhd \
+                                $(t8243_core_rtl_c0)                \
+                                $(t8243_sync_notri)
+	$(ANALYZE) $<
+
+$(t8243_async_notri) : $(T8243_DIR)/t8243_async_notri.vhd \
+                       $(t8243_comp_pack)
+	$(ANALYZE) $<
+
+$(t8243_async_notri_struct_c0) : $(T8243_DIR)/t8243_async_notri-c.vhd \
+                                 $(t8243_core_rtl_c0)                 \
+                                 $(t8243_async_notri)
+	$(ANALYZE) $<
+
+$(t8243) : $(T8243_DIR)/t8243.vhd \
+           $(t8243_comp_pack)
+	$(ANALYZE) $<
+
+$(t8243_struct_c0) : $(T8243_DIR)/t8243-c.vhd       \
+                     $(t8243_async_notri_struct_c0) \
+                     $(t8243)
+	$(ANALYZE) $<
+
+$(tb_t8048_t8243) : $(BENCH_DIR)/tb_t8048_t8243.vhd \
+                    $(t48_tb_pack)                  \
+                    $(t48_core_comp_pack)           \
+                    $(t48_system_comp_pack)         \
+                    $(t8243_comp_pack)
+	$(ANALYZE) $<
+
+$(tb_t8048_t8243_behav_c0) : $(BENCH_DIR)/tb_t8048_t8243-c.vhd \
+                             $(t8048_struct_c0)                \
+                             $(t8243_struct_c0)                \
+                             $(generic_ram_ena_rtl_c0)         \
+                             $(lpm_rom)                        \
+                             $(t48_tb_pack)                    \
+                             $(tb_t8048_t8243)
+	$(ANALYZE) $<
+
+$(tb_t8243) : $(BENCH_DIR)/tb_t8243.vhd \
+              $(t48_tb_pack)            \
+              $(t48_core_comp_pack)     \
+              $(t8243_comp_pack)
+	$(ANALYZE) $<
+
+$(tb_t8243_behav_c0) : $(BENCH_DIR)/tb_t8243-c.vhd   \
+                       $(if_timing_behav_c0)         \
+                       $(t48_core_struct_c0)         \
+                       $(t8243_sync_notri_struct_c0) \
+                       $(generic_ram_ena_rtl_c0)     \
+                       $(lpm_rom)                    \
+                       $(t48_tb_pack)                \
+                       $(t48_core_comp_pack)         \
+                       $(tb_t8243)
 	$(ANALYZE) $<
