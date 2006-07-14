@@ -1,11 +1,141 @@
 
 Known bugs of the T48 uController core
 ======================================
-Version: $Date: 2004-10-25 21:37:36 $
+Version: $Date: 2006-07-14 01:06:36 $
+
+
+Release 0.6.1 BETA
+------------------
+
+*******************************************************************************
+Deassertion of PROG too early
+
+PROG is deasserted in XTAL2 cycle which might lead to read data being already
+invalid (tri-stated) when the core samples P2[3:0] at the end of XTAL3.
+
+Fixed in:
+clock_ctrl.vhd 1.12
+Fix will be included in next release.
+
+
+
+Release 0.6 BETA
+----------------
+
+*******************************************************************************
+Deassertion of PROG too early
+
+See above.
+
+*******************************************************************************
+P2 Port value restored after expander access
+
+After access to expander interface (ANLD Pp; MOVD A,Pp; MOVD Pp,A; ORLD Pp)
+the port value of P2 is restored. This is wrong according to chapter "Port 2
+Operations" of the "Expanded MCS-48 System" manual. It states that previously
+latched I/O information will be removed and not restored.
+
+Fixed in:
+p2.vhd 1.8
+Fix will be included in next release.
+
+*******************************************************************************
+Problem when INT and JMP
+
+When code is executed from Memory Bank 1, the injected CALL triggered by the
+interrupt does not always vector to address 3. This happens because of a bus
+collision between the decoder unit and the db_bus unit. The resulting address
+can be either:
+* 000h, 001h, 002h, 003h for external and timer interrupt
+* 004h, 005h, 006h, 007h for timer interrupt
+
+The problem was introduced in release 0.6 BETA when the glitch on PCH was
+fixed.
+
+Fixed in:
+decoder.vhd 1.21
+New regression test: int_on_mb1
+Fix will be included in next release.
+
+
+
+Release 0.5 BETA
+----------------
+
+*******************************************************************************
+Deassertion of PROG too early
+
+See above.
+
+*******************************************************************************
+P2 Port value restored after expander access
+
+See above.
+
+*******************************************************************************
+Target address of JMP and CALL to Program Memory Bank 1 corrupted by interrupt
+
+An interrupt occuring during the execution of a JMP instruction, forces bit 11
+of the target address to 0. This corrupts target addresses that are located in
+Program Memory Bank 1.
+
+Fixed in:
+int.vhd 1.5
+New regression test: white_box/int_on_int
+Fix will be included in next release.
+
+*******************************************************************************
+MSB of Program Counter changed upon PC increment
+
+The current implementation of the Program Counter allows that the MSB (bit 11)
+is modifed when the PC increments at address 07FFh linear code execution. This
+is contrary to the description found in "The Expanded MCS-48 System" which
+states that bit 11 is only altered by JMP and CALL/RET but not by normal
+increment.
+
+Fixed in:
+pmem_crtl.vhd 1.4
+New regression test: white_box/pc_wrap_bit11
+Fix will be included in next release.
+
+*******************************************************************************
+Wrong clock applied to T0
+
+After executing the 'ENT0 CLK' instruction, the internal clock (XTAL divided
+by 3) should be applied to T0.
+The t48_core applies clk_i to T0. This is equal to XTAL in the current
+implementation of t8048 and others. Therefore, the clock at T0 is three times
+faster than specified.
+
+Fixed in:
+clock_ctrl.vhd 1.7
+t48_core.vhd 1.8
+Fix will be included in next release.
+
 
 
 Release 0.4 BETA
 ----------------
+
+*******************************************************************************
+P2 Port value restored after expander access
+
+See above.
+
+*******************************************************************************
+Target address of JMP and CALL to Program Memory Bank 1 corrupted by interrupt
+
+See above.
+
+*******************************************************************************
+MSB of Program Counter changed upon PC increment
+
+See above.
+
+*******************************************************************************
+Wrong clock applied to T0
+
+See above.
 
 *******************************************************************************
 RD' and WR' not asserted for INS A, BUS and OUTL BUS, A
@@ -17,7 +147,6 @@ signals are missing.
 Fixed in:
 decoder.vhd 1.16
 Fix will be included in next release.
-
 
 *******************************************************************************
 P1 constantly in push-pull mode in t8048
@@ -34,6 +163,26 @@ Fix will be included in next release.
 
 Release 0.3 BETA
 ----------------
+
+*******************************************************************************
+P2 Port value restored after expander access
+
+See above.
+
+*******************************************************************************
+Target address of JMP and CALL to Program Memory Bank 1 corrupted by interrupt
+
+See above.
+
+*******************************************************************************
+MSB of Program Counter changed upon PC increment
+
+See above.
+
+*******************************************************************************
+Wrong clock applied to T0
+
+See above.
 
 *******************************************************************************
 RD' and WR' not asserted for INS A, BUS and OUTL BUS, A
@@ -64,6 +213,21 @@ Fix will be included in next release.
 
 Release 0.2 BETA
 ----------------
+
+*******************************************************************************
+P2 Port value restored after expander access
+
+See above.
+
+*******************************************************************************
+MSB of Program Counter changed upon PC increment
+
+See above.
+
+*******************************************************************************
+Wrong clock applied to T0
+
+See above.
 
 *******************************************************************************
 RD' and WR' not asserted for INS A, BUS and OUTL BUS, A
@@ -100,6 +264,21 @@ Fix will be included in next release.
 
 Release 0.1 BETA
 ----------------
+
+*******************************************************************************
+P2 Port value restored after expander access
+
+See above.
+
+*******************************************************************************
+MSB of Program Counter changed upon PC increment
+
+See above.
+
+*******************************************************************************
+Wrong clock applied to T0
+
+See above.
 
 *******************************************************************************
 RD' and WR' not asserted for INS A, BUS and OUTL BUS, A
