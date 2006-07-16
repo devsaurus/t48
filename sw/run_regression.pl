@@ -4,7 +4,7 @@
 #
 # run_regression.pl
 #
-# $Id: run_regression.pl,v 1.10 2006-06-24 00:52:24 arniml Exp $
+# $Id: run_regression.pl,v 1.11 2006-07-16 23:25:22 arniml Exp $
 #
 # Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 #
@@ -24,6 +24,15 @@
 # Each testcell is built by calling the central Makefile.cell.
 # The resulting hex-file is then copied to $SIM_DIR where the VHDL simulator
 # is started.
+#
+# Exceptions for a testcell are defined by additional files.
+#   no_gen : don't execute the generic/default testbench tb_behav_c0
+#   no_t48 : don't execute the t8048 testbench tb_t8048_behav_c0
+#   no_t39 : don't execute the t8039 testbench tb_t8039_behav_c0
+#   no_dump_compare : don't include testcell when running dump compares
+#   io_exp : use the testbenches containing the t8243 IO expander
+#            tb_t8243_behav_c0
+#            tb_t8048_t8243_behav_c0
 #
 
 
@@ -48,6 +57,7 @@ my (%cells, $cell, $cell_dir, $tag);
 my $pwd;
 my $dump_compare = 0;
 my $dump_compare_cell = 0;
+my $io_exp_cell = 0;
 
 
 ##############################################################################
@@ -57,11 +67,14 @@ my $dump_compare_cell = 0;
 my %ghdl_simulators    = ('gen' => './tb_behav_c0',
                           't48' => './tb_t8048_behav_c0',
                           't39' => './tb_t8039_behav_c0');
+my %ghdl_io_expanders  = ('gen' => './tb_t8243_behav_c0',
+                          't48' => './tb_t8048_t8243_behav_c0');
 my $ghdl_simulator_opt = '--assert-level=error --stop-time=20ms';
 my $ghdl_simulator_vcd = './tb_behav_c0 --assert-level=error --vcd=temp.vcd';
 #
 # Choose simulator:
 my %vhdl_simulators    = %ghdl_simulators;
+my %vhdl_io_expanders  = %ghdl_io_expanders;
 my $vhdl_simulator_opt = $ghdl_simulator_opt;
 my $vhdl_simulator_vcd = $ghdl_simulator_vcd;
 my ($vhdl_simulator_tag, $vhdl_simulator);
@@ -103,6 +116,7 @@ while (($cell, $tag) = each(%cells)) {
         print("Processing $cell\n");
 
         $dump_compare_cell = -e 'no_dump_compare' ? 0 : $dump_compare;
+        $io_exp_cell = -e 'io_exp' ? 1 : 0;
 
         system('rm -f $SIM_DIR/*.hex');
         system('make -f $VERIF_DIR/include/Makefile.cell clean');
@@ -127,8 +141,12 @@ while (($cell, $tag) = each(%cells)) {
             } elsif ($dump_compare) {
                 print("Dump Compare: Excluded\n");
             } else {
+                # decide which simulator set is chosen for this cell
+                my %cell_simulators = $io_exp_cell ? %vhdl_io_expanders :
+                                                     %vhdl_simulators;
+
                 # run all enabled simulators
-                while (($vhdl_simulator_tag, $vhdl_simulator) = each %vhdl_simulators) {
+                while (($vhdl_simulator_tag, $vhdl_simulator) = each %cell_simulators) {
                     if (! -e "$cell_dir/no_$vhdl_simulator_tag") {
                         print("Executing simulator $vhdl_simulator_tag\n");
                         system($vhdl_simulator." ".$vhdl_simulator_opt);
