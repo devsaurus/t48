@@ -1,7 +1,8 @@
 
 Compile list for the T48 uController project
 ============================================
-Version: $Date: 2005-10-15 21:10:55 $
+Version: $Date: 2006-07-21 23:29:13 $
+$Name: not supported by cvs2svn $
 
 bench/vhdl/if_timing.vhd
 bench/vhdl/if_timing-c.vhd
@@ -45,17 +46,17 @@ rtl/vhdl/alu.vhd
 rtl/vhdl/alu-c.vhd
 rtl/vhdl/t48_core.vhd
 rtl/vhdl/t48_core-c.vhd
-rtl/vhdl/system/lpm_ram_dq.vhd
-rtl/vhdl/system/syn_ram-e.vhd
-rtl/vhdl/system/syn_ram-lpm-a.vhd
-rtl/vhdl/system/syn_ram-lpm-c.vhd
+rtl/vhdl/system/generic_ram_ena.vhd
+rtl/vhdl/system/generic_ram_ena-c.vhd
 rtl/vhdl/system/lpm_rom.vhd
 rtl/vhdl/t48_core_comp_pack-p.vhd
 bench/vhdl/tb.vhd
 bench/vhdl/tb-c.vhd
-rtl/vhdl/system/syn_rom-e.vhd
-rtl/vhdl/system/syn_rom-lpm-a.vhd
-rtl/vhdl/system/syn_rom-lpm-c.vhd
+Elaborate tb_behav_c0
+
+rtl/vhdl/system/t48_rom-e.vhd
+bench/vhdl/t48_rom-lpm-a.vhd
+bench/vhdl/t48_rom-lpm-c.vhd
 rtl/vhdl/system/t8048_notri.vhd
 rtl/vhdl/system/t8048_notri-c.vhd
 rtl/vhdl/system/t48_system_comp_pack-p.vhd
@@ -63,13 +64,29 @@ rtl/vhdl/system/t8048.vhd
 rtl/vhdl/system/t8048-c.vhd
 bench/vhdl/tb_t8048.vhd
 bench/vhdl/tb_t8048-c.vhd
+Elaborate tb_t8048_behav_c0
+
 rtl/vhdl/system/t8039_notri.vhd
 rtl/vhdl/system/t8039_notri-c.vhd
 rtl/vhdl/system/t8039.vhd
 rtl/vhdl/system/t8039-c.vhd
 bench/vhdl/tb_t8039.vhd
 bench/vhdl/tb_t8039-c.vhd
-rtl/vhdl/system/wb_master.vhd
-rtl/vhdl/system/wb_master-c.vhd
-rtl/vhdl/system/t8050_wb.vhd
-rtl/vhdl/system/t8050_wb-c.vhd
+Elaborate tb_t8039_behav_c0
+
+rtl/vhdl/t8243/t8243_core.vhd
+rtl/vhdl/t8243/t8243_core-c.vhd
+rtl/vhdl/t8243/t8243_comp_pack-p.vhd
+rtl/vhdl/t8243/t8243_async_notri.vhd
+rtl/vhdl/t8243/t8243_async_notri-c.vhd
+rtl/vhdl/t8243/t8243.vhd
+rtl/vhdl/t8243/t8243-c.vhd
+bench/vhdl/tb_t8048_t8243.vhd
+bench/vhdl/tb_t8048_t8243-c.vhd
+Elaborate tb_t8048_t8243_behav_c0
+
+rtl/vhdl/t8243/t8243_sync_notri.vhd
+rtl/vhdl/t8243/t8243_sync_notri-c.vhd
+bench/vhdl/tb_t8243.vhd
+bench/vhdl/tb_t8243-c.vhd
+Elaborate tb_t8243_behav_c0
