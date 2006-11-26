@@ -2,7 +2,7 @@
 --
 -- T8x49 ROM
 --
--- $Id: t49_rom-struct-a.vhd,v 1.1 2006-06-21 00:59:15 arniml Exp $
+-- $Id: t49_rom-struct-a.vhd,v 1.2 2006-11-26 11:58:28 arniml Exp $
 --
 -- Copyright (c) 2006 Arnim Laeuger (arniml@opencores.org)
 --
@@ -45,7 +45,7 @@
 
 architecture struct of t49_rom is
 
-  component rom_t49x
+  component rom_t49
     port(
       Clk : in  std_logic;
       A   : in  std_logic_vector(10 downto 0);
@@ -69,4 +69,7 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2006/06/21 00:59:15  arniml
+-- initial check-in
+--
 -------------------------------------------------------------------------------
