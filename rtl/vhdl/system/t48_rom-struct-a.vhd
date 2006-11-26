@@ -2,7 +2,7 @@
 --
 -- T8x48 ROM
 --
--- $Id: t48_rom-struct-a.vhd,v 1.2 2006-11-26 11:58:28 arniml Exp $
+-- $Id: t48_rom-struct-a.vhd,v 1.3 2006-11-26 12:53:28 arniml Exp $
 --
 -- Copyright (c) 2006 Arnim Laeuger (arniml@opencores.org)
 --
@@ -57,9 +57,9 @@ begin
 
   rom_b : rom_t48
     port map (
-      Clk => ck_i,
-      A   => addr_i,
-      D   => data_o
+      Clk => clk_i,
+      A   => rom_addr_i,
+      D   => rom_data_o
     );
 
 end struct;
@@ -69,6 +69,9 @@ end struct;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.2  2006/11/26 11:58:28  arniml
+-- fix component name
+--
 -- Revision 1.1  2006/06/21 00:59:15  arniml
 -- initial check-in
 --
