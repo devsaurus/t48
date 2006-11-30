@@ -2,7 +2,7 @@
 --
 -- The Timer/Counter unit.
 --
--- $Id: timer.vhd,v 1.6 2005-06-11 10:08:43 arniml Exp $
+-- $Id: timer.vhd,v 1.7 2006-11-30 14:31:59 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -188,6 +188,7 @@ begin
       t1_q           <= '0';
       prescaler_q    <= (others => '0');
       inc_sel_q      <= NONE;
+      counter_q      <= (others => '0');
 
     elsif clk_i'event and clk_i = clk_active_c then
       if en_clk_i then
@@ -255,6 +256,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.6  2005/06/11 10:08:43  arniml
+-- introduce prefix 't48_' for all packages, entities and configurations
+--
 -- Revision 1.5  2004/07/11 16:51:33  arniml
 -- cleanup copyright notice
 --
