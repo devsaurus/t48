@@ -1,7 +1,25 @@
 
 Change log for the T48 uController core
 =======================================
-Version: $Date: 2006-01-15 20:56:57 $
+Version: $Date: 2006-12-18 23:36:24 $
+
+
+Release 1.0
+-----------
+
+* T8243 I/O expander added to project
+
+* Bugfix for "Deassertion of PROG too early"
+  PROG is deasserted at end of XTAL3 now.
+  Applied in clock_ctrl.vhd 1.12
+
+* new input xtal_en_i gates xtal_i base clock
+
+* counter_q in timer module has asynchronous reset
+
+* replaced syn_rom and syn_ram with t48_rom and generic_ram_ena
+
+* verification environment updated for new testbenches
 
 
 Release 0.6.1 BETA
