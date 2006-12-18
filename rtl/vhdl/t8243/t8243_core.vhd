@@ -4,7 +4,7 @@
 -- This is the core module implementing all functionality of the
 -- original 8243 chip.
 --
--- $Id: t8243_core.vhd,v 1.1 2006-07-13 22:53:56 arniml Exp $
+-- $Id: t8243_core.vhd,v 1.2 2006-12-18 01:18:58 arniml Exp $
 -- $Name: not supported by cvs2svn $
 --
 -- Copyright (c) 2006, Arnim Laeuger (arniml@opencores.org)
@@ -147,7 +147,7 @@ begin
   --     * latch port number
   --     * latch instruction
   --
-  ctrl_seq: process (clk_i, reset_n_i)
+  ctrl_seq: process (clk_i, cs_n_i)
   begin
     if cs_n_i = '1' then
       px_sel_q <= (others => '0');
@@ -296,4 +296,7 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.1  2006/07/13 22:53:56  arniml
+-- initial check-in
+--
 -------------------------------------------------------------------------------
