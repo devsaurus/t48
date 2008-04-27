@@ -1,7 +1,7 @@
 
 README for the T48 uController project
 ======================================
-Version: $Date: 2006-07-16 01:59:23 $
+Version: $Date: 2008-04-27 22:30:48 $
 $Name: not supported by cvs2svn $
 
 
@@ -91,6 +91,14 @@ t48
     +-- sim
     |    |
     |    \-- rtl_sim        : Directory for running simulations.
+    |
+    +-- syn
+    |    |
+    |    \-- t8048          : T8048 toplevel example synthesis.
+    |         |
+    |         +-- b5x300    : for SpartanIIe 300.
+    |         |
+    |         \-- jopcyc    : for Cyclone EP1C12.
     |
     \-- sw                  : General purpose scripts and files.
          |
