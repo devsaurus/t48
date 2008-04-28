@@ -2,7 +2,7 @@
 --
 -- The testbench for t8048.
 --
--- $Id: tb_t8048.vhd,v 1.7 2006-06-24 00:51:50 arniml Exp $
+-- $Id: tb_t8048.vhd,v 1.8 2008-04-28 22:10:13 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -88,6 +88,8 @@ architecture behav of tb_t8048 is
   signal psen_n_s        : std_logic;
   signal prog_n_s        : std_logic;
 
+  signal t0_b : std_logic;
+
   signal p1_b : std_logic_vector( 7 downto 0);
   signal p2_b : std_logic_vector( 7 downto 0);
 
@@ -151,7 +153,7 @@ begin
     port map (
       xtal_i    => xtal_s,
       reset_n_i => res_n_s,
-      t0_b      => p1_b(0),
+      t0_b      => t0_b,
       int_n_i   => int_n_s,
       ea_i      => zero_s,
       rd_n_o    => rd_n_s,
@@ -208,6 +210,8 @@ begin
   end process ext_ram;
   --
   -----------------------------------------------------------------------------
+
+  t0_b <= p1_b(0);
 
   -----------------------------------------------------------------------------
   -- The clock generator
@@ -296,6 +300,9 @@ end behav;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.7  2006/06/24 00:51:50  arniml
+-- comment added about lower 1k of external ROM
+--
 -- Revision 1.6  2006/06/22 00:21:28  arniml
 -- added external ROM
 --

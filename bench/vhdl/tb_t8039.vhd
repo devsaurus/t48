@@ -2,7 +2,7 @@
 --
 -- The testbench for t8039.
 --
--- $Id: tb_t8039.vhd,v 1.4 2006-06-22 00:21:58 arniml Exp $
+-- $Id: tb_t8039.vhd,v 1.5 2008-04-28 22:13:33 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -87,6 +87,8 @@ architecture behav of tb_t8039 is
   signal psen_n_s        : std_logic;
   signal prog_n_s        : std_logic;
 
+  signal t0_b : std_logic;
+
   signal p1_b : std_logic_vector( 7 downto 0);
   signal p2_b : std_logic_vector( 7 downto 0);
 
@@ -150,7 +152,7 @@ begin
     port map (
       xtal_i    => xtal_s,
       reset_n_i => res_n_s,
-      t0_b      => p1_b(0),
+      t0_b      => t0_b,
       int_n_i   => int_n_s,
       ea_i      => one_s,
       rd_n_o    => rd_n_s,
@@ -206,6 +208,8 @@ begin
   end process ext_mem;
   --
   -----------------------------------------------------------------------------
+
+  t0_b <= p1_b(0);
 
   -----------------------------------------------------------------------------
   -- The clock generator
@@ -294,6 +298,9 @@ end behav;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.4  2006/06/22 00:21:58  arniml
+-- cleanup & enhance external access
+--
 -- Revision 1.3  2006/06/21 01:04:05  arniml
 -- replaced syn_ram and syn_rom with generic_ram_ena and t48_rom/t49_rom/t3x_rom
 --
