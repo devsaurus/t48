@@ -1,7 +1,7 @@
 
 README for the T48 uController project
 ======================================
-Version: $Date: 2008-04-27 22:30:48 $
+Version: $Date: 2008-04-28 22:09:02 $
 $Name: not supported by cvs2svn $
 
 
@@ -232,7 +232,9 @@ required ROM files for internal and external program ROM. The target 'simu'
 copies these files automatically to the simulation directory. So most likely,
 for running a test case or any other software, you will want to issue:
 
-$ make -f VERIF_DIR/include/Makefile.cell simu clean
+$ make -f VERIF_DIR/include/Makefile.cell all clean
+
+The 'all' target generates hex files for all supported testbenches.
 
 The only supported assembler is Alfred Arnold's macroassembler AS. See
 
