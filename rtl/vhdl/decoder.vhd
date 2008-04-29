@@ -3,7 +3,7 @@
 -- The Decoder unit.
 -- It decodes the instruction opcodes and executes them.
 --
--- $Id: decoder.vhd,v 1.25 2006-06-20 00:46:03 arniml Exp $
+-- $Id: decoder.vhd,v 1.26 2008-04-29 21:19:21 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -180,7 +180,7 @@ architecture rtl of t48_decoder is
   signal opc_multi_cycle_s : boolean;
   signal opc_read_bus_s    : boolean;
   signal opc_inj_int_s     : boolean;
-  signal opc_opcode_s      : word_t;
+  signal opc_opcode_q      : word_t;
   signal opc_mnemonic_s    : mnemonic_t;
   signal last_cycle_s      : boolean;
 
@@ -236,6 +236,10 @@ architecture rtl of t48_decoder is
   signal int_pending_s      : boolean;
   signal int_in_progress_s  : boolean;
 
+  -- the mnemonic
+  signal mnemonic_rec_s     : mnemonic_rec_t;
+  signal mnemonic_q         : mnemonic_t;
+
   -- pragma translate_off
   signal istrobe_res_q      : std_logic;
   signal istrobe_q          : std_logic;
@@ -244,24 +248,59 @@ architecture rtl of t48_decoder is
 
 begin
 
+  -- pragma translate_off
+
+  -- Register Mnemonic --------------------------------------------------------
+  assert (register_mnemonic_g = 1) or (register_mnemonic_g = 0)
+    report "register_mnemonic_g must be either 1 or 0!"
+    severity failure;
+
+  -- pragma translate_on
+
+
   -----------------------------------------------------------------------------
   -- Opcode Decoder
+  --
+  mnemonic_rec_s <= decode_opcode_f(opcode => opc_opcode_q);
+  --
   -----------------------------------------------------------------------------
-  opc_decoder_b : t48_opc_decoder
-    generic map (
-      register_mnemonic_g => register_mnemonic_g
-    )
-    port map (
-      clk_i         => clk_i,
-      res_i         => res_i,
-      en_clk_i      => en_clk_i,
-      data_i        => data_i,
-      read_bus_i    => opc_read_bus_s,
-      inj_int_i     => opc_inj_int_s,
-      opcode_o      => opc_opcode_s,
-      mnemonic_o    => opc_mnemonic_s,
-      multi_cycle_o => opc_multi_cycle_s
-    );
+
+
+  -----------------------------------------------------------------------------
+  -- Process opc_regs
+  --
+  -- Purpose:
+  --   Implements the opcode and mnemonic registers.
+  --
+  opc_regs: process (res_i, clk_i)
+  begin
+    if res_i = res_active_c then
+      opc_opcode_q <= (others => '0');      -- NOP
+      mnemonic_q   <= MN_NOP;
+
+    elsif clk_i'event and clk_i = clk_active_c then
+      if en_clk_i then
+
+        if opc_read_bus_s then
+          opc_opcode_q <= data_i;
+        elsif opc_inj_int_s then
+          opc_opcode_q <= "00010100";
+        else
+          mnemonic_q <= mnemonic_rec_s.mnemonic;
+        end if;
+
+      end if;
+
+    end if;
+
+  end process opc_regs;
+  --
+  opc_multi_cycle_s <= mnemonic_rec_s.multi_cycle;
+  opc_mnemonic_s    <=   mnemonic_q
+                       when register_mnemonic_g = 1 else
+                         mnemonic_rec_s.mnemonic;
+  --
+  -----------------------------------------------------------------------------
 
 
   -----------------------------------------------------------------------------
@@ -420,7 +459,7 @@ begin
                    clk_mstate_i,
                    clk_second_cycle_i,
                    cnd_take_branch_i,
-                   opc_opcode_s,
+                   opc_opcode_q,
                    opc_mnemonic_s,
                    psw_carry_i,
                    psw_f0_i,
@@ -433,7 +472,7 @@ begin
     procedure address_indirect_3_f is
     begin
       -- apply dmem address from selected register for indirect mode
-      if opc_opcode_s(3) = '0' or enable_quartus_bugfix_c then
+      if opc_opcode_q(3) = '0' or enable_quartus_bugfix_c then
         dm_read_dmem_o       <= true;
         dm_write_dmem_addr_o <= true;
         dm_addr_type_o       <= DM_PLAIN;
@@ -508,7 +547,7 @@ begin
     clk_assert_wr_o        <= false;
     cnd_branch_cond_o      <= COND_ON_BIT;
     cnd_compute_take_o     <= false;
-    cnd_comp_value_o       <= opc_opcode_s(7 downto 5);
+    cnd_comp_value_o       <= opc_opcode_q(7 downto 5);
     dm_addr_type_o         <= DM_REG;
     tim_read_timer_o       <= false;
     tim_write_timer_o      <= false;
@@ -554,10 +593,10 @@ begin
     -- prepare potential register indirect address mode
     if not clk_second_cycle_i and clk_mstate_i = MSTATE2 then
       data_s               <= (others => '0');
-      if opc_opcode_s(3) = '1' then
-        data_s(2 downto 0) <= opc_opcode_s(2 downto 0);
+      if opc_opcode_q(3) = '1' then
+        data_s(2 downto 0) <= opc_opcode_q(2 downto 0);
       else
-        data_s(2 downto 0) <= "00" & opc_opcode_s(0);
+        data_s(2 downto 0) <= "00" & opc_opcode_q(0);
       end if;
 
       read_dec_s           <= true;
@@ -573,7 +612,7 @@ begin
           -- read RAM once for indirect address mode
           when MSTATE3 =>
             if not enable_quartus_bugfix_c or
-               opc_opcode_s(3) = '0' then
+               opc_opcode_q(3) = '0' then
               address_indirect_3_f;
             end if;
 
@@ -585,7 +624,7 @@ begin
           when MSTATE5 =>
             and_or_xor_add_5_f(alu_op => ALU_ADD);
 
-            if opc_opcode_s(4) = '1' then
+            if opc_opcode_q(4) = '1' then
               alu_use_carry_o     <= true;
             end if;
 
@@ -612,7 +651,7 @@ begin
             when MSTATE3 =>
               and_or_xor_add_5_f(alu_op => ALU_ADD);
 
-              if opc_opcode_s(4) = '1' then
+              if opc_opcode_q(4) = '1' then
                 alu_use_carry_o     <= true;
               end if;
 
@@ -633,7 +672,7 @@ begin
           -- read RAM once for indirect address mode
           when MSTATE3 =>
             if not enable_quartus_bugfix_c or
-               opc_opcode_s(3) = '0' then
+               opc_opcode_q(3) = '0' then
               address_indirect_3_f;
             end if;
 
@@ -678,9 +717,9 @@ begin
         if not clk_second_cycle_i then
           -- read port to Temp Reg
           if clk_mstate_i = MSTATE5 then
-            if opc_opcode_s(1 downto 0) = "00" then
+            if opc_opcode_q(1 downto 0) = "00" then
               add_read_bus_s     <= true;
-            elsif opc_opcode_s(1) = '0' then
+            elsif opc_opcode_q(1) = '0' then
               p1_read_p1_o       <= true;
               p1_read_reg_o      <= true;
             else
@@ -709,9 +748,9 @@ begin
               alu_op_o           <= ALU_AND;
               alu_read_alu_o     <= true;
 
-              if opc_opcode_s(1 downto 0) = "00" then
+              if opc_opcode_q(1 downto 0) = "00" then
                 bus_write_bus_o  <= true;
-              elsif opc_opcode_s(1) = '0' then
+              elsif opc_opcode_q(1) = '0' then
                 p1_write_p1_o    <= true;
               else
                 p2_write_p2_o    <= true;
@@ -786,7 +825,7 @@ begin
               read_dec_s           <= true;
               if not int_pending_s then
                 -- store high part of target address in Program Counter
-                data_s             <= "0000" & mb_v & opc_opcode_s(7 downto 5);
+                data_s             <= "0000" & mb_v & opc_opcode_q(7 downto 5);
               else
                 -- apply high part of vector address manually
                 data_s             <= (others => '0');
@@ -821,7 +860,7 @@ begin
       when MN_CLR_F =>
         -- store 0 to selected flag
         if clk_mstate_i = MSTATE3 then
-          if opc_opcode_s(5) = '0' then
+          if opc_opcode_q(5) = '0' then
             psw_special_data_o <= '0';
             psw_write_f0_o     <= true;
           else
@@ -851,7 +890,7 @@ begin
       when MN_CPL_f =>
         -- write inverse of selected flag back to flag
         if clk_mstate_i = MSTATE3 then
-          if opc_opcode_s(5) = '0' then
+          if opc_opcode_q(5) = '0' then
             psw_special_data_o <= not psw_f0_i;
             psw_write_f0_o     <= true;
           else
@@ -906,7 +945,7 @@ begin
         case clk_mstate_i is
           when MSTATE4 =>
             -- DEC Rr: store data from RAM to shadow Accumulator
-            if opc_opcode_s(6) = '1' then
+            if opc_opcode_q(6) = '1' then
               dm_read_dmem_o         <= true;
               alu_write_shadow_o     <= true;
             end if;
@@ -915,7 +954,7 @@ begin
             alu_op_o                 <= ALU_DEC;
             alu_read_alu_o           <= true;
 
-            if opc_opcode_s(6) = '0' then
+            if opc_opcode_q(6) = '0' then
               -- write DEC of Accumulator to Accumulator
               alu_write_accu_o       <= true;
             else
@@ -931,7 +970,7 @@ begin
       -- Mnemonic DIS_EN_I ----------------------------------------------------
       when MN_DIS_EN_I =>
         if clk_mstate_i = MSTATE3 then
-          if opc_opcode_s(4) = '1' then
+          if opc_opcode_q(4) = '1' then
             dis_i_s <= true;
           else
             en_i_s  <= true;
@@ -941,7 +980,7 @@ begin
       -- Mnemonic DIS_EN_TCNTI ------------------------------------------------
       when MN_DIS_EN_TCNTI =>
         if clk_mstate_i = MSTATE3 then
-          if opc_opcode_s(4) = '1' then
+          if opc_opcode_q(4) = '1' then
             dis_tcnti_s <= true;
           else
             en_tcnti_s  <= true;
@@ -996,7 +1035,7 @@ begin
         if clk_second_cycle_i and clk_mstate_i = MSTATE2 then
           alu_write_accu_o <= true;
 
-          if opc_opcode_s(1) = '0' then
+          if opc_opcode_q(1) = '0' then
             p1_read_p1_o   <= true;
           else
             p2_read_p2_o   <= true;
@@ -1020,13 +1059,13 @@ begin
           -- read RAM once for indirect address mode
           when MSTATE3 =>
             if not enable_quartus_bugfix_c or
-               opc_opcode_s(3) = '0' then
+               opc_opcode_q(3) = '0' then
               address_indirect_3_f;
             end if;
 
           when MSTATE4 =>
             -- INC Rr; INC @ Rr: store data from RAM to shadow Accumulator
-            if opc_opcode_s(3 downto 2) /= "01" then
+            if opc_opcode_q(3 downto 2) /= "01" then
               dm_read_dmem_o         <= true;
               alu_write_shadow_o     <= true;
             end if;
@@ -1035,7 +1074,7 @@ begin
             alu_op_o                 <= ALU_INC;
             alu_read_alu_o           <= true;
 
-            if opc_opcode_s(3 downto 2) = "01" then
+            if opc_opcode_q(3 downto 2) = "01" then
               -- write INC output of ALU to Accumulator
               alu_write_accu_o       <= true;
             else
@@ -1079,7 +1118,7 @@ begin
           -- start branch calculation
           if clk_mstate_i = MSTATE3 then
             cnd_compute_take_o  <= true;
-            cnd_comp_value_o(0) <= opc_opcode_s(4);
+            cnd_comp_value_o(0) <= opc_opcode_q(4);
           end if;
 
         else
@@ -1099,7 +1138,7 @@ begin
           -- start branch calculation
           if clk_mstate_i = MSTATE3 then
             cnd_compute_take_o  <= true;
-            if opc_opcode_s(7) = '1' then
+            if opc_opcode_q(7) = '1' then
               -- JF0
               cnd_branch_cond_o <= COND_F0;
             else
@@ -1132,7 +1171,7 @@ begin
 
             -- store high part of target address in Program Counter
             when MSTATE2 =>
-              data_s         <= "0000" & mb_v & opc_opcode_s(7 downto 5);
+              data_s         <= "0000" & mb_v & opc_opcode_q(7 downto 5);
               read_dec_s     <= true;
               pm_write_pch_o <= true;
 
@@ -1187,7 +1226,7 @@ begin
       -- Mnemonic JT ----------------------------------------------------------
       when MN_JT =>
         assert_psen_s           <= true;
-        if opc_opcode_s(6) = '0' then
+        if opc_opcode_q(6) = '0' then
           cnd_branch_cond_o     <= COND_T0;
         else
           cnd_branch_cond_o     <= COND_T1;
@@ -1197,7 +1236,7 @@ begin
           -- start branch calculation
           if clk_mstate_i = MSTATE3 then
             cnd_compute_take_o  <= true;
-            cnd_comp_value_o(0) <= opc_opcode_s(4);
+            cnd_comp_value_o(0) <= opc_opcode_q(4);
           end if;
 
         else
@@ -1240,7 +1279,7 @@ begin
           if clk_mstate_i = MSTATE3 then
             alu_read_alu_o      <= true;
             cnd_compute_take_o  <= true;
-            cnd_comp_value_o(0) <= opc_opcode_s(6);
+            cnd_comp_value_o(0) <= opc_opcode_q(6);
           end if;
 
         else
@@ -1268,7 +1307,7 @@ begin
           -- read RAM once for indirect address mode
           when MSTATE3 =>
             if not enable_quartus_bugfix_c or
-               opc_opcode_s(3) = '0' then
+               opc_opcode_q(3) = '0' then
               address_indirect_3_f;
             end if;
 
@@ -1304,7 +1343,7 @@ begin
           -- read RAM once for indirect address mode
           when MSTATE3 =>
             if not enable_quartus_bugfix_c or
-               opc_opcode_s(3) = '0' then
+               opc_opcode_q(3) = '0' then
               address_indirect_3_f;
             end if;
 
@@ -1325,7 +1364,7 @@ begin
         -- read RAM once for indirect address mode
         if not clk_second_cycle_i and clk_mstate_i = MSTATE3 then
           if not enable_quartus_bugfix_c or
-             opc_opcode_s(3) = '0' then
+             opc_opcode_q(3) = '0' then
             address_indirect_3_f;
           end if;
         end if;
@@ -1339,7 +1378,7 @@ begin
       -- Mnemonic MOV_T -------------------------------------------------------
       when MN_MOV_T =>
         if clk_mstate_i = MSTATE3 then
-          if opc_opcode_s(5) = '1' then
+          if opc_opcode_q(5) = '1' then
             alu_read_alu_o    <= true;  -- MOV T, A
             tim_write_timer_o <= true;
           else
@@ -1358,9 +1397,9 @@ begin
             when MSTATE3 =>
 
               data_s(7 downto 4)     <= (others => '0');
-              data_s(1 downto 0)     <= opc_opcode_s(1 downto 0);
+              data_s(1 downto 0)     <= opc_opcode_q(1 downto 0);
               -- decide which 8243 command to use
-              case opc_opcode_s(7 downto 4) is
+              case opc_opcode_q(7 downto 4) is
                 when "1001" =>
                   data_s(3 downto 2) <= "11";  -- ANLD command
                 when "1000" =>
@@ -1408,7 +1447,7 @@ begin
             when MSTATE3 =>
               data_s                 <= "0000" &
                                         "00"   &  -- 8243 command: read
-                                        opc_opcode_s(1 downto 0);
+                                        opc_opcode_q(1 downto 0);
               read_dec_s             <= true;
               p2_write_exp_o         <= true;
 
@@ -1459,7 +1498,7 @@ begin
           -- (skip page offset update from Program Counter)
           if clk_mstate_i = MSTATE3 then
             alu_read_alu_o   <= true;
-            if opc_opcode_s(6) = '0' then
+            if opc_opcode_q(6) = '0' then
               pm_addr_type_o <= PM_PAGE;
             else
               pm_addr_type_o <= PM_PAGE3;
@@ -1481,7 +1520,7 @@ begin
       when MN_MOVX =>
         bus_bidir_bus_o        <= true;
 
-        if opc_opcode_s(4) = '0' then
+        if opc_opcode_q(4) = '0' then
           clk_assert_rd_o      <= true;
         else
           clk_assert_wr_o      <= true;
@@ -1497,7 +1536,7 @@ begin
 
             -- store contents of Accumulator to BUS
             when MSTATE5 =>
-              if opc_opcode_s(4) = '1' then
+              if opc_opcode_q(4) = '1' then
                 alu_read_alu_o   <= true;
                 bus_write_bus_o  <= true;
               end if;
@@ -1508,7 +1547,7 @@ begin
     
         else
           if clk_mstate_i = MSTATE2 then
-            if opc_opcode_s(4) = '0' then
+            if opc_opcode_q(4) = '0' then
               -- store contents of BUS in Accumulator
               add_read_bus_s   <= true;
               alu_write_accu_o <= true;
@@ -1532,7 +1571,7 @@ begin
           -- read RAM once for indirect address mode
           when MSTATE3 =>
             if not enable_quartus_bugfix_c or
-               opc_opcode_s(3) = '0' then
+               opc_opcode_q(3) = '0' then
               address_indirect_3_f;
             end if;
 
@@ -1577,9 +1616,9 @@ begin
         if not clk_second_cycle_i then
           -- read port to Temp Reg
           if clk_mstate_i = MSTATE5 then
-            if opc_opcode_s(1 downto 0) = "00" then
+            if opc_opcode_q(1 downto 0) = "00" then
               add_read_bus_s     <= true;
-            elsif opc_opcode_s(1) = '0' then
+            elsif opc_opcode_q(1) = '0' then
               p1_read_p1_o       <= true;
               p1_read_reg_o      <= true;
             else
@@ -1608,9 +1647,9 @@ begin
               alu_op_o           <= ALU_OR;
               alu_read_alu_o     <= true;
 
-              if opc_opcode_s(1 downto 0) = "00" then
+              if opc_opcode_q(1 downto 0) = "00" then
                 bus_write_bus_o  <= true;
-              elsif opc_opcode_s(1) = '0' then
+              elsif opc_opcode_q(1) = '0' then
                 p1_write_p1_o    <= true;
               else
                 p2_write_p2_o    <= true;
@@ -1625,7 +1664,7 @@ begin
 
       -- Mnemonic OUTL_EXT ----------------------------------------------------
       when MN_OUTL_EXT =>
-        if opc_opcode_s(4) = '0' then
+        if opc_opcode_q(4) = '0' then
           clk_assert_wr_o <= true;
         end if;
 
@@ -1633,8 +1672,8 @@ begin
         if not clk_second_cycle_i and clk_mstate_i = MSTATE4 then
           alu_read_alu_o  <= true;
 
-          if opc_opcode_s(4) = '1' then
-            if opc_opcode_s(1) = '0' then
+          if opc_opcode_q(4) = '1' then
+            if opc_opcode_q(1) = '0' then
               p1_write_p1_o <= true;
             else
               p2_write_p2_o <= true;
@@ -1680,7 +1719,7 @@ begin
             when MSTATE1 =>
               dm_read_dmem_o         <= true;
               pm_write_pch_o         <= true;
-              if opc_opcode_s(4) = '1' then
+              if opc_opcode_q(4) = '1' then
                 psw_write_psw_o      <= true;
                 retr_executed_s      <= true;
               end if;
@@ -1702,7 +1741,7 @@ begin
           alu_read_alu_o       <= true;
           alu_write_accu_o     <= true;
 
-          if opc_opcode_s(4) = '1' then
+          if opc_opcode_q(4) = '1' then
             psw_special_data_o <= alu_carry_i;
             psw_write_carry_o  <= true;
             alu_use_carry_o    <= true;
@@ -1716,7 +1755,7 @@ begin
           alu_read_alu_o       <= true;
           alu_write_accu_o     <= true;
 
-          if opc_opcode_s(4) = '0' then
+          if opc_opcode_q(4) = '0' then
             psw_special_data_o <= alu_carry_i;
             psw_write_carry_o  <= true;
             alu_use_carry_o    <= true;
@@ -1726,7 +1765,7 @@ begin
       -- Mnemonic SEL_MB ------------------------------------------------------
       when MN_SEL_MB =>
         if clk_mstate_i = MSTATE3 then
-          if opc_opcode_s(4) = '1' then
+          if opc_opcode_q(4) = '1' then
             set_mb_s   <= true;
           else
             clear_mb_s <= true;
@@ -1736,7 +1775,7 @@ begin
       -- Mnemonic SEL_RB ------------------------------------------------------
       when MN_SEL_RB =>
         if clk_mstate_i = MSTATE3 then
-          psw_special_data_o <= opc_opcode_s(4);
+          psw_special_data_o <= opc_opcode_q(4);
           psw_write_bs_o     <= true;
         end if;
 
@@ -1749,7 +1788,7 @@ begin
       -- Mnemonic STRT --------------------------------------------------------
       when MN_STRT =>
         if clk_mstate_i = MSTATE3 then
-          if opc_opcode_s(4) = '1' then
+          if opc_opcode_q(4) = '1' then
             tim_start_t_o   <= true;
           else
             tim_start_cnt_o <= true;
@@ -1771,7 +1810,7 @@ begin
           -- read RAM once for indirect address mode
           when MSTATE3 =>
             if not enable_quartus_bugfix_c or
-               opc_opcode_s(3) = '0' then
+               opc_opcode_q(3) = '0' then
               address_indirect_3_f;
             end if;
 
@@ -1781,7 +1820,7 @@ begin
             dm_read_dmem_o       <= true;
             alu_write_accu_o     <= true;
             alu_write_temp_reg_o <= true;
-            if opc_opcode_s(4) = '1' then
+            if opc_opcode_q(4) = '1' then
               -- XCHD
               -- only write lower nibble of Accumulator
               alu_accu_low_o     <= true;
@@ -1791,7 +1830,7 @@ begin
           when MSTATE5 =>
             dm_write_dmem_s      <= true;
             alu_read_alu_o       <= true;
-            if opc_opcode_s(4) = '1' then
+            if opc_opcode_q(4) = '1' then
               -- XCHD
               -- concatenate shadow Accumulator and Temp Reg
               alu_op_o           <= ALU_CONCAT;
@@ -1808,7 +1847,7 @@ begin
           -- read RAM once for indirect address mode
           when MSTATE3 =>
             if not enable_quartus_bugfix_c or
-               opc_opcode_s(3) = '0' then
+               opc_opcode_q(3) = '0' then
               address_indirect_3_f;
             end if;
 
@@ -1974,6 +2013,9 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.25  2006/06/20 00:46:03  arniml
+-- new input xtal_en_i
+--
 -- Revision 1.24  2005/11/14 21:12:29  arniml
 -- suppress p2_output_pch_o when MOVX operation is accessing the
 -- external memory
