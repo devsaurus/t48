@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# $Id: gen_ise_project.tcl,v 1.1 2008-04-12 21:27:07 arniml Exp $
+# $Id: gen_ise_project.tcl,v 1.2 2008-04-29 21:16:07 arniml Exp $
 #
 # Based on
 # Created by Phil Hays, Xilinx
@@ -148,12 +148,14 @@ puts "Setting project properties..."
 
 project set {Optimization Goal} Area -process {Synthesize - XST}
 project set {Optimization Effort} Normal -process {Synthesize - XST}
+project set {Use Synthesis Constraints File} 1 -process {Synthesize - XST}
+
 #project set "Map Effort Level" High
 #project set {Perform Timing-Driven Packing and Placement} 1
 project set {Place & Route Effort Level (Overall)} Standard
 #project set "Other Place & Route Command Line Options" "-intsyle xflow"
 project set {Generate Post-Place & Route Static Timing Report} true
-project set {Report Uncovered Paths} 10 -process {Generate Post-Place & Route Static Timing}
+project set {Report Unconstrained Paths} 10 -process {Generate Post-Place & Route Static Timing}
 project set {Report Type} {Verbose Report} -process {Generate Post-Place & Route Static Timing}
 project set {Create Binary Configuration File} 1 -process {Generate Programming File}
 

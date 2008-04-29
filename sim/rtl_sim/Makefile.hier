@@ -110,11 +110,11 @@ $(decoder) : $(RTL_DIR)/decoder.vhd \
 		$(decoder_pack)
 	$(ANALYZE) $<
 
-$(decoder_pack) : $(RTL_DIR)/decoder_pack-p.vhd
+$(decoder_pack) : $(RTL_DIR)/decoder_pack-p.vhd \
+                  $(t48_pack)
 	$(ANALYZE) $<
 
 $(decoder_rtl_c0) : $(RTL_DIR)/decoder-c.vhd \
-		$(opc_decoder_rtl_c0)        \
 		$(int_rtl_c0)                \
 		$(decoder)
 	$(ANALYZE) $<
@@ -137,30 +137,6 @@ $(int) : $(RTL_DIR)/int.vhd \
 
 $(int_rtl_c0) : $(RTL_DIR)/int-c.vhd \
 		$(int)
-	$(ANALYZE) $<
-
-$(opc_decoder) : $(RTL_DIR)/opc_decoder.vhd \
-		$(decoder_pack)             \
-		$(t48_pack)                 \
-		$(pmem_ctrl_pack)           \
-		$(dmem_ctrl_pack)           \
-		$(cond_branch_pack)         \
-		$(alu_pack)                 \
-		$(t48_comp_pack)
-	$(ANALYZE) $<
-
-$(opc_decoder_rtl_c0) : $(RTL_DIR)/opc_decoder-c.vhd \
-		$(opc_table_rtl_c0) \
-		$(opc_decoder)
-	$(ANALYZE) $<
-
-$(opc_table) : $(RTL_DIR)/opc_table.vhd \
-		$(decoder_pack)         \
-		$(t48_pack)
-	$(ANALYZE) $<
-
-$(opc_table_rtl_c0) : $(RTL_DIR)/opc_table-c.vhd \
-		$(opc_table)
 	$(ANALYZE) $<
 
 $(p1) : $(RTL_DIR)/p1.vhd \

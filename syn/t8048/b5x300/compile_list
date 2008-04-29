@@ -8,11 +8,9 @@
 ../../../rtl/vhdl/dmem_ctrl_pack-p.vhd
 ../../../rtl/vhdl/dmem_ctrl.vhd
 ../../../rtl/vhdl/decoder_pack-p.vhd
-../../../rtl/vhdl/opc_table.vhd
 ../../../rtl/vhdl/cond_branch_pack-p.vhd
 ../../../rtl/vhdl/alu_pack-p.vhd
 ../../../rtl/vhdl/t48_comp_pack-p.vhd
-../../../rtl/vhdl/opc_decoder.vhd
 ../../../rtl/vhdl/int.vhd
 ../../../rtl/vhdl/t48_tb_pack-p.vhd
 ../../../rtl/vhdl/decoder.vhd
