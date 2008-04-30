@@ -1,7 +1,24 @@
 
 Change log for the T48 uController core
 =======================================
-Version: $Date: 2006-12-18 23:36:24 $
+Version: $Date: 2008-04-30 22:45:44 $
+$Name: not supported by cvs2svn $
+
+
+Release 1.1
+-----------
+
+* code optimizations in the decoder to reduce LUT usage with
+  Xilinx ISE/XST.
+
+* fix tb_t8048 and tb_t8049 with respect to P1[0]->T0 signalling.
+
+* synthesis templates for QuartusII and ISE.
+
+* added dedicated version of hex2rom utility for RTL ROM generation
+  (keeps compatibility with QuartusII 7.2).
+
+* better describe RTL ROM and RAM macros.
 
 
 Release 1.0
