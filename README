@@ -1,7 +1,7 @@
 
 README for the T48 uController project
 ======================================
-Version: $Date: 2008-04-28 22:09:02 $
+Version: $Date: 2008-04-30 22:32:11 $
 $Name: not supported by cvs2svn $
 
 
@@ -271,3 +271,26 @@ script. For each test cell, it steps through the sequence
 It is highly recommended to redirect the output of run_regression.pl into a
 file. Otherwise, analyzing the messages related to each test cell is almost
 impossible.
+
+
+FPGA Implementation
+-------------------
+
+All of the design files contain pure RTL code. Also the RAM for the data
+memory is described by generic RTL code. It should be translated automatically
+by the tool chain to a technology specific RAM macro.
+
+There is a generic method for the program memory ROM as well, although this
+project uses a flow where hex-files are loaded by lpm_rom.vhd as the default
+method. Convert the ROM image to an RTL VHDL file with one of the two
+following commands (either from hex or bin format):
+
+  $ hex2rom -b [rom image file] rom_t48 10l8s > rom_t48.vhd
+  $ hex2rom -b [rom image file] rom_t49 11l8s > rom_t49.vhd
+
+The option -b specifies that [rom image file] contains binary data. Skip this
+option to process a file in hex format.
+
+These resulting RTL representations are instantiated by t48_rom-struct-a.vhd
+and t49_rom-struct-a.vhd. Altera and Xilinx design tools will detect and
+extract the ROM and turn it into a memory macro.
