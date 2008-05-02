@@ -3,7 +3,7 @@
 -- The Decoder unit.
 -- It decodes the instruction opcodes and executes them.
 --
--- $Id: decoder.vhd,v 1.26 2008-04-29 21:19:21 arniml Exp $
+-- $Id: decoder.vhd,v 1.27 2008-05-02 21:20:41 arniml Exp $
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -164,7 +164,6 @@ use work.t48_pack.all;
 use work.t48_alu_pack.all;
 use work.t48_decoder_pack.all;
 
-use work.t48_comp_pack.t48_opc_decoder;
 use work.t48_comp_pack.t48_int;
 
 -- pragma translate_off
@@ -2013,6 +2012,10 @@ end rtl;
 -- File History:
 --
 -- $Log: not supported by cvs2svn $
+-- Revision 1.26  2008/04/29 21:19:21  arniml
+-- better support for ISE/XST:
+-- opc_table and opc_decoder merged into decoder_pack and decoder
+--
 -- Revision 1.25  2006/06/20 00:46:03  arniml
 -- new input xtal_en_i
 --
