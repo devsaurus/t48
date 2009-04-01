@@ -2,7 +2,7 @@
 --
 -- T8048 Microcontroller System
 --
--- $Id: t8048-c.vhd,v 1.2 2004-12-01 23:09:47 arniml Exp $
+-- $Id$
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --

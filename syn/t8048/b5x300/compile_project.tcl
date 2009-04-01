@@ -2,7 +2,7 @@
 #
 # Generic project compile script
 #
-# $Id: compile_project.tcl,v 1.1 2008-04-12 21:27:07 arniml Exp $
+# $Id$
 #
 # Execute from within xtclsh.
 #

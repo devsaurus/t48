@@ -3,7 +3,7 @@
 -- The Port 1 unit.
 -- Implements the Port 1 logic.
 --
--- $Id: p1.vhd,v 1.5 2005-06-11 10:08:43 arniml Exp $
+-- $Id$
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -149,22 +149,3 @@ begin
   p1_low_imp_o <= low_imp_q;
 
 end rtl;
-
-
--------------------------------------------------------------------------------
--- File History:
---
--- $Log: not supported by cvs2svn $
--- Revision 1.4  2004/07/11 16:51:33  arniml
--- cleanup copyright notice
---
--- Revision 1.3  2004/05/17 14:37:53  arniml
--- reorder data_o generation
---
--- Revision 1.2  2004/03/29 19:39:58  arniml
--- rename pX_limp to pX_low_imp
---
--- Revision 1.1  2004/03/23 21:31:52  arniml
--- initial check-in
---
--------------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 /*
- * $Id: memory.c,v 1.3 2004-07-03 14:35:52 arniml Exp $
+ * $Id$
  *
  * Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
  *

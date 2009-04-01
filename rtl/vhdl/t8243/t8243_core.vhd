@@ -4,8 +4,7 @@
 -- This is the core module implementing all functionality of the
 -- original 8243 chip.
 --
--- $Id: t8243_core.vhd,v 1.2 2006-12-18 01:18:58 arniml Exp $
--- $Name: not supported by cvs2svn $
+-- $Id$
 --
 -- Copyright (c) 2006, Arnim Laeuger (arniml@opencores.org)
 --
@@ -290,13 +289,3 @@ begin
   p7_en_o <= px_en_q(port_7_c);
 
 end rtl;
-
-
--------------------------------------------------------------------------------
--- File History:
---
--- $Log: not supported by cvs2svn $
--- Revision 1.1  2006/07/13 22:53:56  arniml
--- initial check-in
---
--------------------------------------------------------------------------------

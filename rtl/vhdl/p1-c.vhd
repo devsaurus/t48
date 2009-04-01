@@ -3,7 +3,7 @@
 -- The Port 1 unit.
 -- Implements the Port 1 logic.
 --
--- $Id: p1-c.vhd,v 1.2 2005-06-11 10:08:43 arniml Exp $
+-- $Id$
 --
 -- All rights reserved
 --

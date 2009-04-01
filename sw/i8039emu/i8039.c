@@ -9,7 +9,7 @@
  *    Adapted for the T48 uController project, 2004 by Arnim Laeuger        *
  *      See http://www.opencores.org/projects.cgi/web/t48/overview          *
  *                                                                          *
- * $Id: i8039.c,v 1.7 2004-07-04 12:06:53 arniml Exp $
+ * $Id$
  *                                                                          *
  *  **** Change Log ****                                                    *
  *                                                                          *

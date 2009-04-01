@@ -2,7 +2,7 @@
 --
 -- T8x48 ROM
 --
--- $Id: t48_rom-struct-a.vhd,v 1.3 2006-11-26 12:53:28 arniml Exp $
+-- $Id$
 --
 -- Copyright (c) 2006 Arnim Laeuger (arniml@opencores.org)
 --
@@ -63,16 +63,3 @@ begin
     );
 
 end struct;
-
-
--------------------------------------------------------------------------------
--- File History:
---
--- $Log: not supported by cvs2svn $
--- Revision 1.2  2006/11/26 11:58:28  arniml
--- fix component name
---
--- Revision 1.1  2006/06/21 00:59:15  arniml
--- initial check-in
---
--------------------------------------------------------------------------------

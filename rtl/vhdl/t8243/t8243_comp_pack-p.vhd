@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 --
--- $Id: t8243_comp_pack-p.vhd,v 1.1 2006-07-13 22:53:56 arniml Exp $
+-- $Id$
 --
 -- Copyright (c) 2006, Arnim Laeuger (arniml@opencores.org)
 --

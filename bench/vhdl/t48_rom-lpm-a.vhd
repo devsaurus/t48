@@ -3,7 +3,7 @@
 -- T8x48 ROM
 -- Wrapper for ROM model from the LPM library.
 --
--- $Id: t48_rom-lpm-a.vhd,v 1.1 2006-06-21 00:58:27 arniml Exp $
+-- $Id$
 --
 -- Copyright (c) 2006 Arnim Laeuger (arniml@opencores.org)
 --
@@ -92,10 +92,3 @@ begin
     );
 
 end lpm;
-
-
--------------------------------------------------------------------------------
--- File History:
---
--- $Log: not supported by cvs2svn $
--------------------------------------------------------------------------------

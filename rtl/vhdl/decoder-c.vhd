@@ -3,7 +3,7 @@
 -- The Decoder unit.
 -- It decodes the instruction opcodes and executes them.
 --
--- $Id: decoder-c.vhd,v 1.3 2008-04-29 21:19:21 arniml Exp $
+-- $Id$
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --

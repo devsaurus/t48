@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 --
--- $Id: alu_pack-p.vhd,v 1.3 2005-06-11 10:08:43 arniml Exp $
+-- $Id$
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -33,16 +33,3 @@ package t48_alu_pack is
   subtype alu_operand_t is std_logic_vector(word_width_c downto 0);
 
 end t48_alu_pack;
-
-
--------------------------------------------------------------------------------
--- File History:
---
--- $Log: not supported by cvs2svn $
--- Revision 1.2  2004/04/04 14:18:53  arniml
--- add measures to implement XCHD
---
--- Revision 1.1  2004/03/23 21:31:52  arniml
--- initial check-in
---
--------------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 	;; *******************************************************************
-	;; $Id: test.asm,v 1.1 2005-10-31 10:05:13 arniml Exp $
+	;; $Id$
 	;;
 	;; Test interrupt on code in Program Memory Bank 1.
 	;; => Bug report "Problem with INT and JMP"

@@ -2,7 +2,7 @@
 --
 -- T8048 Microcontroller System
 --
--- $Id: t8050_wb-c.vhd,v 1.2 2005-06-11 10:19:14 arniml Exp $
+-- $Id$
 --
 -- Copyright (c) 2005, Arnim Laeuger (arniml@opencores.org)
 --

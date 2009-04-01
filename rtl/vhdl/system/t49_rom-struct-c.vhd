@@ -2,7 +2,7 @@
 --
 -- T8x49 ROM
 --
--- $Id: t49_rom-struct-c.vhd,v 1.1 2006-11-26 12:52:34 arniml Exp $
+-- $Id$
 --
 -- Copyright (c) 2006, Arnim Laeuger (arniml@opencores.org)
 --

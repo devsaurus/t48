@@ -2,7 +2,7 @@
 --
 -- T8039 Microcontroller System
 --
--- $Id: t8039-c.vhd,v 1.2 2004-12-03 19:43:12 arniml Exp $
+-- $Id$
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --

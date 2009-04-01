@@ -2,7 +2,7 @@
 --
 -- T8x48 ROM
 --
--- $Id: t48_rom-e.vhd,v 1.1 2006-06-21 00:59:15 arniml Exp $
+-- $Id$
 --
 -- Copyright (c) 2006 Arnim Laeuger (arniml@opencores.org)
 --
@@ -55,10 +55,3 @@ entity t48_rom is
   );
 
 end t48_rom;
-
-
--------------------------------------------------------------------------------
--- File History:
---
--- $Log: not supported by cvs2svn $
--------------------------------------------------------------------------------

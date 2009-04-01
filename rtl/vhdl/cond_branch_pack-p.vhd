@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 --
--- $Id: cond_branch_pack-p.vhd,v 1.2 2005-06-11 10:08:43 arniml Exp $
+-- $Id$
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -26,13 +26,3 @@ package t48_cond_branch_pack is
   subtype comp_value_t is std_logic_vector(2 downto 0);
 
 end t48_cond_branch_pack;
-
-
--------------------------------------------------------------------------------
--- File History:
---
--- $Log: not supported by cvs2svn $
--- Revision 1.1  2004/03/23 21:31:52  arniml
--- initial check-in
---
--------------------------------------------------------------------------------

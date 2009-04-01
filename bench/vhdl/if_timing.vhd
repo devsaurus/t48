@@ -2,7 +2,7 @@
 --
 -- Interface Timing Checker.
 --
--- $Id: if_timing.vhd,v 1.6 2005-11-01 21:20:36 arniml Exp $
+-- $Id$
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -589,26 +589,3 @@ begin
   -----------------------------------------------------------------------------
 
 end behav;
-
-
--------------------------------------------------------------------------------
--- File History:
---
--- $Log: not supported by cvs2svn $
--- Revision 1.5  2004/12/03 19:58:55  arniml
--- add others to case statement
---
--- Revision 1.4  2004/10/25 19:33:13  arniml
--- remove tAW sanity check
--- conflicts with OUTL A, BUS
---
--- Revision 1.3  2004/09/12 00:31:50  arniml
--- add checks for PSEN
---
--- Revision 1.2  2004/04/25 20:40:58  arniml
--- check expander timings
---
--- Revision 1.1  2004/04/25 16:24:10  arniml
--- initial check-in
---
--------------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 #
 # Generic Makefile for ISE projects
 #
-# $Id: Makefile,v 1.1 2008-04-12 21:27:07 arniml Exp $
+# $Id$
 #
 # Execute with 'make <target>', where target is one of
 #   ise           : build ISE project from

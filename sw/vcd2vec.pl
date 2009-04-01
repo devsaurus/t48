@@ -4,7 +4,7 @@
 #
 # vcd2vec.pl
 #
-# $Id: vcd2vec.pl,v 1.1 2004-04-09 19:16:00 arniml Exp $
+# $Id$
 #
 # Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 #

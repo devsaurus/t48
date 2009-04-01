@@ -3,7 +3,7 @@
 -- The Data Memory control unit.
 -- All accesses to the Data Memory are managed here.
 --
--- $Id: dmem_ctrl-c.vhd,v 1.2 2005-06-11 10:08:43 arniml Exp $
+-- $Id$
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --

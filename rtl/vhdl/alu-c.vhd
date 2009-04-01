@@ -3,7 +3,7 @@
 -- The Arithmetic Logic Unit (ALU).
 -- It contains the ALU core plus the Accumulator and the Temp Reg.
 --
--- $Id: alu-c.vhd,v 1.2 2005-06-11 10:08:43 arniml Exp $
+-- $Id$
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --

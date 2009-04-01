@@ -2,7 +2,7 @@
 --
 -- The testbench for t48_core.
 --
--- $Id: tb-c.vhd,v 1.4 2006-06-21 01:04:05 arniml Exp $
+-- $Id$
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -41,19 +41,3 @@ configuration tb_behav_c0 of tb is
   end for;
 
 end tb_behav_c0;
-
-
--------------------------------------------------------------------------------
--- File History:
---
--- $Log: not supported by cvs2svn $
--- Revision 1.3  2004/05/21 11:22:44  arniml
--- exchange syn_rom for lpm_rom
---
--- Revision 1.2  2004/04/25 16:23:21  arniml
--- added if_timing
---
--- Revision 1.1  2004/03/24 21:42:10  arniml
--- initial check-in
---
--------------------------------------------------------------------------------

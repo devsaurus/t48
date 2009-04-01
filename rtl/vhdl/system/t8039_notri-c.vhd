@@ -3,7 +3,7 @@
 -- T8039 Microcontroller System
 -- 8039 toplevel without tri-states
 --
--- $Id: t8039_notri-c.vhd,v 1.2 2006-06-21 01:02:35 arniml Exp $
+-- $Id$
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --

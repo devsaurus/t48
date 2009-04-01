@@ -2,8 +2,7 @@
 --
 -- The T8243 asynchronous toplevel without tri-state signals
 --
--- $Id: t8243_async_notri.vhd,v 1.1 2006-07-13 22:53:56 arniml Exp $
--- $Name: not supported by cvs2svn $
+-- $Id$
 --
 -- Copyright (c) 2006, Arnim Laeuger (arniml@opencores.org)
 --
@@ -123,10 +122,3 @@ begin
     );
 
 end struct;
-
-
--------------------------------------------------------------------------------
--- File History:
---
--- $Log: not supported by cvs2svn $
--------------------------------------------------------------------------------

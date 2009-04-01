@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 --
--- $Id: t48_comp_pack-p.vhd,v 1.12 2008-05-01 19:28:41 arniml Exp $
+-- $Id$
 --
 -- Copyright (c) 2004, 2005, Arnim Laeuger (arniml@opencores.org)
 --

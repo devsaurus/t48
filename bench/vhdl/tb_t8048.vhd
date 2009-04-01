@@ -2,7 +2,7 @@
 --
 -- The testbench for t8048.
 --
--- $Id: tb_t8048.vhd,v 1.8 2008-04-28 22:10:13 arniml Exp $
+-- $Id$
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -294,33 +294,3 @@ begin
   -----------------------------------------------------------------------------
 
 end behav;
-
-
--------------------------------------------------------------------------------
--- File History:
---
--- $Log: not supported by cvs2svn $
--- Revision 1.7  2006/06/24 00:51:50  arniml
--- comment added about lower 1k of external ROM
---
--- Revision 1.6  2006/06/22 00:21:28  arniml
--- added external ROM
---
--- Revision 1.5  2006/06/21 01:04:05  arniml
--- replaced syn_ram and syn_rom with generic_ram_ena and t48_rom/t49_rom/t3x_rom
---
--- Revision 1.4  2004/04/18 19:00:58  arniml
--- connect T0 and T1 to P1
---
--- Revision 1.3  2004/04/14 20:57:44  arniml
--- wait for instruction strobe after final end-of-simulation detection
--- this ensures that the last mov instruction is part of the dump and
--- enables 100% matching with i8039 simulator
---
--- Revision 1.2  2004/03/26 22:39:28  arniml
--- enhance simulation result string
---
--- Revision 1.1  2004/03/24 21:42:10  arniml
--- initial check-in
---
--------------------------------------------------------------------------------

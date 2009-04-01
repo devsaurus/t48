@@ -2,7 +2,7 @@
 --
 -- The testbench for t8039.
 --
--- $Id: tb_t8039.vhd,v 1.5 2008-04-28 22:13:33 arniml Exp $
+-- $Id$
 --
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
@@ -292,22 +292,3 @@ begin
   -----------------------------------------------------------------------------
 
 end behav;
-
-
--------------------------------------------------------------------------------
--- File History:
---
--- $Log: not supported by cvs2svn $
--- Revision 1.4  2006/06/22 00:21:58  arniml
--- cleanup & enhance external access
---
--- Revision 1.3  2006/06/21 01:04:05  arniml
--- replaced syn_ram and syn_rom with generic_ram_ena and t48_rom/t49_rom/t3x_rom
---
--- Revision 1.2  2005/11/01 21:22:28  arniml
--- fix address assignment
---
--- Revision 1.1  2004/04/18 19:00:07  arniml
--- initial check-in
---
--------------------------------------------------------------------------------

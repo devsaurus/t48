@@ -1,5 +1,5 @@
 /*
- * $Id: main.c,v 1.3 2004-07-03 14:37:12 arniml Exp $
+ * $Id$
  *
  * Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
  *

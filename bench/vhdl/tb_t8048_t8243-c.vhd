@@ -2,7 +2,7 @@
 --
 -- The testbench for t8048 driving a t8243.
 --
--- $Id: tb_t8048_t8243-c.vhd,v 1.1 2006-07-13 22:55:10 arniml Exp $
+-- $Id$
 --
 -- Copyright (c) 2006, Arnim Laeuger (arniml@opencores.org)
 --
@@ -33,10 +33,3 @@ configuration tb_t8048_t8243_behav_c0 of tb_t8048_t8243 is
   end for;
 
 end tb_t8048_t8243_behav_c0;
-
-
--------------------------------------------------------------------------------
--- File History:
---
--- $Log: not supported by cvs2svn $
--------------------------------------------------------------------------------
