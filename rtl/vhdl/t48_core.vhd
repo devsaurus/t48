@@ -138,6 +138,8 @@ architecture struct of t48_core is
   signal xtal_en_s  : boolean;
   signal en_clk_s   : boolean;
 
+  signal t0_s, t1_s : std_logic;
+
   -- ALU signals
   signal alu_data_s           : word_t;
   signal alu_write_accu_s     : boolean;
@@ -276,6 +278,9 @@ begin
   xtal_en_s <= to_boolean(xtal_en_i);
   en_clk_s  <= to_boolean(en_clk_i);
 
+  t0_s <= To_X01Z(t0_i);
+  t1_s <= To_X01Z(t1_i);
+
   alu_b : t48_alu
     port map (
       clk_i              => clk_i,
@@ -348,8 +353,8 @@ begin
       branch_cond_i  => cnd_branch_cond_s,
       take_branch_o  => cnd_take_branch_s,
       accu_i         => alu_data_s,
-      t0_i           => To_X01Z(t0_i),
-      t1_i           => To_X01Z(t1_i),
+      t0_i           => t0_s,
+      t1_i           => t1_s,
       int_n_i        => int_n_i,
       f0_i           => psw_f0_s,
       f1_i           => cnd_f1_s,
@@ -499,7 +504,7 @@ begin
         clk_i         => clk_i,
         res_i         => reset_i,
         en_clk_i      => en_clk_s,
-        t1_i          => To_X01Z(t1_i),
+        t1_i          => t1_s,
         clk_mstate_i  => clk_mstate_s,
         data_i        => t48_data_s,
         data_o        => tim_data_s,
