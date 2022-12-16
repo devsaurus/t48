@@ -66,7 +66,8 @@ my $io_exp_cell = 0;
 # GHDL
 my %ghdl_simulators    = ('gen' => './tb_behav_c0',
                           't48' => './tb_t8048_behav_c0',
-                          't39' => './tb_t8039_behav_c0');
+                          't39' => './tb_t8039_behav_c0',
+                          't41a'=> './tb_t8041a_behav_c0');
 my %ghdl_io_expanders  = ('gen' => './tb_t8243_behav_c0',
                           't48' => './tb_t8048_t8243_behav_c0');
 my $ghdl_simulator_opt = '--assert-level=error --stop-time=20ms';

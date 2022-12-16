@@ -21,7 +21,10 @@ package t48_cond_branch_pack is
                                COND_F0, COND_F1,
                                COND_INT,
                                COND_T0, COND_T1,
-                               COND_TF);
+                               COND_TF,
+                               -- UPI41
+                               COND_NIBF,
+                               COND_OBF);
 
   subtype comp_value_t is std_logic_vector(2 downto 0);
 
