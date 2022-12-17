@@ -5,7 +5,7 @@
 # It sets all variables needed for VHDL code compilation with Makefile.hier.
 #
 #
-# Copyright (c) 2004-2006 Arnim Laeuger (arniml@opencores.org)
+# Copyright (c) 2004-2022 Arnim Laeuger (arniml@opencores.org)
 #
 # All rights reserved
 #
@@ -38,6 +38,14 @@ upi41_db_bus_rtl_c0 = $(LIB_WORK)/upi41_db_bus-c.o
 upi41_db_bus = $(LIB_WORK)/upi41_db_bus.o
 upi41_core_struct_c0 = $(LIB_WORK)/upi41_core-c.o
 upi41_core = $(LIB_WORK)/upi41_core.o
+t8041_notri_struct_c0 = $(LIB_WORK)/t8041_notri-c.o
+t8041_notri = $(LIB_WORK)/t8041_notri.o
+t8041_struct_c0 = $(LIB_WORK)/t8041-c.o
+t8041 = $(LIB_WORK)/t8041.o
+upi_stim_behav_c0 = $(LIB_WORK)/upi_stim-c.o
+upi_stim = $(LIB_WORK)/upi_stim.o
+tb_t8041_behav_c0 = $(LIB_WORK)/tb_t8041-c.o
+tb_t8041 = $(LIB_WORK)/tb_t8041.o
 t8041a_notri_struct_c0 = $(LIB_WORK)/t8041a_notri-c.o
 t8041a_notri = $(LIB_WORK)/t8041a_notri.o
 t8041a_struct_c0 = $(LIB_WORK)/t8041a-c.o
@@ -143,6 +151,7 @@ tb_t8048_elab       = tb_t8048_behav_c0
 tb_t8039_elab       = tb_t8039_behav_c0
 tb_t8048_t8243_elab = tb_t8048_t8243_behav_c0
 tb_t8243_elab       = tb_t8243_behav_c0
+tb_t8041_elab       = tb_t8041_behav_c0
 tb_t8041a_elab      = tb_t8041a_behav_c0
 #
 ##############################################################################
@@ -166,13 +175,16 @@ $(tb_t8048_t8243_elab) : $(tb_t8048_t8243_behav_c0)
 $(tb_t8243_elab) : $(tb_t8243_behav_c0)
 	$(ELABORATE) tb_t8243_behav_c0
 
+$(tb_t8041_elab) : $(tb_t8041_behav_c0)
+	$(ELABORATE) tb_t8041_behav_c0
+
 $(tb_t8041a_elab) : $(tb_t8041a_behav_c0)
 	$(ELABORATE) tb_t8041a_behav_c0
 
 .PHONY: elaborate
 elaborate: $(LIB_WORK) $(tb_elab) $(tb_t8048_elab) $(tb_t8039_elab) \
            $(tb_t8048_t8243_elab) $(tb_t8243_elab) \
-	   $(tb_t8041a_elab)
+	   $(tb_t8041_elab) $(tb_t8041a_elab)
 #
 ##############################################################################
 

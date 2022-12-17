@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 --
--- The testbench for t8041a.
+-- The testbench for t8041.
 --
 -- Copyright (c) 2004-2022, Arnim Laeuger (arniml@opencores.org)
 --
@@ -44,16 +44,16 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity tb_t8041a is
+entity tb_t8041 is
 
-end tb_t8041a;
+end tb_t8041;
 
 
-use work.t48_system_comp_pack.t8041a;
+use work.t48_system_comp_pack.t8041;
 
 use work.t48_tb_pack.all;
 
-architecture behav of tb_t8041a is
+architecture behav of tb_t8041 is
 
   -- clock period, 11 MHz
   constant period_c : time := 90 ns;
@@ -97,7 +97,7 @@ begin
   p2_b   <= (others => 'H');
   p1_b   <= (others => 'H');
 
-  t8041a_b : t8041a
+  t8041_b : t8041
     port map (
       xtal_i    => xtal_s,
       reset_n_i => res_n_s,

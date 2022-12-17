@@ -25,7 +25,7 @@
 #  Various VHDL design units.
 #
 #
-# Copyright (c) 2004-2006, Arnim Laeuger (arniml@opencores.org)
+# Copyright (c) 2004-2022, Arnim Laeuger (arniml@opencores.org)
 #
 # All rights reserved
 #
@@ -474,6 +474,47 @@ $(upi41_core_struct_c0) : $(RTL_DIR)/upi41_core-c.vhd \
 		$(upi41_core)
 	$(ANALYZE) $<
 
+$(t8041_notri) : $(RTL_DIR)/system/t8041_notri.vhd \
+		$(t48_core_comp_pack)
+	$(ANALYZE) $<
+
+$(t8041_notri_struct_c0) : $(RTL_DIR)/system/t8041_notri-c.vhd \
+		$(upi41_core_struct_c0)                        \
+		$(generic_ram_ena_rtl_c0)                      \
+		$(t48_rom_lpm_c0)                              \
+		$(t48_core_comp_pack)                          \
+		$(t8041_notri)
+	$(ANALYZE) $<
+
+$(t8041) : $(RTL_DIR)/system/t8041.vhd \
+		$(t48_system_comp_pack)
+	$(ANALYZE) $<
+
+$(t8041_struct_c0) : $(RTL_DIR)/system/t8041-c.vhd \
+		$(t8041_notri_struct_c0)           \
+		$(t8041)
+	$(ANALYZE) $<
+
+$(upi_stim) : $(BENCH_DIR)/upi_stim.vhd
+	$(ANALYZE) $<
+
+$(upi_stim_behav_c0) : $(BENCH_DIR)/upi_stim-c.vhd \
+		$(upi_stim)
+	$(ANALYZE) $<
+
+$(tb_t8041) : $(BENCH_DIR)/tb_t8041.vhd \
+		$(t48_tb_pack)          \
+		$(t48_core_comp_pack)   \
+		$(t48_system_comp_pack)
+	$(ANALYZE) $<
+
+$(tb_t8041_behav_c0) : $(BENCH_DIR)/tb_t8041-c.vhd \
+		$(t8041_struct_c0)                 \
+		$(upi_stim_behav_c0)               \
+		$(t48_tb_pack)                     \
+		$(tb_t8041)
+	$(ANALYZE) $<
+
 $(t8041a_notri) : $(RTL_DIR)/system/t8041a_notri.vhd \
 		$(t48_core_comp_pack)
 	$(ANALYZE) $<
@@ -503,6 +544,7 @@ $(tb_t8041a) : $(BENCH_DIR)/tb_t8041a.vhd \
 
 $(tb_t8041a_behav_c0) : $(BENCH_DIR)/tb_t8041a-c.vhd \
 		$(t8041a_struct_c0)                  \
+		$(upi_stim_behav_c0)                 \
 		$(t48_tb_pack)                       \
 		$(tb_t8041a)
 	$(ANALYZE) $<
