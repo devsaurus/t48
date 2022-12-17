@@ -168,7 +168,7 @@ begin
 
     elsif clk_i'event and clk_i = clk_active_c then
       -- master access
-      if read_pulse_s then
+      if read_pulse_s and a0_i = '0' then
         obf_q <= '0';
       elsif write_pulse_s then
         dbbin_q <= db_i;

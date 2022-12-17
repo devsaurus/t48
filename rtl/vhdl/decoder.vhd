@@ -1085,7 +1085,7 @@ begin
       -- Mnemonic IN_DBB - UPI41 ----------------------------------------------
       when MN_IN_DBB =>
         -- read BUS and store in Accumulator
-        if clk_mstate_i = MSTATE2 then
+        if clk_mstate_i = MSTATE4 then
           alu_write_accu_o <= true;
 
           add_read_bus_s   <= true;
