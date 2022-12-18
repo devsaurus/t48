@@ -20,9 +20,14 @@ end upi_stim;
 
 architecture behav of upi_stim is
 
+  subtype word_t is std_logic_vector(7 downto 0);
+
 begin
 
   stim: process
+
+    constant test_echo_c     : word_t := "00000001";
+    constant test_status41_c : word_t := "00000010";
 
     constant del_seq_c  : time :=   5 us;
     constant del_dat_c  : time :=  10 us;
@@ -73,6 +78,8 @@ begin
       end loop;
     end;
 
+    ---------------------------------------------------------------------------
+    --
     procedure echo_test is
     begin
       -- write data
@@ -87,11 +94,107 @@ begin
       end if;
 
       -- send ok to dut
-      write_dbbin(data => "00000001", a0 => '1');
+      write_dbbin(data => test_echo_c, a0 => '1');
     end;
 
-    procedure flags_test is
+    ---------------------------------------------------------------------------
+    --
+    procedure status41_test is
     begin
+      -- test F1=0, F0=0, IBF=0, OBF=0
+      read_dbbout(a0 => '1');
+      if rdata(3 downto 0) /= "0000" then
+        -- error
+        fail_o <= true;
+      end if;
+
+      -- Step 1:
+      -- set IBF and F1, DUT software doesn't read data
+      write_dbbin(data => test_status41_c, a0 => '1');
+      -- test F1=1, F0=0, IBF=1, OBF=0
+      read_dbbout(a0 => '1');
+      if rdata(3 downto 0) /= "1010" then
+        -- error
+        fail_o <= true;
+      end if;
+
+      -- Step 2:
+      -- set IBF and clear F1, DUT software doesn't read data
+      write_dbbin(data => test_status41_c, a0 => '0');
+      -- test F1=0, F0=0, IBF=1, OBF=0
+      read_dbbout(a0 => '1');
+      if rdata(3 downto 0) /= "0010" then
+        -- error
+        fail_o <= true;
+      end if;
+
+      -- Step 3:
+      -- set IBF and set F1, DUT software reads data and sets F0
+      write_dbbin(data => not test_status41_c, a0 => '1');
+      -- test F1=1, F0=1, IBF=0, OBF=0
+      read_dbbout(a0 => '1');
+      if rdata(3 downto 0) /= "1100" then
+        -- error
+        fail_o <= true;
+      end if;
+
+      -- Step 4:
+      -- set IBF and clear F1, DUT software reads data and clears F0
+      write_dbbin(data => not test_status41_c, a0 => '0');
+      -- test F1=0, F0=0, IBF=0, OBF=0
+      read_dbbout(a0 => '1');
+      if rdata(3 downto 0) /= "0000" then
+        -- error
+        fail_o <= true;
+      end if;
+
+      -- Step 5:
+      -- set IBF and set F1, DUT software reads data and loads OBF with F0=1
+      write_dbbin(data => test_status41_c, a0 => '1');
+      -- test F1=1, F0=1, IBF=0, OBF=1
+      read_dbbout(a0 => '1');
+      if rdata(3 downto 0) /= "1101" then
+        -- error
+        fail_o <= true;
+      end if;
+      -- read OBF, test for 099H
+      read_dbbout(a0 => '0');
+      if rdata /= "10011001" then
+        -- error
+        fail_o <= true;
+      end if;
+      -- test F1=1, F0=1, IBF=0, OBF=0
+      read_dbbout(a0 => '1');
+      if rdata(3 downto 0) /= "1100" then
+        -- error
+        fail_o <= true;
+      end if;
+
+      -- Step 6:
+      -- set IBF and clear F1, DUT software reads data and loads OBF with F0=0
+      -- and F1=1
+      write_dbbin(data => test_status41_c, a0 => '0');
+      -- test F1=1, F0=0, IBF=0, OBF=1
+      read_dbbout(a0 => '1');
+      if rdata(3 downto 0) /= "1001" then
+        -- error
+        fail_o <= true;
+      end if;
+      -- read OBF; test for 066H
+      read_dbbout(a0 => '0');
+      if rdata /= "01100110" then
+        -- error
+        fail_o <= true;
+      end if;
+      -- test F1=1, F0=0, IBF=0, OBF=0
+      read_dbbout(a0 => '1');
+      if rdata(3 downto 0) /= "1000" then
+        -- error
+        fail_o <= true;
+      end if;
+
+      -- send ok to dut
+      write_dbbin(data => test_status41_c, a0 => '1');
     end;
 
   begin
@@ -111,9 +214,14 @@ begin
 
       -- read and interpret request
       read_dbbout(a0 => '0');
+
       case rdata is
-        when "00000001" =>
+        when test_echo_c =>
           echo_test;
+
+        when test_status41_c =>
+          status41_test;
+
         when others =>
           null;
       end case;
