@@ -20,7 +20,7 @@ configuration t8041_notri_struct_c0 of t8041_notri is
       use configuration work.generic_ram_ena_rtl_c0;
     end for;
 
-    for upi41a_core_b : upi41_core
+    for upi41_core_b : upi41_core
       use configuration work.upi41_core_struct_c0;
     end for;
 

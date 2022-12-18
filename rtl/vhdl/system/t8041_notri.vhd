@@ -119,7 +119,7 @@ begin
   -- pragma translate_on
 
 
-  upi41a_core_b : upi41_core
+  upi41_core_b : upi41_core
     generic map (
       xtal_div_3_g        => 1,
       register_mnemonic_g => 1,
