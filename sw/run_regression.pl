@@ -6,7 +6,7 @@
 #
 # $Id$
 #
-# Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
+# Copyright (c) 2004-2022, Arnim Laeuger (arniml@opencores.org)
 #
 # All rights reserved
 #
@@ -26,11 +26,12 @@
 # is started.
 #
 # Exceptions for a testcell are defined by additional files.
-#   no_gen  : don't execute the generic/default testbench tb_behav_c0
-#   no_t48  : don't execute the t8048 testbench tb_t8048_behav_c0
-#   no_t39  : don't execute the t8039 testbench tb_t8039_behav_c0
-#   no_t41  : don't execute the t8041 testbench tb_t8041_behav_c0
-#   no_t41a : don't execute the t8041a testbench tb_t8041a_behav_c0
+#   no_gen   : don't execute the generic/default testbench tb_behav_c0
+#   no_t48   : don't execute the t8048 testbench tb_t8048_behav_c0
+#   no_t39   : don't execute the t8039 testbench tb_t8039_behav_c0
+#   no_t41   : don't execute the t8041 testbench tb_t8041_behav_c0
+#   no_t41a  : don't execute the t8041a testbench tb_t8041a_behav_c0
+#   no_t42ah : don't execute the t8042ah testbench tb_t8042ah_behav_c0
 #   no_dump_compare : don't include testcell when running dump compares
 #   io_exp : use the testbenches containing the t8243 IO expander
 #            tb_t8243_behav_c0
@@ -66,11 +67,12 @@ my $io_exp_cell = 0;
 # Commands to call the different VHDL simulators.
 # 
 # GHDL
-my %ghdl_simulators    = ('gen' => './tb_behav_c0',
-                          't48' => './tb_t8048_behav_c0',
-                          't39' => './tb_t8039_behav_c0',
-                          't41' => './tb_t8041_behav_c0',
-                          't41a'=> './tb_t8041a_behav_c0');
+my %ghdl_simulators    = ('gen'   => './tb_behav_c0',
+                          't48'   => './tb_t8048_behav_c0',
+                          't39'   => './tb_t8039_behav_c0',
+                          't41'   => './tb_t8041_behav_c0',
+                          't41a'  => './tb_t8041a_behav_c0',
+                          't42ah' => './tb_t8042ah_behav_c0');
 my %ghdl_io_expanders  = ('gen' => './tb_t8243_behav_c0',
                           't48' => './tb_t8048_t8243_behav_c0');
 my $ghdl_simulator_opt = '--assert-level=error --stop-time=20ms';

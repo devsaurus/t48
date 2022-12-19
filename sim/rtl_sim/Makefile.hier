@@ -548,3 +548,37 @@ $(tb_t8041a_behav_c0) : $(BENCH_DIR)/tb_t8041a-c.vhd \
 		$(t48_tb_pack)                       \
 		$(tb_t8041a)
 	$(ANALYZE) $<
+
+$(t8042ah_notri) : $(RTL_DIR)/system/t8042ah_notri.vhd \
+		$(t48_core_comp_pack)
+	$(ANALYZE) $<
+
+$(t8042ah_notri_struct_c0) : $(RTL_DIR)/system/t8042ah_notri-c.vhd \
+		$(upi41_core_struct_c0)                            \
+		$(generic_ram_ena_rtl_c0)                          \
+		$(t49_rom_lpm_c0)                                  \
+		$(t48_core_comp_pack)                              \
+		$(t8042ah_notri)
+	$(ANALYZE) $<
+
+$(t8042ah) : $(RTL_DIR)/system/t8042ah.vhd \
+		$(t48_system_comp_pack)
+	$(ANALYZE) $<
+
+$(t8042ah_struct_c0) : $(RTL_DIR)/system/t8042ah-c.vhd \
+		$(t8042ah_notri_struct_c0)             \
+		$(t8042ah)
+	$(ANALYZE) $<
+
+$(tb_t8042ah) : $(BENCH_DIR)/tb_t8042ah.vhd \
+		$(t48_tb_pack)              \
+		$(t48_core_comp_pack)       \
+		$(t48_system_comp_pack)
+	$(ANALYZE) $<
+
+$(tb_t8042ah_behav_c0) : $(BENCH_DIR)/tb_t8042ah-c.vhd \
+		$(t8042ah_struct_c0)                   \
+		$(upi_stim_behav_c0)                   \
+		$(t48_tb_pack)                         \
+		$(tb_t8042ah)
+	$(ANALYZE) $<

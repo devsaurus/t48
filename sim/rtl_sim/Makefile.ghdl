@@ -52,6 +52,12 @@ t8041a_struct_c0 = $(LIB_WORK)/t8041a-c.o
 t8041a = $(LIB_WORK)/t8041a.o
 tb_t8041a_behav_c0 = $(LIB_WORK)/tb_t8041a-c.o
 tb_t8041a = $(LIB_WORK)/tb_t8041a.o
+t8042ah_notri_struct_c0 = $(LIB_WORK)/t8042ah_notri-c.o
+t8042ah_notri = $(LIB_WORK)/t8042ah_notri.o
+t8042ah_struct_c0 = $(LIB_WORK)/t8042ah-c.o
+t8042ah = $(LIB_WORK)/t8042ah.o
+tb_t8042ah_behav_c0 = $(LIB_WORK)/tb_t8042ah-c.o
+tb_t8042ah = $(LIB_WORK)/tb_t8042ah.o
 
 tb_t8243_behav_c0 = $(LIB_WORK)/tb_t8243-c.o
 tb_t8243 = $(LIB_WORK)/tb_t8243.o
@@ -153,6 +159,7 @@ tb_t8048_t8243_elab = tb_t8048_t8243_behav_c0
 tb_t8243_elab       = tb_t8243_behav_c0
 tb_t8041_elab       = tb_t8041_behav_c0
 tb_t8041a_elab      = tb_t8041a_behav_c0
+tb_t8042ah_elab     = tb_t8042ah_behav_c0
 #
 ##############################################################################
 
@@ -181,10 +188,13 @@ $(tb_t8041_elab) : $(tb_t8041_behav_c0)
 $(tb_t8041a_elab) : $(tb_t8041a_behav_c0)
 	$(ELABORATE) tb_t8041a_behav_c0
 
+$(tb_t8042ah_elab) : $(tb_t8042ah_behav_c0)
+	$(ELABORATE) tb_t8042ah_behav_c0
+
 .PHONY: elaborate
 elaborate: $(LIB_WORK) $(tb_elab) $(tb_t8048_elab) $(tb_t8039_elab) \
            $(tb_t8048_t8243_elab) $(tb_t8243_elab) \
-	   $(tb_t8041_elab) $(tb_t8041a_elab)
+	   $(tb_t8041_elab) $(tb_t8041a_elab) $(tb_t8042ah_elab)
 #
 ##############################################################################
 
