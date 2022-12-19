@@ -43,8 +43,8 @@ step3:	ujnibf	step3
 step3_goon:
 	;; read IBF and complement F0
 	uin	a, dbb
-	xrl	a, #002H
-	jz	fail
+	xrl	a, #~002H
+	jnz	fail
 	cpl	f0
 
 	;; wait for IBF=1 and F1=0
@@ -52,8 +52,8 @@ step4:	ujnibf	step4
 	jf1	step4
 	;; read IBF and complement F0
 	uin	a, dbb
-	xrl	a, #002H
-	jz	fail
+	xrl	a, #~002H
+	jnz	fail
 	cpl	f0
 
 	;; wait for IBF=1 and F1=1
@@ -63,8 +63,8 @@ step5:	ujnibf	step5
 step5_goon:
 	;; read IBF and complement F0
 	uin	a, dbb
-	xrl	a, #~002H
-	jz	fail
+	xrl	a, #002H
+	jnz	fail
 	cpl	f0
 	;; load OBF
 	mov	a, #099H
@@ -75,8 +75,8 @@ step6:	ujnibf	step6
 	jf1	step6
 	;; read IBF and complement F0
 	uin	a, dbb
-	xrl	a, #~002H
-	jz	fail
+	xrl	a, #002H
+	jnz	fail
 	cpl	f0
 	;; complement F1
 	cpl	f1

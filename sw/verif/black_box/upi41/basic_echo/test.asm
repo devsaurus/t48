@@ -32,8 +32,7 @@ inp1:	ujnibf	inp1
 	uin	a, dbb
 
 	;; invert and output
-	xrl	a, #0FFH
-
+	cpl	a
 	uout	dbb, a
 
 out1:	ujobf	out1
