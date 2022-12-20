@@ -15,3 +15,7 @@ uin	MACRO	a, dbb
 uout	MACRO	dbb, a
 	db	002H
 	ENDM
+
+umov	MACRO	sts, a
+	db	090H
+	ENDM

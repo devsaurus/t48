@@ -104,7 +104,7 @@ architecture rtl of upi41_db_bus is
   signal dbbin_q,
          dbbout_q : word_t;
   -- the BUS status register
-  signal sts_q    : word_t;
+  signal sts_q    : std_logic_vector(7 downto 4);
 
 begin
 
@@ -183,7 +183,7 @@ begin
         elsif read_bus_i then
           ibf_q    <= '0';
         elsif write_sts_i then
-          sts_q    <= data_i;
+          sts_q    <= data_i(7 downto 4);
         end if;
 
         if ibf_int_i then
@@ -207,7 +207,8 @@ begin
   ibf_o      <= ibf_q;
   obf_o      <= obf_q;
   db_o       <= dbbout_q when a0_i = '0' else
-                sts_q(7 downto 4) & f1_i & f0_i & ibf_q & obf_q;
+                sts_q & f1_i & f0_i & ibf_q & obf_q when is_type_a_g = 1 else
+                "0000" & f1_i & f0_i & ibf_q & obf_q;
   db_dir_o   <= '1' when cs_n_i = '0' and read_hold_q else '0';
   data_o     <=   dbbin_q
                 when read_bus_i else

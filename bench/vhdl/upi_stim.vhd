@@ -26,8 +26,9 @@ begin
 
   stim: process
 
-    constant test_echo_c     : word_t := "00000001";
-    constant test_status41_c : word_t := "00000010";
+    constant test_echo_c      : word_t := "00000001";
+    constant test_status41_c  : word_t := "00000010";
+    constant test_status41a_c : word_t := "00000011";
 
     constant del_seq_c  : time :=   5 us;
     constant del_dat_c  : time :=  10 us;
@@ -197,6 +198,85 @@ begin
       write_dbbin(data => test_status41_c, a0 => '1');
     end;
 
+    ---------------------------------------------------------------------------
+    --
+    procedure status41a_test is
+    begin
+      -- test F1=0, F0=0, IBF=0, OBF=0
+      read_dbbout(a0 => '1');
+      if rdata(3 downto 0) /= "0000" then
+        -- error
+        fail_o <= true;
+      end if;
+
+      -- Step 1:
+      -- set IBF and F1, DUT software sets STS to A
+      write_dbbin(data => test_status41a_c, a0 => '1');
+      -- test STS=A, F1=1, F0=0, IBF=0, OBF=1
+      read_dbbout(a0 => '1');
+      if rdata /= "10101001" then
+        -- error
+        fail_o <= true;
+      end if;
+      --
+      read_dbbout(a0 => '0');
+      if rdata /= "00000001" then
+        -- error
+        fail_o <= true;
+      end if;
+
+      -- Step 2:
+      -- set IBF and clear F1, DUT software sets STS to 5
+      write_dbbin(data => not test_status41a_c, a0 => '0');
+      -- test STS=5, F1=0, F0=0, IBF=0, OBF=1
+      read_dbbout(a0 => '1');
+      if rdata /= "01010001" then
+        -- error
+        fail_o <= true;
+      end if;
+      --
+      read_dbbout(a0 => '0');
+      if rdata /= "00000010" then
+        -- error
+        fail_o <= true;
+      end if;
+
+      -- Step 3:
+      -- set IBF and set F1, DUT software sets STS to 0
+      write_dbbin(data => test_status41a_c, a0 => '1');
+      -- test STS=0, F1=1, F0=0, IBF=0, OBF=1
+      read_dbbout(a0 => '1');
+      if rdata /= "00001001" then
+        -- error
+        fail_o <= true;
+      end if;
+      --
+      read_dbbout(a0 => '0');
+      if rdata /= "00000011" then
+        -- error
+        fail_o <= true;
+      end if;
+
+      -- Step 4:
+      -- set IBF and clear F1, DUT software sets STS to 0
+      write_dbbin(data => not test_status41a_c, a0 => '0');
+      -- test STS=0, F1=0, F0=0, IBF=0, OBF=1
+      read_dbbout(a0 => '1');
+      if rdata /= "00000001" then
+        -- error
+        fail_o <= true;
+      end if;
+      --
+      read_dbbout(a0 => '0');
+      if rdata /= "00000100" then
+        -- error
+        fail_o <= true;
+      end if;
+
+      -- send ok to dut
+      write_dbbin(data => test_status41a_c, a0 => '1');
+    end;
+
   begin
 
     fail_o <= false;
@@ -221,6 +301,9 @@ begin
 
         when test_status41_c =>
           status41_test;
+
+        when test_status41a_c =>
+          status41a_test;
 
         when others =>
           null;
