@@ -165,6 +165,9 @@ architecture struct of upi41_core is
   signal bus_en_dma_s     : boolean;
   signal bus_en_flags_s   : boolean;
   signal bus_write_sts_s  : boolean;
+  signal bus_mint_ibf_n_s : std_logic;
+  signal bus_mint_obf_s   : std_logic;
+  signal bus_drq_s        : std_logic;
 
   -- Clock Controller signals
   signal clk_multi_cycle_s  : boolean;
@@ -206,6 +209,7 @@ architecture struct of upi41_core is
   signal p1_data_s     : word_t;
 
   -- Port 2 signals
+  signal p2_s            : word_t;
   signal p2_write_p2_s   : boolean;
   signal p2_write_exp_s  : boolean;
   signal p2_read_p2_s    : boolean;
@@ -394,6 +398,10 @@ begin
         ibf_int_i    => bus_ibf_int_s,
         en_dma_i     => bus_en_dma_s,
         en_flags_i   => bus_en_flags_s,
+        mint_ibf_n_o => bus_mint_ibf_n_s,
+        mint_obf_o   => bus_mint_obf_s,
+        drq_o        => bus_drq_s,
+        dack_n_i     => p2_i(7),
         a0_i         => a0_i,
         cs_n_i       => cs_n_i,
         rd_n_i       => rd_n_i,
@@ -587,7 +595,7 @@ begin
         output_pch_i  => p2_output_pch_s,
         pch_i         => pmem_addr_s(11 downto 8),
         p2_i          => p2_i,
-        p2_o          => p2_o,
+        p2_o          => p2_s,
         p2l_low_imp_o => p2l_low_imp_o,
         p2h_low_imp_o => p2h_low_imp_o
       );
@@ -595,10 +603,12 @@ begin
 
   skip_p2: if include_port2_g = 0 generate
     p2_data_s     <= (others => bus_idle_level_c);
-    p2_o          <= (others => '0');
+    p2_s          <= (others => '0');
     p2l_low_imp_o <= '0';
     p2h_low_imp_o <= '0';
   end generate;
+
+  p2_o <= p2_s and '1' & bus_drq_s & bus_mint_ibf_n_s & bus_mint_obf_s & "1111";
 
   pmem_ctrl_b : t48_pmem_ctrl
     port map (

@@ -73,6 +73,10 @@ entity upi41_db_bus is
     ibf_int_i    : in  boolean;
     en_dma_i     : in  boolean;
     en_flags_i   : in  boolean;
+    mint_ibf_n_o : out std_logic;
+    mint_obf_o   : out std_logic;
+    drq_o        : out std_logic;
+    dack_n_i     : in  std_logic;
     -- BUS Interface ----------------------------------------------------------
     a0_i         : in  std_logic;
     cs_n_i       : in  std_logic;
@@ -105,6 +109,9 @@ architecture rtl of upi41_db_bus is
          dbbout_q : word_t;
   -- the BUS status register
   signal sts_q    : std_logic_vector(7 downto 4);
+
+  signal dma_q,
+         flags_q : boolean;
 
 begin
 
@@ -165,6 +172,8 @@ begin
       ibf_q      <= '0';
       obf_q      <= '0';
       int_n_o    <= '1';
+      dma_q      <= false;
+      flags_q    <= false;
 
     elsif clk_i'event and clk_i = clk_active_c then
       -- master access
@@ -190,6 +199,15 @@ begin
           int_n_o <= '1';
         end if;
 
+        if is_type_a_g = 1 then
+          if en_dma_i then
+            dma_q <= true;
+          end if;
+          if en_flags_i then
+            flags_q <= true;
+          end if;
+        end if;
+
       end if;
 
     end if;
@@ -213,5 +231,12 @@ begin
   data_o     <=   dbbin_q
                 when read_bus_i else
                   (others => bus_idle_level_c);
+
+  mint_ibf_n_o <= '1' when flags_q and ibf_q = '0' else '0';
+  mint_obf_o   <= '1' when flags_q and obf_q = '1' else '0';
+
+  -- TODO
+  drq_o <= '0' when dma_q else '1';
+  -- dack_n_i
 
 end rtl;

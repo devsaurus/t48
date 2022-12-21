@@ -19,3 +19,7 @@ uout	MACRO	dbb, a
 umov	MACRO	sts, a
 	db	090H
 	ENDM
+
+uen_flags	MACRO
+	db	0F5H
+	ENDM
