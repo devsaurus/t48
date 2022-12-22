@@ -263,8 +263,8 @@ begin
     --
     procedure master_int_test is
     begin
-      -- check master interrupt lines are low
-      if int_ibf_n /= '0' or int_obf /= '0' then
+      -- check master interrupt lines are still high
+      if int_ibf_n /= 'H' or int_obf /= 'H' then
         fail_o <= true;
       end if;
       -- acknowledge

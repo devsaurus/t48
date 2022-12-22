@@ -232,8 +232,8 @@ begin
                 when read_bus_i else
                   (others => bus_idle_level_c);
 
-  mint_ibf_n_o <= '1' when flags_q and ibf_q = '0' else '0';
-  mint_obf_o   <= '1' when flags_q and obf_q = '1' else '0';
+  mint_ibf_n_o <= '0' when flags_q and ibf_q = '1' else '1';
+  mint_obf_o   <= '0' when flags_q and obf_q = '0' else '1';
 
   -- TODO
   drq_o <= '0' when dma_q else '1';
