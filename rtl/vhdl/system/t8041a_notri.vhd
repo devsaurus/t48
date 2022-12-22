@@ -123,9 +123,6 @@ begin
     generic map (
       xtal_div_3_g        => 1,
       register_mnemonic_g => 1,
-      include_port1_g     => 1,
-      include_port2_g     => 1,
-      include_timer_g     => 1,
       sample_t1_state_g   => 4,
       is_upi_type_a_g     => 1
     )

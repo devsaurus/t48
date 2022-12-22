@@ -36,22 +36,16 @@ configuration upi41_core_struct_c0 of upi41_core is
       use configuration work.t48_dmem_ctrl_rtl_c0;
     end for;
 
-    for use_timer
-      for timer_b : t48_timer
-        use configuration work.t48_timer_rtl_c0;
-      end for;
+    for timer_b : t48_timer
+      use configuration work.t48_timer_rtl_c0;
     end for;
 
-    for use_p1
-      for p1_b : t48_p1
-        use configuration work.t48_p1_rtl_c0;
-      end for;
+    for p1_b : t48_p1
+      use configuration work.t48_p1_rtl_c0;
     end for;
 
-    for use_p2
-      for p2_b : t48_p2
-        use configuration work.t48_p2_rtl_c0;
-      end for;
+    for p2_b : t48_p2
+      use configuration work.t48_p2_rtl_c0;
     end for;
 
     for pmem_ctrl_b : t48_pmem_ctrl

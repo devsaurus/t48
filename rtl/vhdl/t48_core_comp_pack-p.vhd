@@ -65,9 +65,6 @@ package t48_core_comp_pack is
     generic (
       xtal_div_3_g          : integer := 1;
       register_mnemonic_g   : integer := 1;
-      include_port1_g       : integer := 1;
-      include_port2_g       : integer := 1;
-      include_timer_g       : integer := 1;
       sample_t1_state_g     : integer := 4;
       is_upi_type_a_g       : integer := 1
     );

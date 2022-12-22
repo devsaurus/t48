@@ -63,12 +63,6 @@ entity upi41_core is
     xtal_div_3_g          : integer := 1;
     -- store mnemonic in flip-flops (registered-out)
     register_mnemonic_g   : integer := 1;
-    -- include the port 1 module
-    include_port1_g       : integer := 1;
-    -- include the port 2 module
-    include_port2_g       : integer := 1;
-    -- include the timer module
-    include_timer_g       : integer := 1;
     -- state in which T1 is sampled (3 or 4)
     sample_t1_state_g     : integer := 4;
     -- UPI41 type a
@@ -266,23 +260,6 @@ begin
   sync_o <= '0';
 
   gnd_s <= '0';
-
-  -----------------------------------------------------------------------------
-  -- Check generics for valid values.
-  -----------------------------------------------------------------------------
-  -- pragma translate_off
-  assert include_timer_g = 0 or include_timer_g = 1
-    report "include_timer_g must be either 1 or 0!"
-    severity failure;
-
-  assert include_port1_g = 0 or include_port1_g = 1
-    report "include_port1_g must be either 1 or 0!"
-    severity failure;
-
-  assert include_port2_g = 0 or include_port2_g = 1
-    report "include_port2_g must be either 1 or 0!"
-    severity failure;
-  -- pragma translate_on
 
 
   xtal_en_s <= to_boolean(xtal_en_i);
@@ -525,88 +502,64 @@ begin
       dmem_data_o       => dmem_data_o
     );
 
-  use_timer: if include_timer_g = 1 generate
-    timer_b : t48_timer
-      generic map (
-        sample_t1_state_g => sample_t1_state_g
-      )
-      port map (
-        clk_i         => clk_i,
-        res_i         => reset_i,
-        en_clk_i      => en_clk_s,
-        t1_i          => t1_s,
-        clk_mstate_i  => clk_mstate_s,
+  timer_b : t48_timer
+    generic map (
+      sample_t1_state_g => sample_t1_state_g
+    )
+    port map (
+      clk_i         => clk_i,
+      res_i         => reset_i,
+      en_clk_i      => en_clk_s,
+      t1_i          => t1_s,
+      clk_mstate_i  => clk_mstate_s,
         data_i        => t48_data_s,
-        data_o        => tim_data_s,
-        read_timer_i  => tim_read_timer_s,
-        write_timer_i => tim_write_timer_s,
-        start_t_i     => tim_start_t_s,
+      data_o        => tim_data_s,
+      read_timer_i  => tim_read_timer_s,
+      write_timer_i => tim_write_timer_s,
+      start_t_i     => tim_start_t_s,
         start_cnt_i   => tim_start_cnt_s,
-        stop_tcnt_i   => tim_stop_tcnt_s,
-        overflow_o    => tim_of_s
-      );
-  end generate;
-
-  skip_timer: if include_timer_g = 0 generate
-    tim_data_s <= (others => bus_idle_level_c);
-    tim_of_s   <= '0';
-  end generate;
+      stop_tcnt_i   => tim_stop_tcnt_s,
+      overflow_o    => tim_of_s
+    );
 
   tim_overflow_s <= to_boolean(tim_of_s);
 
-  use_p1: if include_port1_g = 1 generate
-    p1_b : t48_p1
-      port map (
-        clk_i        => clk_i,
-        res_i        => reset_i,
-        en_clk_i     => en_clk_s,
-        data_i       => t48_data_s,
-        data_o       => p1_data_s,
-        write_p1_i   => p1_write_p1_s,
-        read_p1_i    => p1_read_p1_s,
-        read_reg_i   => p1_read_reg_s,
-        p1_i         => p1_i,
-        p1_o         => p1_o,
-        p1_low_imp_o => p1_low_imp_o
-      );
-  end generate;
+  p1_b : t48_p1
+    port map (
+      clk_i        => clk_i,
+      res_i        => reset_i,
+      en_clk_i     => en_clk_s,
+      data_i       => t48_data_s,
+      data_o       => p1_data_s,
+      write_p1_i   => p1_write_p1_s,
+      read_p1_i    => p1_read_p1_s,
+      read_reg_i   => p1_read_reg_s,
+      p1_i         => p1_i,
+      p1_o         => p1_o,
+      p1_low_imp_o => p1_low_imp_o
+    );
 
-  skip_p1: if include_port1_g = 0 generate
-    p1_data_s    <= (others => bus_idle_level_c);
-    p1_o         <= (others => '0');
-    p1_low_imp_o <= '0';
-  end generate;
-
-  use_p2: if include_port2_g = 1 generate
-    p2_b : t48_p2
-      port map (
-        clk_i         => clk_i,
-        res_i         => reset_i,
-        en_clk_i      => en_clk_s,
-        xtal_i        => xtal_i,
-        xtal_en_i     => xtal_en_s,
-        data_i        => t48_data_s,
-        data_o        => p2_data_s,
-        write_p2_i    => p2_write_p2_s,
-        write_exp_i   => p2_write_exp_s,
-        read_p2_i     => p2_read_p2_s,
-        read_reg_i    => p2_read_reg_s,
-        read_exp_i    => p2_read_exp_s,
-        output_pch_i  => p2_output_pch_s,
-        pch_i         => pmem_addr_s(11 downto 8),
-        p2_i          => p2_i,
-        p2_o          => p2_s,
-        p2l_low_imp_o => p2l_low_imp_o,
-        p2h_low_imp_o => p2h_low_imp_o
-      );
-  end generate;
-
-  skip_p2: if include_port2_g = 0 generate
-    p2_data_s     <= (others => bus_idle_level_c);
-    p2_s          <= (others => '0');
-    p2l_low_imp_o <= '0';
-    p2h_low_imp_o <= '0';
-  end generate;
+  p2_b : t48_p2
+    port map (
+      clk_i         => clk_i,
+      res_i         => reset_i,
+      en_clk_i      => en_clk_s,
+      xtal_i        => xtal_i,
+      xtal_en_i     => xtal_en_s,
+      data_i        => t48_data_s,
+      data_o        => p2_data_s,
+      write_p2_i    => p2_write_p2_s,
+      write_exp_i   => p2_write_exp_s,
+      read_p2_i     => p2_read_p2_s,
+      read_reg_i    => p2_read_reg_s,
+      read_exp_i    => p2_read_exp_s,
+      output_pch_i  => p2_output_pch_s,
+      pch_i         => pmem_addr_s(11 downto 8),
+      p2_i          => p2_i,
+      p2_o          => p2_s,
+      p2l_low_imp_o => p2l_low_imp_o,
+      p2h_low_imp_o => p2h_low_imp_o
+    );
 
   p2_o <= p2_s and '1' & bus_drq_s & bus_mint_ibf_n_s & bus_mint_obf_s & "1111";
 
