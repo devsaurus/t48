@@ -23,3 +23,7 @@ umov	MACRO	sts, a
 uen_flags	MACRO
 	db	0F5H
 	ENDM
+
+uen_dma	MACRO
+	db	0E5H
+	ENDM

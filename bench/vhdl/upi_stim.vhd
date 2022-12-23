@@ -1,6 +1,7 @@
 
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 entity upi_stim is
 
@@ -21,6 +22,8 @@ end upi_stim;
 architecture behav of upi_stim is
 
   subtype word_t is std_logic_vector(7 downto 0);
+  alias dack_n    : std_logic is p2_b(7);
+  alias drq       : std_logic is p2_b(6);
   alias int_ibf_n : std_logic is p2_b(5);
   alias int_obf   : std_logic is p2_b(4);
 
@@ -32,6 +35,7 @@ begin
     constant test_status41_c   : word_t := "00000010";
     constant test_status41a_c  : word_t := "00000011";
     constant test_master_int_c : word_t := "00000100";
+    constant test_dma_int_c    : word_t := "00000101";
 
     constant del_seq_c  : time :=   5 us;
     constant del_dat_c  : time :=  10 us;
@@ -39,7 +43,7 @@ begin
 
     variable rdata : std_logic_vector(db_b'range);
 
-    procedure write_dbbin(data : in std_logic_vector(7 downto 0);
+    procedure write_dbbin(data : in word_t;
                           a0   : in std_logic) is
     begin
       cs_n_o <= '0';
@@ -70,6 +74,38 @@ begin
       wait for del_seq_c;
       cs_n_o <= '1';
       wait for del_seq_c;
+      wait for del_step_c;
+    end;
+
+    procedure read_dma is
+    begin
+      wait for del_seq_c;
+      dack_n <= '0';
+      wait for del_seq_c;
+      rd_n_o <= '0';
+      wait for del_dat_c;
+      rdata := db_b;
+      rd_n_o <= '1';
+      wait for del_seq_c;
+      dack_n <= '1';
+      wait for del_seq_c;
+      wait for del_step_c;
+    end;
+
+    procedure write_dma(data : in word_t) is
+    begin
+      wait for del_seq_c;
+      dack_n <= '0';
+      wait for del_seq_c;
+      wr_n_o <= '0';
+      wait for del_seq_c;
+      db_b <= data;
+      wait for del_dat_c;
+      wr_n_o <= '1';
+      wait for del_seq_c;
+      dack_n <= '1';
+      wait for del_seq_c;
+      db_b <= (others => 'Z');
       wait for del_step_c;
     end;
 
@@ -327,6 +363,71 @@ begin
       write_dbbin(data => test_master_int_c, a0 => '1');
     end;
 
+    ---------------------------------------------------------------------------
+    --
+    procedure dma_int_test is
+    begin
+      -- acknowledge
+      write_dbbin(data => not test_dma_int_c, a0 => '0');
+
+      -- test DRQ line low
+      if drq /= '0' then
+        fail_o <= true;
+      end if;
+
+      -- read 4 bytes with DMA
+      for byte in 4 downto 1 loop
+        -- wait for DRQ
+        wait until rising_edge(drq);
+
+        -- check status
+        read_dbbout(a0 => '1');
+        if rdata /= "00000001" then
+          fail_o <= true;
+        end if;
+        -- check DRQ still active
+        if drq /= 'H' then
+          fail_o <= true;
+        end if;
+
+        -- finally read data
+        read_dma;
+        if unsigned(rdata) /= byte then
+          fail_o <= true;
+        end if;
+
+        -- check status
+        read_dbbout(a0 => '1');
+        if rdata /= "00000000" then
+          fail_o <= true;
+        end if;
+      end loop;
+      --wait;
+
+      -- write 4 bytes with DMA
+      for byte in 4 downto 1 loop
+        -- wait for DRQ
+        wait until rising_edge(drq);
+
+        -- check status
+        read_dbbout(a0 => '1');
+        if rdata /= "00000000" then
+          fail_o <= true;
+        end if;
+        -- check DRQ still active
+        if drq /= 'H' then
+          fail_o <= true;
+        end if;
+
+        -- finally write data
+        write_dma(data => std_logic_vector(to_unsigned(byte, word_t'length)));
+      end loop;
+
+      -- send ok to dut
+      write_dbbin(data => test_dma_int_c, a0 => '1');
+
+    end;
+
   begin
 
     fail_o <= false;
@@ -335,6 +436,7 @@ begin
     wr_n_o <= '1';
     a0_o   <= '0';
     db_b   <= (others => 'Z');
+    dack_n <= 'H';
 
     wait until falling_edge(p1_b(2));
     wait for 100 us;
@@ -357,6 +459,9 @@ begin
 
         when test_master_int_c =>
           master_int_test;
+
+        when test_dma_int_c =>
+          dma_int_test;
 
         when others =>
           null;

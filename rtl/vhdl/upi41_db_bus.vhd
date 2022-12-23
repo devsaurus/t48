@@ -203,6 +203,10 @@ begin
         int_n_o <= '0';
       end if;
 
+      if dack_s and (read_s or write_s) then
+        drq_o <= '0';
+      end if;
+
       if en_clk_i then
         if write_bus_i then
           dbbout_q <= data_i;
@@ -226,9 +230,7 @@ begin
             flags_q <= true;
           end if;
 
-          if dack_s then
-            drq_o <= '0';
-          elsif dma_q and write_p2_i and data_i(6) = '1' then
+          if dma_q and write_p2_i and data_i(6) = '1' then
             drq_o <= '1';
           end if;
         end if;
