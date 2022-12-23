@@ -85,3 +85,36 @@ rtl/vhdl/t8243/t8243_sync_notri-c.vhd
 bench/vhdl/tb_t8243.vhd
 bench/vhdl/tb_t8243-c.vhd
 Elaborate tb_t8243_behav_c0
+
+rtl/vhdl/upi41_db_bus.vhd
+rtl/vhdl/upi41_db_bus-c.vhd
+rtl/vhdl/upi41_core.vhd
+rtl/vhdl/upi41_core-c.vhd
+rtl/vhdl/system/t8041_notri.vhd
+rtl/vhdl/system/t8041_notri-c.vhd
+rtl/vhdl/system/t8041.vhd
+rtl/vhdl/system/t8041-c.vhd
+bench/vhdl/upi_stim.vhd
+bench/vhdl/upi_stim-c.vhd
+bench/vhdl/tb_t8041.vhd
+bench/vhdl/tb_t8041-c.vhd
+Elaborate tb_t8041_behav_c0
+
+rtl/vhdl/system/t8041a_notri.vhd
+rtl/vhdl/system/t8041a_notri-c.vhd
+rtl/vhdl/system/t8041a.vhd
+rtl/vhdl/system/t8041a-c.vhd
+bench/vhdl/tb_t8041a.vhd
+bench/vhdl/tb_t8041a-c.vhd
+Elaborate tb_t8041a_behav_c0
+
+rtl/vhdl/system/t49_rom-e.vhd
+bench/vhdl/t49_rom-lpm-a.vhd
+bench/vhdl/t49_rom-lpm-c.vhd
+rtl/vhdl/system/t8042ah_notri.vhd
+rtl/vhdl/system/t8042ah_notri-c.vhd
+rtl/vhdl/system/t8042ah.vhd
+rtl/vhdl/system/t8042ah-c.vhd
+bench/vhdl/tb_t8042ah.vhd
+bench/vhdl/tb_t8042ah-c.vhd
+Elaborate tb_t8042ah_behav_c0

@@ -15,17 +15,20 @@ It can be configured to better suit the requirements and characteristics of
 the integrating system. On the other hand, nearly the full functionality of a
 stock 8048/8049 is available.
 
+The core also provides a variant that implements the specific features of the
+UPI-41A/41AH/42/42AH device family.
+
 
 Download
 --------
 
 Download the latest stable release from the project homepage at OpenCores.org:
 
-  http://www.opencores.org/projects.cgi/web/t48/overview/
+  https://opencores.org/projects/t48
 
-You can get the latest version of the design files from CVS:
+You can get the latest version of the design files from SVN:
 
-  http://www.opencores.org/pdownloads.cgi/list/t48
+  https://opencores.org/websvn/listing/t48
 
 Please keep in mind that this is work in progress and might contain smaller or
 bigger problems.
@@ -144,7 +147,7 @@ where <simulator> denotes one of the supported simulators:
     http://www.symphonyeda.com/
 
 Make will analyze all VHDL files (RTL and testbench code) and elaborate all
-three testbench top-levels if appropriate for the chosen simulator:
+testbench top-levels if appropriate for the chosen simulator:
 
   * tb_behav_c0
     The main testbench for regression testing.
@@ -162,6 +165,15 @@ three testbench top-levels if appropriate for the chosen simulator:
 
   * tb_t8048_t8243_behav_c0
     Testbench containing the t8048 and the asynchronous t8243 toplevel.
+
+  * tb_t8041_behav_c0
+    Testbench containing the t8041 sample system.
+
+  * tb_t8041a_behav_c0
+    Testbench containing the t8041a sample system.
+
+  * tb_t8042ah_behav_c0
+    Testbench containing the t8042ah sample system.
 
 Each Makefile has a 'clean' target to delete all intermediate data:
 
@@ -184,7 +196,7 @@ simulation will stop immediately after elaborating the design.
 These files are:
 
   * rom_t49.hex
-    Internal ROM contents for 8x49 derivatives,
+    Internal ROM contents for t8x49 and t8042ah derivatives,
     address range 000H to 7FFH.
     Intel hex format, starting at address 000H.
 
@@ -194,7 +206,7 @@ These files are:
     Intel hex format, starting at address 800H.
 
   * rom_t48.hex
-    Internal ROM contents for t8x48 derivatives,
+    Internal ROM contents for t8x48 and t8041x derivatives,
     address range 000H to 3FFH.
     Intel hex format, starting at address 000H.
 
