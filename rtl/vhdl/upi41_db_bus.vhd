@@ -73,8 +73,11 @@ entity upi41_db_bus is
     ibf_int_i    : in  boolean;
     en_dma_i     : in  boolean;
     en_flags_i   : in  boolean;
+    -- P2 interface -----------------------------------------------------------
+    write_p2_i   : in  boolean;
     mint_ibf_n_o : out std_logic;
     mint_obf_o   : out std_logic;
+    dma_o        : out boolean;
     drq_o        : out std_logic;
     dack_n_i     : in  std_logic;
     -- BUS Interface ----------------------------------------------------------
@@ -102,6 +105,8 @@ architecture rtl of upi41_db_bus is
          write_s, write_q,
          read_pulse_s, write_pulse_s : boolean;
 
+  signal a0_q : std_logic;
+
   signal ibf_q, obf_q : std_logic;
 
   -- the BUS output register
@@ -112,6 +117,9 @@ architecture rtl of upi41_db_bus is
 
   signal dma_q,
          flags_q : boolean;
+
+  signal ext_acc_s : boolean;
+  signal dack_s  : boolean;
 
 begin
 
@@ -131,8 +139,10 @@ begin
   -- Purpose:
   --   Generate read and write pulses based on master access.
   --
-  read_s  <= cs_n_i = '0' and rd_n_i = '0';
-  write_s <= cs_n_i = '0' and wr_n_i = '0';
+  dack_s    <= dack_n_i = '0' and dma_q;
+  ext_acc_s <= cs_n_i = '0' or dack_s;
+  read_s    <= ext_acc_s and rd_n_i = '0';
+  write_s   <= ext_acc_s and wr_n_i = '0';
   --
   master_access: process (res_i, clk_i)
   begin
@@ -140,6 +150,7 @@ begin
       read_q      <= false;
       read_hold_q <= false;
       write_q     <= false;
+      a0_q        <= '0';
 
     elsif clk_i'event and clk_i = clk_active_c then
       read_q  <= read_s;
@@ -147,8 +158,14 @@ begin
 
       if read_s then
         read_hold_q <= true;
-      elsif cs_n_i = '1' then
+      elsif ext_acc_s then
         read_hold_q <= false;
+      end if;
+
+      if dack_s then
+        a0_q <= '0';
+      elsif read_s or write_s then
+        a0_q <= a0_i;
       end if;
 
     end if;
@@ -166,18 +183,19 @@ begin
   bus_regs: process (res_i, clk_i)
   begin
     if res_i = res_active_c then
-      dbbin_q    <= (others => '0');
-      dbbout_q   <= (others => '0');
-      sts_q      <= (others => '0');
-      ibf_q      <= '0';
-      obf_q      <= '0';
-      int_n_o    <= '1';
-      dma_q      <= false;
-      flags_q    <= false;
+      dbbin_q  <= (others => '0');
+      dbbout_q <= (others => '0');
+      sts_q    <= (others => '0');
+      ibf_q    <= '0';
+      obf_q    <= '0';
+      int_n_o  <= '1';
+      dma_q    <= false;
+      drq_o    <= '0';
+      flags_q  <= false;
 
     elsif clk_i'event and clk_i = clk_active_c then
       -- master access
-      if read_pulse_s and a0_i = '0' then
+      if read_pulse_s and a0_q = '0' then
         obf_q <= '0';
       elsif write_pulse_s then
         dbbin_q <= db_i;
@@ -202,9 +220,16 @@ begin
         if is_type_a_g = 1 then
           if en_dma_i then
             dma_q <= true;
+            drq_o <= '0';
           end if;
           if en_flags_i then
             flags_q <= true;
+          end if;
+
+          if dack_s then
+            drq_o <= '0';
+          elsif dma_q and write_p2_i and data_i(6) = '1' then
+            drq_o <= '1';
           end if;
         end if;
 
@@ -220,14 +245,14 @@ begin
   -----------------------------------------------------------------------------
   -- Output Mapping.
   -----------------------------------------------------------------------------
-  set_f1_o   <= write_pulse_s and a0_i = '1';
-  clear_f1_o <= write_pulse_s and a0_i = '0';
+  set_f1_o   <= write_pulse_s and a0_q = '1';
+  clear_f1_o <= write_pulse_s and a0_q = '0';
   ibf_o      <= ibf_q;
   obf_o      <= obf_q;
-  db_o       <= dbbout_q when a0_i = '0' else
+  db_o       <= dbbout_q when a0_q = '0' else
                 sts_q & f1_i & f0_i & ibf_q & obf_q when is_type_a_g = 1 else
                 "0000" & f1_i & f0_i & ibf_q & obf_q;
-  db_dir_o   <= '1' when cs_n_i = '0' and read_hold_q else '0';
+  db_dir_o   <= '1' when ext_acc_s and read_hold_q else '0';
   data_o     <=   dbbin_q
                 when read_bus_i else
                   (others => bus_idle_level_c);
@@ -235,8 +260,6 @@ begin
   mint_ibf_n_o <= '0' when flags_q and ibf_q = '1' else '1';
   mint_obf_o   <= '0' when flags_q and obf_q = '0' else '1';
 
-  -- TODO
-  drq_o <= '0' when dma_q else '1';
-  -- dack_n_i
+  dma_o <= dma_q;
 
 end rtl;

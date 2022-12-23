@@ -155,8 +155,10 @@ package t48_comp_pack is
       ibf_int_i    : in  boolean;
       en_dma_i     : in  boolean;
       en_flags_i   : in  boolean;
+      write_p2_i   : in  boolean;
       mint_ibf_n_o : out std_logic;
       mint_obf_o   : out std_logic;
+      dma_o        : out boolean;
       drq_o        : out std_logic;
       dack_n_i     : in  std_logic;
       a0_i         : in  std_logic;
