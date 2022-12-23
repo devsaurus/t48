@@ -172,10 +172,7 @@ architecture struct of upi41_core is
   signal clk_assert_wr_s    : boolean;
   signal clk_mstate_s       : mstate_t;
   signal clk_second_cycle_s : boolean;
-  signal psen_s             : boolean;
   signal prog_s             : boolean;
-  signal rd_s               : boolean;
-  signal wr_s               : boolean;
   signal ale_s              : boolean;
   signal xtal3_s            : boolean;
 
@@ -327,10 +324,10 @@ begin
       mstate_o       => clk_mstate_s,
       second_cycle_o => clk_second_cycle_s,
       ale_o          => ale_s,
-      psen_o         => psen_s,
+      psen_o         => open,
       prog_o         => prog_s,
-      rd_o           => rd_s,
-      wr_o           => wr_s
+      rd_o           => open,
+      wr_o           => open
     );
 
   cond_branch_b : t48_cond_branch
