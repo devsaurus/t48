@@ -278,8 +278,16 @@ begin
   xtal_en_s <= to_boolean(xtal_en_i);
   en_clk_s  <= to_boolean(en_clk_i);
 
-  t0_s <= To_X01Z(t0_i);
-  t1_s <= To_X01Z(t1_i);
+  t0_s <=
+    -- pragma translate_off
+    To_X01Z
+    -- pragma translate_on
+    (t0_i);
+  t1_s <=
+    -- pragma translate_off
+    To_X01Z
+    -- pragma translate_on
+    (t1_i);
 
   alu_b : t48_alu
     port map (
