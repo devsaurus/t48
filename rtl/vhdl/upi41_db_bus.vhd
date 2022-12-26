@@ -158,7 +158,7 @@ begin
 
       if read_s then
         read_hold_q <= true;
-      elsif ext_acc_s then
+      elsif not ext_acc_s then
         read_hold_q <= false;
       end if;
 
@@ -171,6 +171,7 @@ begin
     end if;
   end process master_access;
   --
+  -- read/write pulses - flags are updated with rising RD' / WR'
   read_pulse_s  <= read_q and not read_s;
   write_pulse_s <= write_q and not write_s;
 
@@ -203,6 +204,7 @@ begin
         int_n_o <= '0';
       end if;
 
+      -- DRQ is inactivated at beginning of access
       if dack_s and (read_s or write_s) then
         drq_o <= '0';
       end if;
