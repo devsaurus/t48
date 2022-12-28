@@ -101,7 +101,6 @@ use work.t48_pack.to_stdLogic;
 architecture rtl of upi41_db_bus is
 
   signal read_s, read_q,
-         read_hold_q,
          write_s, write_q,
          read_pulse_s, write_pulse_s : boolean;
 
@@ -114,6 +113,7 @@ architecture rtl of upi41_db_bus is
          dbbout_q : word_t;
   -- the BUS status register
   signal sts_q    : std_logic_vector(7 downto 4);
+  signal status_q : word_t;
 
   signal dma_q,
          flags_q : boolean;
@@ -148,24 +148,27 @@ begin
   begin
     if res_i = res_active_c then
       read_q      <= false;
-      read_hold_q <= false;
       write_q     <= false;
       a0_q        <= '0';
+      status_q    <= (others => '0');
 
     elsif clk_i'event and clk_i = clk_active_c then
       read_q  <= read_s;
       write_q <= write_s;
 
-      if read_s then
-        read_hold_q <= true;
-      elsif not ext_acc_s then
-        read_hold_q <= false;
-      end if;
-
       if dack_s then
         a0_q <= '0';
       elsif read_s or write_s then
         a0_q <= a0_i;
+      end if;
+
+      -- prevent change when master reads status
+      if not read_s then
+        if is_type_a_g = 1 then
+          status_q <= sts_q  & f1_i & f0_i & ibf_q & obf_q;
+        else
+          status_q <= "0000" & f1_i & f0_i & ibf_q & obf_q;
+        end if;
       end if;
 
     end if;
@@ -253,10 +256,9 @@ begin
   clear_f1_o <= write_pulse_s and a0_q = '0';
   ibf_o      <= ibf_q;
   obf_o      <= obf_q;
-  db_o       <= dbbout_q when a0_q = '0' else
-                sts_q & f1_i & f0_i & ibf_q & obf_q when is_type_a_g = 1 else
-                "0000" & f1_i & f0_i & ibf_q & obf_q;
-  db_dir_o   <= '1' when ext_acc_s and read_hold_q else '0';
+  db_o       <= dbbout_q when a0_i = '0' or (dack_s and dma_q) else
+                status_q;
+  db_dir_o   <= '1' when read_s else '0';
   data_o     <=   dbbin_q
                 when read_bus_i else
                   (others => bus_idle_level_c);
