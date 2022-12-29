@@ -47,10 +47,10 @@ begin
                           a0   : in std_logic) is
     begin
       cs_n_o <= '0';
+      a0_o <= a0;
       wait for del_seq_c;
       wr_n_o <= '0';
       wait for del_seq_c;
-      a0_o <= a0;
       db_b <= data;
       wait for del_dat_c;
       wr_n_o <= '1';
@@ -64,10 +64,9 @@ begin
     procedure read_dbbout(a0 : in std_logic) is
     begin
       cs_n_o <= '0';
+      a0_o <= a0;
       wait for del_seq_c;
       rd_n_o <= '0';
-      wait for del_seq_c;
-      a0_o <= a0;
       wait for del_dat_c;
       rdata := db_b;
       rd_n_o <= '1';
