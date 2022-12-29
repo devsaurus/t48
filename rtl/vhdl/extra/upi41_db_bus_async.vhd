@@ -249,13 +249,13 @@ begin
       if res_status_s then
         status_q <= (others => '0');
       elsif falling_edge(rd_n_i) then
-        if ext_acc_s then
-          -- prevent change when master reads status
-          if is_type_a_g = 1 then
-            status_q <= sts_q  & f1_i & f0_i & ibf_q & obf_q;
-          else
-            status_q <= "0000" & f1_i & f0_i & ibf_q & obf_q;
-          end if;
+        -- prevent change when master reads status:
+        -- latch new status regardless of actual access with cs_n_i to
+        -- avoid setup issues when rd_n_i is asserted together with cs_n_i
+        if is_type_a_g = 1 then
+          status_q <= sts_q  & f1_i & f0_i & ibf_q & obf_q;
+        else
+          status_q <= "0000" & f1_i & f0_i & ibf_q & obf_q;
         end if;
       end if;
     end process status_p;
@@ -273,6 +273,7 @@ begin
       elsif set_drq_s then
         drq_o <= '1';
       elsif falling_edge(clk_drq_s) then
+        -- TODO: check setup time of DACK' to falling rd_n_i/wr_n_i
         if dack_s then
           drq_o <= '0';
         end if;
