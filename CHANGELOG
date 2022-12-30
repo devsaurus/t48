@@ -4,6 +4,18 @@ Change log for the T48 uController core
 Version: $Id$
 
 
+Release 1.3
+-----------
+
+Added support for UPI-41/41A/41AH/42/42AH device family.
+
+
+Release 1.2
+-----------
+
+Maintenance release for SVN updates.
+
+
 Release 1.1
 -----------
 
