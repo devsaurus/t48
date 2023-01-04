@@ -2,9 +2,8 @@
 	;; Test UPI41 read and write with IBF interrupt.
 	;; *******************************************************************
 
-	INCLUDE	"cpu.inc"
+	CPU	8041
 	INCLUDE	"pass_fail.inc"
-	INCLUDE "upi41_opcodes.inc"
 
 	ORG	0
 	jmp	main
@@ -14,7 +13,7 @@
 
 	mov	r6, a
 
-	uin	a, dbb
+	in	a, dbb
 	mov	r7, a
 
 	mov	a, r6
@@ -25,12 +24,12 @@
 main:
 
 	;; test IBF empty
-	ujnibf	ibfempty
+	jnibf	ibfempty
 	jmp	fail
 
 ibfempty:
 	;; test OBF empty
-	ujobf	fail
+	jobf	fail
 
 	;; set up ISR
 	clr	a
@@ -42,7 +41,7 @@ ibfempty:
 
 	;; request echo test
 	mov	a, #001H
-	uout	dbb, a
+	out	dbb, a
 
 waitisr:
 	mov	a, r7
@@ -53,16 +52,16 @@ waitisr:
 
 	;; invert and output
 	cpl	a
-	uout	dbb, a
+	out	dbb, a
 
-out1:	ujobf	out1
+out1:	jobf	out1
 
 	;; read next input as command
-inp2:	ujnibf	inp2
+inp2:	jnibf	inp2
 	jf1	inp2_2
 	jmp	fail
 
-inp2_2:	uin	a, dbb
+inp2_2:	in	a, dbb
 	xrl	a, #001H
 	jz	pass
 

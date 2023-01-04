@@ -2,39 +2,38 @@
 	;; Test UPI41A DMA.
 	;; *******************************************************************
 
-	INCLUDE	"cpu.inc"
+	CPU	8042
 	INCLUDE	"pass_fail.inc"
-	INCLUDE "upi41_opcodes.inc"
 
 	ORG	0
 
 	;; Start of test
 
 	;; test IBF empty
-	ujnibf	ibfempty
+	jnibf	ibfempty
 	jmp	fail
 
 ibfempty:
 	;; test OBF empty
-	ujobf	fail
+	jobf	fail
 
 	;; signal test start
 	anl	P1, #~004H
 
 	;; request master interrupt test
 	mov	a, #005H
-	uout	dbb, a
+	out	dbb, a
 
 	;; setup DMA
 	;; read input as data
-step1:	ujnibf	step1
+step1:	jnibf	step1
 	jf1	fail
 
-	uin	a, dbb
+	in	a, dbb
 	xrl	a, #~005H
 	jnz	fail
 
-	uen_dma
+	en	dma
 
 	;; Step 2: Request 4 reads via DMA
 	mov	r7, #004H
@@ -43,11 +42,11 @@ read4dma:
 dloop2:	djnz	r0, dloop2
 
 	mov	a, r7
-	uout	dbb, a
+	out	dbb, a
 
 	orl	p2, #040H
 
-step2:	ujobf	step2
+step2:	jobf	step2
 	djnz	r7, read4dma
 
 	;; Step 3: Request 4 writes via DMA
@@ -58,9 +57,9 @@ dloop3:	djnz	r0, dloop3
 
 	orl	p2, #040H
 
-step3:	ujnibf	step3
+step3:	jnibf	step3
 
-	uin	a, dbb
+	in	a, dbb
 	xrl	a, r7
 	jnz	fail
 	jf1	fail
@@ -69,12 +68,12 @@ step3:	ujnibf	step3
 
 
 	;; read next input as command
-done:	ujnibf	done
+done:	jnibf	done
 	jf1	done_goon
 	jmp	done
 done_goon:
 
-	uin	a, dbb
+	in	a, dbb
 	xrl	a, #005H
 	jz	pass
 

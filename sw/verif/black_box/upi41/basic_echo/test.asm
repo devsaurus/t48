@@ -2,47 +2,46 @@
 	;; Test UPI41 read and write.
 	;; *******************************************************************
 
-	INCLUDE	"cpu.inc"
+	CPU	8041
 	INCLUDE	"pass_fail.inc"
-	INCLUDE "upi41_opcodes.inc"
 
 	ORG	0
 
 	;; Start of test
 
 	;; test IBF empty
-	ujnibf	ibfempty
+	jnibf	ibfempty
 	jmp	fail
 
 ibfempty:
 	;; test OBF empty
-	ujobf	fail
+	jobf	fail
 
 	;; signal test start
 	anl	P1, #~004H
 
 	;; request echo test
 	mov	a, #001H
-	uout	dbb, a
+	out	dbb, a
 
 	;; read input as data
-inp1:	ujnibf	inp1
+inp1:	jnibf	inp1
 	jf1	fail
 
-	uin	a, dbb
+	in	a, dbb
 
 	;; invert and output
 	cpl	a
-	uout	dbb, a
+	out	dbb, a
 
-out1:	ujobf	out1
+out1:	jobf	out1
 
 	;; read next input as command
-inp2:	ujnibf	inp2
+inp2:	jnibf	inp2
 	jf1	inp2_2
 	jmp	fail
 
-inp2_2:	uin	a, dbb
+inp2_2:	in	a, dbb
 	xrl	a, #001H
 	jz	pass
 
