@@ -22,8 +22,27 @@ use work.t48_pack.pmem_addr_t;
 use work.t48_pack.mstate_t;
 use work.t48_pack.word_t;
 use work.t48_pack.nibble_t;
+use work.t48_pack.bus_idle_level_c;
 
 package t48_comp_pack is
+
+  component t48_adc
+    port (
+      clk_i      : in  std_logic;
+      res_i      : in  std_logic;
+      en_clk_i   : in  boolean;
+      ale_i      : in  boolean;
+      mstate_i   : in  mstate_t;
+      sel_an0_i  : in  boolean;
+      sel_an1_i  : in  boolean;
+      read_adc_i : in  boolean;
+      data_o     : out word_t;
+      sel_an_o   : out std_logic;
+      sh_o       : out std_logic;
+      sar_o      : out std_logic_vector(7 downto 0);
+      comp_i     : in  std_logic
+    );
+  end component;
 
   component t48_alu
     port (
@@ -51,22 +70,24 @@ package t48_comp_pack is
 
   component t48_bus_mux
     port (
-      alu_data_i : in  word_t;
-      bus_data_i : in  word_t;
-      dec_data_i : in  word_t;
-      dm_data_i  : in  word_t;
-      pm_data_i  : in  word_t;
-      p1_data_i  : in  word_t;
-      p2_data_i  : in  word_t;
-      psw_data_i : in  word_t;
-      tim_data_i : in  word_t;
+      adc_data_i : in  word_t := (others => bus_idle_level_c);
+      alu_data_i : in  word_t := (others => bus_idle_level_c);
+      bus_data_i : in  word_t := (others => bus_idle_level_c);
+      dec_data_i : in  word_t := (others => bus_idle_level_c);
+      dm_data_i  : in  word_t := (others => bus_idle_level_c);
+      pm_data_i  : in  word_t := (others => bus_idle_level_c);
+      p0_data_i  : in  word_t := (others => bus_idle_level_c);
+      p1_data_i  : in  word_t := (others => bus_idle_level_c);
+      p2_data_i  : in  word_t := (others => bus_idle_level_c);
+      psw_data_i : in  word_t := (others => bus_idle_level_c);
+      tim_data_i : in  word_t := (others => bus_idle_level_c);
       data_o     : out word_t
     );
   end component;
 
   component t48_clock_ctrl
     generic (
-      xtal_div_3_g   : integer := 1
+      xtal_div_3_g : integer := 1
     );
     port (
       clk_i          : in  std_logic;
@@ -175,7 +196,9 @@ package t48_comp_pack is
     generic (
       register_mnemonic_g   : integer := 1;
       is_upi_g              : integer := 0;
-      is_upi_type_a_g       : integer := 0
+      is_upi_type_a_g       : integer := 0;
+      is_mcs2x_g            : integer := 0;
+      is_mcs2x_type_2_g     : integer := 0
     );
     port (
       clk_i                  : in  std_logic;
@@ -204,6 +227,8 @@ package t48_comp_pack is
       dm_write_dmem_addr_o   : out boolean;
       dm_write_dmem_o        : out boolean;
       dm_read_dmem_o         : out boolean;
+      p0_write_p0_o          : out boolean;           -- MCS2x
+      p0_read_p0_o           : out boolean;           -- MCS2x
       p1_write_p1_o          : out boolean;
       p1_read_p1_o           : out boolean;
       p2_write_p2_o          : out boolean;
@@ -264,7 +289,10 @@ package t48_comp_pack is
       psw_write_aux_carry_o  : out boolean;
       psw_write_f0_o         : out boolean;
       psw_write_bs_o         : out boolean;
-      tim_overflow_i         : in  boolean
+      tim_overflow_i         : in  boolean;
+      adc_sel_an0_o          : out boolean;
+      adc_sel_an1_o          : out boolean;
+      adc_read_adc_o         : out boolean
     );
   end component;
 

@@ -76,7 +76,7 @@ fail:	FAIL
 	ORG	0800H
 program_memory_bank_1:
 	;; spend some time and wait for interrupt
-	mov	r2, #013h
+	mov	r2, #012h
 	djnz	r2, $
 
 call_instruction:

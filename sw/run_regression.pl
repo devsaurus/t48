@@ -32,6 +32,8 @@
 #   no_t41   : don't execute the t8041 testbench tb_t8041_behav_c0
 #   no_t41a  : don't execute the t8041a testbench tb_t8041a_behav_c0
 #   no_t42ah : don't execute the t8042ah testbench tb_t8042ah_behav_c0
+#   no_t21   : don't execute the t8021 testbench tb_t8021_behav_c0
+#   no_t22   : don't execute the t8021 testbench tb_t8022_behav_c0
 #   no_dump_compare : don't include testcell when running dump compares
 #   io_exp : use the testbenches containing the t8243 IO expander
 #            tb_t8243_behav_c0
@@ -72,7 +74,9 @@ my %ghdl_simulators    = ('gen'   => './tb_behav_c0',
                           't39'   => './tb_t8039_behav_c0',
                           't41'   => './tb_t8041_behav_c0',
                           't41a'  => './tb_t8041a_behav_c0',
-                          't42ah' => './tb_t8042ah_behav_c0');
+                          't42ah' => './tb_t8042ah_behav_c0',
+                          't21'   => './tb_t8021_behav_c0',
+                          't22'   => './tb_t8022_behav_c0');
 my %ghdl_io_expanders  = ('gen' => './tb_t8243_behav_c0',
                           't48' => './tb_t8048_t8243_behav_c0');
 my $ghdl_simulator_opt = '--assert-level=error --stop-time=20ms';

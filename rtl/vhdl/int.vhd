@@ -230,7 +230,7 @@ begin
         ale_q   <= ale_i;
 
         if last_cycle_i and
-          ale_q  and not ale_i  then
+          not ale_q  and ale_i  then
           int_q <= not to_boolean(int_n_i);
         end if;
 

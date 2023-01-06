@@ -12,8 +12,8 @@ family architecture. While being a controller core for SoC, it also aims for
 code-compatability and cycle-accuracy so that it can be used as a drop-in
 replacement for any MCS-48 controller.
 It can be configured to better suit the requirements and characteristics of
-the integrating system. On the other hand, nearly the full functionality of a
-stock 8048/8049 is available.
+the integrating system. On the other hand, nearly the full functionality of
+stock 8048/8049 and 8021/8022 is available.
 
 The core also provides a variant that implements the specific features of the
 UPI-41A/41AH/42/42AH device family.
@@ -174,6 +174,12 @@ testbench top-levels if appropriate for the chosen simulator:
 
   * tb_t8042ah_behav_c0
     Testbench containing the t8042ah sample system.
+
+  * tb_t8021_behav_c0
+    Testbench containing the t8021 sample system.
+
+  * tb_t8022_behav_c0
+    Testbench containing the t8022 sample system.
 
 Each Makefile has a 'clean' target to delete all intermediate data:
 

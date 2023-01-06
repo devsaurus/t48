@@ -15,7 +15,7 @@
 	jnz	fail
 
 	dec	a
-	jb0	ok_0
+	jnz	ok_0
 	jmp	fail
 
 ok_0:	inc	a

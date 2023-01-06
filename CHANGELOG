@@ -4,6 +4,12 @@ Change log for the T48 uController core
 Version: $Id$
 
 
+Release 1.4
+-----------
+
+Added support 8021 and 8022 devices.
+
+
 Release 1.3
 -----------
 

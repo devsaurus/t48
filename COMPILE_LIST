@@ -118,3 +118,25 @@ rtl/vhdl/system/t8042ah-c.vhd
 bench/vhdl/tb_t8042ah.vhd
 bench/vhdl/tb_t8042ah-c.vhd
 Elaborate tb_t8042ah_behav_c0
+
+rtl/vhdl/t21_core.vhd
+rtl/vhdl/t21_core-c.vhd
+rtl/vhdl/system/t8021_notri.vhd
+rtl/vhdl/system/t8021_notri-c.vhd
+rtl/vhdl/system/t8021.vhd
+rtl/vhdl/system/t8021-c.vhd
+bench/vhdl/tb_t8021.vhd
+bench/vhdl/tb_t8021-c.vhd
+Elaborate tb_t8021_behav_c0
+
+rtl/vhdl/adc.vhd
+rtl/vhdl/adc-c.vhd
+rtl/vhdl/t22_core.vhd
+rtl/vhdl/t22_core-c.vhd
+rtl/vhdl/system/t8022_notri.vhd
+rtl/vhdl/system/t8022_notri-c.vhd
+rtl/vhdl/system/t8022.vhd
+rtl/vhdl/system/t8022-c.vhd
+bench/vhdl/tb_t8022.vhd
+bench/vhdl/tb_t8022-c.vhd
+Elaborate tb_t8022_behav_c0

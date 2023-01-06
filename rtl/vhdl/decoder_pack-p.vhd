@@ -2,7 +2,7 @@
 --
 -- $Id$
 --
--- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
+-- Copyright (c) 2004-2023, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved
 --
@@ -66,6 +66,7 @@ package t48_decoder_pack is
                       MN_OUTD_PP_A,
                       MN_OUTL_EXT,
                       MN_RET,
+                      MN_RETR,
                       MN_RL,
                       MN_RR,
                       MN_SEL_MB,
@@ -83,7 +84,14 @@ package t48_decoder_pack is
                       MN_JOBF,
                       -- UPI41A opcodes
                       MN_EN_DMA_FLAGS,
-                      MN_MOV_STS
+                      MN_MOV_STS,
+                      -- MCS21 opcodes
+                      MN_IN_P0,
+                      MN_OUTL_P0,
+                      -- MCS21 opcodes
+                      MN_RAD,
+                      MN_RETI,
+                      MN_SEL_AN
                       );
 
   type mnemonic_rec_t is
@@ -101,15 +109,21 @@ package t48_decoder_pack is
   function decode_upi41a_opcode_f(opcode : in word_t) return
     mnemonic_rec_t;
 
+  function decode_mcs21_opcode_f(opcode : in word_t) return
+    mnemonic_rec_t;
+
+  function decode_mcs22_opcode_f(opcode : in word_t) return
+    mnemonic_rec_t;
+
 end t48_decoder_pack;
 
 
 package body t48_decoder_pack is
 
   -----------------------------------------------------------------------------
-  -- Common opcodes of MCS-48 and UPI-41/UPI-41A
+  -- Basic opcodes shared by all variants.
   --
-  function decode_common_opcode_f(opcode : in word_t) return
+  function decode_basic_opcode_f(opcode : in word_t) return
     mnemonic_rec_t is
     variable mnemonic_v    : mnemonic_t;
     variable multi_cycle_v : boolean;
@@ -159,11 +173,6 @@ package body t48_decoder_pack is
       when "10010111" =>                                        -- CLR C
         mnemonic_v    := MN_CLR_C;
 
-      -- Mnemonic CLR_F -------------------------------------------------------
-      when "10000101" |                                         -- CLR F0
-           "10100101" =>
-        mnemonic_v    := MN_CLR_F;
-
       -- Mnemonic CPL_A -------------------------------------------------------
       when "00110111" =>                                        -- CPL A
         mnemonic_v    := MN_CPL_A;
@@ -172,30 +181,13 @@ package body t48_decoder_pack is
       when "10100111" =>                                        -- CPL C
         mnemonic_v    := MN_CPL_C;
 
-      -- Mnemonic CPL_F -------------------------------------------------------
-      when "10010101" |                                         -- CPL F0
-           "10110101" =>                                        -- CPL F1
-        mnemonic_v    := MN_CPL_F;
-
       -- Mnemonic DA ----------------------------------------------------------
       when "01010111" =>                                        -- DA D
         mnemonic_v    := MN_DA;
 
       -- Mnemonic DEC ---------------------------------------------------------
-      when "11001000" | "11001001" | "11001010" | "11001011" |  -- DEC Rr
-           "11001100" | "11001101" | "11001110" | "11001111" |  --
-           "00000111" =>                                        -- DEC A
+      when "00000111" =>                                        -- DEC A
         mnemonic_v    := MN_DEC;
-
-      -- Mnemonic DIS_EN_I ----------------------------------------------------
-      when "00010101" |                                         -- DIS I
-           "00000101" =>                                        -- EN I
-        mnemonic_v    := MN_DIS_EN_I;
-
-      -- Mnemonic DIS_EN_TCNTI ------------------------------------------------
-      when "00110101" |                                         -- DIS TCNTI
-           "00100101" =>                                        -- EN TCNTI
-        mnemonic_v    := MN_DIS_EN_TCNTI;
 
       -- Mnemonic DJNZ --------------------------------------------------------
       when "11101000" | "11101001" | "11101010" | "11101011" |  -- DJNZ Rr, addr
@@ -215,22 +207,10 @@ package body t48_decoder_pack is
            "00010000" | "00010001" =>                           -- INC @ Rr
         mnemonic_v    := MN_INC;
 
-      -- Mnemonic JBB ---------------------------------------------------------
-      when "00010010" | "00110010" | "01010010" | "01110010" |  -- JBb addr
-           "10010010" | "10110010" | "11010010" | "11110010" => --
-        mnemonic_v    := MN_JBB;
-        multi_cycle_v := true;
-
       -- Mnemonic JC ----------------------------------------------------------
       when "11110110" |                                         -- JC addr
            "11100110" =>                                        -- JNC addr
         mnemonic_v    := MN_JC;
-        multi_cycle_v := true;
-
-      -- Mnemonic JF ----------------------------------------------------------
-      when "10110110" |                                         -- JF0 addr
-           "01110110" =>                                        -- JF1 addr
-        mnemonic_v    := MN_JF;
         multi_cycle_v := true;
 
       -- Mnemonic JMP ---------------------------------------------------------
@@ -242,14 +222,6 @@ package body t48_decoder_pack is
       -- Mnemonic JMPP --------------------------------------------------------
       when "10110011" =>                                        -- JMPP @ A
         mnemonic_v    := MN_JMPP;
-        multi_cycle_v := true;
-
-      -- Mnemonic JT ----------------------------------------------------------
-      when "00100110" |                                         -- JNT0 addr
-           "01000110" |                                         -- JNT1 addr
-           "00110110" |                                         -- JT0 addr
-           "01010110" =>                                        -- JT1 addr
-        mnemonic_v    := MN_JT;
         multi_cycle_v := true;
 
       -- Mnemonic JTF ---------------------------------------------------------
@@ -268,19 +240,11 @@ package body t48_decoder_pack is
         mnemonic_v    := MN_MOV_A_DATA;
         multi_cycle_v := true;
 
-      -- Mnemonic MOV_A_PSW ---------------------------------------------------
-      when "11000111" =>                                        -- MOV A, PSW
-        mnemonic_v    := MN_MOV_A_PSW;
-
       -- Mnemonic MOV_A_RR ----------------------------------------------------
       when "11111000" | "11111001" | "11111010" | "11111011" |  -- MOV A, Rr
            "11111100" | "11111101" | "11111110" | "11111111" |  --
            "11110000" | "11110001" =>                           -- MOV A, @ Rr
         mnemonic_v    := MN_MOV_A_RR;
-
-      -- Mnemonic MOV_PSW_A ---------------------------------------------------
-      when "11010111" =>                                        -- MOV PSW, A
-        mnemonic_v    := MN_MOV_PSW_A;
 
       -- Mnemonic MOV_RR ------------------------------------------------------
       when "10101000" | "10101001" | "10101010" | "10101011" |  -- MOV Rr, A
@@ -306,8 +270,7 @@ package body t48_decoder_pack is
         multi_cycle_v := true;
 
       -- Mnemonic MOVP --------------------------------------------------------
-      when "10100011" |                                         -- MOVP A, @ A
-           "11100011" =>                                        -- MOVP3 A, @ A
+      when "10100011" =>                                        -- MOVP A, @ A
         mnemonic_v    := MN_MOVP;
         multi_cycle_v := true;
 
@@ -328,14 +291,18 @@ package body t48_decoder_pack is
 
       -- Mnemonic OUTD_PP_A ---------------------------------------------------
       when "00111100" | "00111101" | "00111110" | "00111111" |  -- MOVD Pp, A
-           "10011100" | "10011101" | "10011110" | "10011111" |  -- ANLD PP, A
+           "10011100" | "10011101" | "10011110" | "10011111" |  -- ANLD Pp, A
            "10001100" | "10001101" | "10001110" | "10001111" => -- ORLD Pp, A
         mnemonic_v    := MN_OUTD_PP_A;
         multi_cycle_v := true;
 
+      -- Mnemonic OUTL_EXT ----------------------------------------------------
+      when "00111001" | "00111010" =>                           -- OUTL Pp, A
+        mnemonic_v    := MN_OUTL_EXT;
+        multi_cycle_v := true;
+
       -- Mnemonic RET ---------------------------------------------------------
-      when "10000011" |                                         -- RET
-           "10010011" =>                                        -- RETR
+      when "10000011" =>                                        -- RET
         mnemonic_v    := MN_RET;
         multi_cycle_v := true;
 
@@ -348,11 +315,6 @@ package body t48_decoder_pack is
       when "01110111" |                                         -- RR A
            "01100111" =>                                        -- RRC A
         mnemonic_v    := MN_RR;
-
-      -- Mnemonic SEL_RB ------------------------------------------------------
-      when "11000101" |                                         -- SEL RB0
-           "11010101" =>                                        -- SEL RB1
-        mnemonic_v    := MN_SEL_RB;
 
       -- Mnemonic STOP_TCNT ---------------------------------------------------
       when "01100101" =>                                        -- STOP TCNT
@@ -396,6 +358,112 @@ package body t48_decoder_pack is
     return result_v;
   end;
 
+  -----------------------------------------------------------------------------
+  -- Common opcodes of MCS-48 and UPI-41/UPI-41A
+  --
+  function decode_common_mcs48_upi41_opcode_f(opcode : in word_t) return
+    mnemonic_rec_t is
+    variable mnemonic_v    : mnemonic_t;
+    variable multi_cycle_v : boolean;
+    variable result_v      : mnemonic_rec_t;
+  begin
+    -- default assignment
+    multi_cycle_v := false;
+
+    case opcode is
+      -- Mnemonic ANL_EXT -----------------------------------------------------
+      when "10011001" | "10011010" =>                           -- ANL PP, data
+        mnemonic_v    := MN_ANL_EXT;
+        multi_cycle_v := true;
+
+      -- Mnemonic CLR_F -------------------------------------------------------
+      when "10000101" |                                         -- CLR F0
+           "10100101" =>                                        -- CLR F1
+        mnemonic_v    := MN_CLR_F;
+
+      -- Mnemonic CPL_F -------------------------------------------------------
+      when "10010101" |                                         -- CPL F0
+           "10110101" =>                                        -- CPL F1
+        mnemonic_v    := MN_CPL_F;
+
+      -- Mnemonic DEC - extend basic set --------------------------------------
+      when "11001000" | "11001001" | "11001010" | "11001011" |  -- DEC Rr
+           "11001100" | "11001101" | "11001110" | "11001111" => --
+        mnemonic_v    := MN_DEC;
+
+      -- Mnemonic DIS_EN_I ----------------------------------------------------
+      when "00010101" |                                         -- DIS I
+           "00000101" =>                                        -- EN I
+        mnemonic_v    := MN_DIS_EN_I;
+
+      -- Mnemonic DIS_EN_TCNTI ------------------------------------------------
+      when "00110101" |                                         -- DIS TCNTI
+           "00100101" =>                                        -- EN TCNTI
+        mnemonic_v    := MN_DIS_EN_TCNTI;
+
+      -- Mnemonic JBB ---------------------------------------------------------
+      when "00010010" | "00110010" | "01010010" | "01110010" |  -- JBb addr
+           "10010010" | "10110010" | "11010010" | "11110010" => --
+        mnemonic_v    := MN_JBB;
+        multi_cycle_v := true;
+
+      -- Mnemonic JF ----------------------------------------------------------
+      when "10110110" |                                         -- JF0 addr
+           "01110110" =>                                        -- JF1 addr
+        mnemonic_v    := MN_JF;
+        multi_cycle_v := true;
+
+      -- Mnemonic JT ----------------------------------------------------------
+      when "00100110" |                                         -- JNT0 addr
+           "01000110" |                                         -- JNT1 addr
+           "00110110" |                                         -- JT0 addr
+           "01010110" =>                                        -- JT1 addr
+        mnemonic_v    := MN_JT;
+        multi_cycle_v := true;
+
+      -- Mnemonic MOV_A_PSW ---------------------------------------------------
+      when "11000111" =>                                        -- MOV A, PSW
+        mnemonic_v    := MN_MOV_A_PSW;
+
+      -- Mnemonic MOV_PSW_A ---------------------------------------------------
+      when "11010111" =>                                        -- MOV PSW, A
+        mnemonic_v    := MN_MOV_PSW_A;
+
+      -- Mnemonic MOVP - extend basic set -------------------------------------
+      when "11100011" =>                                        -- MOVP3 A, @ A
+        mnemonic_v    := MN_MOVP;
+        multi_cycle_v := true;
+
+      -- Mnemonic ORL_EXT -----------------------------------------------------
+      when "10001001" | "10001010" =>                           -- ORL Pp, data
+        mnemonic_v    := MN_ORL_EXT;
+        multi_cycle_v := true;
+
+      -- Mnemonic RETR --------------------------------------------------------
+      when "10010011" =>                                        -- RETR
+        mnemonic_v    := MN_RETR;
+        multi_cycle_v := true;
+
+      -- Mnemonic SEL_RB ------------------------------------------------------
+      when "11000101" |                                         -- SEL RB0
+           "11010101" =>                                        -- SEL RB1
+        mnemonic_v    := MN_SEL_RB;
+
+      when others =>
+        mnemonic_v    := MN_INVALID;
+
+    end case;
+
+    if mnemonic_v = MN_INVALID then
+      result_v := decode_basic_opcode_f(opcode);
+    else
+      result_v.mnemonic    := mnemonic_v;
+      result_v.multi_cycle := multi_cycle_v;
+    end if;
+
+    return result_v;
+  end;
+
 
   -----------------------------------------------------------------------------
   -- Specific MCS-48 opcodes
@@ -410,9 +478,8 @@ package body t48_decoder_pack is
     multi_cycle_v := false;
 
     case opcode is
-      -- Mnemonic ANL_EXT -----------------------------------------------------
-      when "10011000" |                                         -- ANL BUS, data
-           "10011001" | "10011010" =>                           -- ANL PP, data
+      -- Mnemonic ANL_EXT - extend common set ---------------------------------
+      when "10011000" =>                                        -- ANL BUS, data
         mnemonic_v    := MN_ANL_EXT;
         multi_cycle_v := true;
 
@@ -436,15 +503,13 @@ package body t48_decoder_pack is
         mnemonic_v    := MN_MOVX;
         multi_cycle_v := true;
 
-      -- Mnemonic ORL_EXT -----------------------------------------------------
-      when "10001000" |                                         -- ORL BUS, data
-           "10001001" | "10001010" =>                           -- ORL Pp, data
+      -- Mnemonic ORL_EXT - extend common set ---------------------------------
+      when "10001000" =>                                        -- ORL BUS, data
         mnemonic_v    := MN_ORL_EXT;
         multi_cycle_v := true;
 
-      -- Mnemonic OUTL_EXT ----------------------------------------------------
-      when "00111001" | "00111010" |                            -- OUTL Pp, A
-           "00000010" =>                                        -- OUTL BUS, A
+      -- Mnemonic OUTL_EXT - extend basic set ---------------------------------
+      when "00000010" =>                                        -- OUTL BUS, A
         mnemonic_v    := MN_OUTL_EXT;
         multi_cycle_v := true;
 
@@ -459,7 +524,7 @@ package body t48_decoder_pack is
     end case;
 
     if mnemonic_v = MN_INVALID then
-      result_v := decode_common_opcode_f(opcode);
+      result_v := decode_common_mcs48_upi41_opcode_f(opcode);
     else
       result_v.mnemonic    := mnemonic_v;
       result_v.multi_cycle := multi_cycle_v;
@@ -482,11 +547,6 @@ package body t48_decoder_pack is
     multi_cycle_v := false;
 
     case opcode is
-      -- Mnemonic ANL_EXT -----------------------------------------------------
-      when "10011001" | "10011010" =>                           -- ANL PP, data
-        mnemonic_v    := MN_ANL_EXT;
-        multi_cycle_v := true;
-
       -- Mnemonic IN_DBB ------------------------------------------------------
       when "00100010" =>                                        -- IN A, DBB
         mnemonic_v    := MN_IN_DBB;
@@ -501,19 +561,9 @@ package body t48_decoder_pack is
         mnemonic_v    := MN_JOBF;
         multi_cycle_v := true;
 
-      -- Mnemonic ORL_EXT -----------------------------------------------------
-      when "10001001" | "10001010" =>                           -- ORL Pp, data
-        mnemonic_v    := MN_ORL_EXT;
-        multi_cycle_v := true;
-
       -- Mnemonic OUT_DBB -----------------------------------------------------
       when "00000010" =>                                        -- OUT DBB, A
         mnemonic_v    := MN_OUT_DBB;
-
-      -- Mnemonic OUTL_EXT ----------------------------------------------------
-      when "00111001" | "00111010" =>                           -- OUTL Pp, A
-        mnemonic_v    := MN_OUTL_EXT;
-        multi_cycle_v := true;
 
       when others =>
         mnemonic_v    := MN_INVALID;
@@ -521,7 +571,7 @@ package body t48_decoder_pack is
     end case;
 
     if mnemonic_v = MN_INVALID then
-      result_v := decode_common_opcode_f(opcode);
+      result_v := decode_common_mcs48_upi41_opcode_f(opcode);
     else
       result_v.mnemonic    := mnemonic_v;
       result_v.multi_cycle := multi_cycle_v;
@@ -560,6 +610,109 @@ package body t48_decoder_pack is
 
     if mnemonic_v = MN_INVALID then
       result_v := decode_upi41_opcode_f(opcode);
+    else
+      result_v.mnemonic    := mnemonic_v;
+      result_v.multi_cycle := multi_cycle_v;
+    end if;
+
+    return result_v;
+  end;
+
+  -----------------------------------------------------------------------------
+  -- Specific MCS-21 opcodes
+  --
+  function decode_mcs21_opcode_f(opcode : in word_t) return
+    mnemonic_rec_t is
+    variable mnemonic_v    : mnemonic_t;
+    variable multi_cycle_v : boolean;
+    variable result_v      : mnemonic_rec_t;
+  begin
+    -- default assignment
+    multi_cycle_v := false;
+
+    case opcode is
+      -- Mnemonic IN_P0 -------------------------------------------------------
+      when "00001000" =>                                        -- IN A, P0
+        mnemonic_v    := MN_IN_P0;
+        multi_cycle_v := true;
+
+      -- Mnemonic JT ----------------------------------------------------------
+      when "01000110" |                                         -- JNT1 addr
+           "01010110" =>                                        -- JT1 addr
+        mnemonic_v    := MN_JT;
+        multi_cycle_v := true;
+
+      -- Mnemonic OUTL_P0 -----------------------------------------------------
+      when "10010000" =>                                        -- OUTL P0, A
+        mnemonic_v    := MN_OUTL_P0;
+        multi_cycle_v := true;
+
+      when others =>
+        mnemonic_v    := MN_INVALID;
+
+    end case;
+
+    if mnemonic_v = MN_INVALID then
+      result_v := decode_basic_opcode_f(opcode);
+    else
+      result_v.mnemonic    := mnemonic_v;
+      result_v.multi_cycle := multi_cycle_v;
+    end if;
+
+    return result_v;
+  end;
+
+  -----------------------------------------------------------------------------
+  -- Specific MCS-22 opcodes
+  --
+  function decode_mcs22_opcode_f(opcode : in word_t) return
+    mnemonic_rec_t is
+    variable mnemonic_v    : mnemonic_t;
+    variable multi_cycle_v : boolean;
+    variable result_v      : mnemonic_rec_t;
+  begin
+    -- default assignment
+    multi_cycle_v := false;
+
+    case opcode is
+      -- Mnemonic DIS_EN_I ----------------------------------------------------
+      when "00010101" |                                         -- DIS I
+           "00000101" =>                                        -- EN I
+        mnemonic_v    := MN_DIS_EN_I;
+
+      -- Mnemonic DIS_EN_TCNTI ------------------------------------------------
+      when "00110101" |                                         -- DIS TCNTI
+           "00100101" =>                                        -- EN TCNTI
+        mnemonic_v    := MN_DIS_EN_TCNTI;
+
+      -- Mnemonic JT ----------------------------------------------------------
+      when "00100110" |                                         -- JNT0 addr
+           "00110110" =>                                        -- JT0 addr
+        mnemonic_v    := MN_JT;
+        multi_cycle_v := true;
+
+      -- Mnemonic RAD ---------------------------------------------------------
+      when "10000000" =>                                        -- RAD
+        mnemonic_v    := MN_RAD;
+        multi_cycle_v := true;
+
+      -- Mnemonic RETI --------------------------------------------------------
+      when "10010011" =>                                        -- RETI
+        mnemonic_v    := MN_RETI;
+        multi_cycle_v := true;
+
+      -- Mnemonic SEL_AN ------------------------------------------------------
+      when "10010101" |                                         -- SEL AN0
+           "10000101" =>                                        -- SEL AN1
+        mnemonic_v    := MN_SEL_AN;
+
+      when others =>
+        mnemonic_v    := MN_INVALID;
+
+    end case;
+
+    if mnemonic_v = MN_INVALID then
+      result_v := decode_mcs21_opcode_f(opcode);
     else
       result_v.mnemonic    := mnemonic_v;
       result_v.multi_cycle := multi_cycle_v;

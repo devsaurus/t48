@@ -11,9 +11,11 @@
 
 	;; Start of test
 	jnt1	fail
-	anl	P1, #0FDH
+	mov	a, #0FDH
+	outl	P1, a
 	jt1	fail
-	orl	P1, #002H
+	mov	a, #0FFH
+	outl	P1, a
 	jt1	pass
 
 fail:	FAIL

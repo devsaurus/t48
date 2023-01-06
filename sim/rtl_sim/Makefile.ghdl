@@ -34,6 +34,25 @@ MAKE_LIB  = mkdir -p $(LIB_WORK)
 ##############################################################################
 # The analyze targets
 #
+t21_core_struct_c0 = $(LIB_WORK)/t21_core-c.o
+t21_core = $(LIB_WORK)/t21_core.o
+t8021_notri_struct_c0 = $(LIB_WORK)/t8021_notri-c.o
+t8021_notri = $(LIB_WORK)/t8021_notri.o
+t8021_struct_c0 = $(LIB_WORK)/t8021-c.o
+t8021 = $(LIB_WORK)/t8021.o
+tb_t8021_behav_c0 = $(LIB_WORK)/tb_t8021-c.o
+tb_t8021 = $(LIB_WORK)/tb_t8021.o
+adc_rtl_c0 = $(LIB_WORK)/adc-c.o
+adc = $(LIB_WORK)/adc.o
+t22_core_struct_c0 = $(LIB_WORK)/t22_core-c.o
+t22_core = $(LIB_WORK)/t22_core.o
+t8022_notri_struct_c0 = $(LIB_WORK)/t8022_notri-c.o
+t8022_notri = $(LIB_WORK)/t8022_notri.o
+t8022_struct_c0 = $(LIB_WORK)/t8022-c.o
+t8022 = $(LIB_WORK)/t8022.o
+tb_t8022_behav_c0 = $(LIB_WORK)/tb_t8022-c.o
+tb_t8022 = $(LIB_WORK)/tb_t8022.o
+
 upi41_db_bus_rtl_c0 = $(LIB_WORK)/upi41_db_bus-c.o
 upi41_db_bus = $(LIB_WORK)/upi41_db_bus.o
 upi41_core_struct_c0 = $(LIB_WORK)/upi41_core-c.o
@@ -160,6 +179,8 @@ tb_t8243_elab       = tb_t8243_behav_c0
 tb_t8041_elab       = tb_t8041_behav_c0
 tb_t8041a_elab      = tb_t8041a_behav_c0
 tb_t8042ah_elab     = tb_t8042ah_behav_c0
+tb_t8021_elab       = tb_t8021_behav_c0
+tb_t8022_elab       = tb_t8022_behav_c0
 #
 ##############################################################################
 
@@ -191,10 +212,17 @@ $(tb_t8041a_elab) : $(tb_t8041a_behav_c0)
 $(tb_t8042ah_elab) : $(tb_t8042ah_behav_c0)
 	$(ELABORATE) tb_t8042ah_behav_c0
 
+$(tb_t8021_elab) : $(tb_t8021_behav_c0)
+	$(ELABORATE) tb_t8021_behav_c0
+
+$(tb_t8022_elab) : $(tb_t8022_behav_c0)
+	$(ELABORATE) tb_t8022_behav_c0
+
 .PHONY: elaborate
 elaborate: $(LIB_WORK) $(tb_elab) $(tb_t8048_elab) $(tb_t8039_elab) \
            $(tb_t8048_t8243_elab) $(tb_t8243_elab) \
-	   $(tb_t8041_elab) $(tb_t8041a_elab) $(tb_t8042ah_elab)
+	   $(tb_t8041_elab) $(tb_t8041a_elab) $(tb_t8042ah_elab) \
+	   $(tb_t8021_elab) $(tb_t8022_elab)
 #
 ##############################################################################
 

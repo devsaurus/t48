@@ -16,7 +16,7 @@
 	jnz	fail
 
 	inc	a
-	jb0	ok_1
+	jnz	ok_1
 	jmp	fail
 
 ok_1:	add	a, #0FFH

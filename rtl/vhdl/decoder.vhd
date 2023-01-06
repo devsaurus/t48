@@ -5,7 +5,7 @@
 --
 -- $Id$
 --
--- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
+-- Copyright (c) 2004-2023, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved
 --
@@ -60,7 +60,9 @@ entity t48_decoder is
     -- store mnemonic in flip-flops (registered-out)
     register_mnemonic_g   : integer := 1;
     is_upi_g              : integer := 0;
-    is_upi_type_a_g       : integer := 0
+    is_upi_type_a_g       : integer := 0;
+    is_mcs2x_g            : integer := 0;
+    is_mcs2x_type_2_g     : integer := 0
   );
 
   port (
@@ -92,6 +94,8 @@ entity t48_decoder is
     dm_write_dmem_addr_o   : out boolean;
     dm_write_dmem_o        : out boolean;
     dm_read_dmem_o         : out boolean;
+    p0_write_p0_o          : out boolean;           -- MCS2x
+    p0_read_p0_o           : out boolean;           -- MCS2x
     p1_write_p1_o          : out boolean;
     p1_read_p1_o           : out boolean;
     p2_write_p2_o          : out boolean;
@@ -162,7 +166,11 @@ entity t48_decoder is
     tim_start_t_o          : out boolean;
     tim_start_cnt_o        : out boolean;
     tim_stop_tcnt_o        : out boolean;
-    tim_overflow_i         : in  boolean
+    tim_overflow_i         : in  boolean;
+    -- ADC Interface - MCS22 --------------------------------------------------
+    adc_sel_an0_o          : out boolean;
+    adc_sel_an1_o          : out boolean;
+    adc_read_adc_o         : out boolean
   );
 
 end t48_decoder;
@@ -271,13 +279,25 @@ begin
     report "is_upi_type_a_g must be either 1 or 0!"
     severity failure;
 
+  -- MCS-2x configuration -----------------------------------------------------
+  assert (is_mcs2x_g = 0) or (is_mcs2x_g = 1)
+    report "is_mcs2x_g must be either 1 or 0!"
+    severity failure;
+  --
+  assert (is_mcs2x_type_2_g = 0) or (is_mcs2x_type_2_g = 1)
+    report "is_mcs2x_type_2_g must be either 1 or 0!"
+    severity failure;
+
+  assert not ((is_upi_g = 1) and (is_mcs2x_g = 1))
+    report "is_upi_g and is_mcs2x_g are mutually exclusive!"
+    severity failure;
   -- pragma translate_on
 
 
   -----------------------------------------------------------------------------
   -- Opcode Decoder
   --
-  gen_mcs48: if is_upi_g = 0 generate
+  gen_mcs48: if is_upi_g = 0 and is_mcs2x_g = 0 generate
     mnemonic_rec_s <= decode_mcs48_opcode_f (opcode => opc_opcode_q);
   end generate;
   gen_upi41: if is_upi_g = 1 and is_upi_type_a_g = 0 generate
@@ -285,6 +305,12 @@ begin
   end generate;
   gen_upi41a: if is_upi_g = 1 and is_upi_type_a_g = 1 generate
     mnemonic_rec_s <= decode_upi41a_opcode_f(opcode => opc_opcode_q);
+  end generate;
+  gen_mcs21: if is_mcs2x_g = 1 and is_mcs2x_type_2_g = 0 generate
+    mnemonic_rec_s <= decode_mcs21_opcode_f(opcode => opc_opcode_q);
+  end generate;
+  gen_mcs22: if is_mcs2x_g = 1 and is_mcs2x_type_2_g = 1 generate
+    mnemonic_rec_s <= decode_mcs22_opcode_f(opcode => opc_opcode_q);
   end generate;
   --
   -----------------------------------------------------------------------------
@@ -582,6 +608,8 @@ begin
     tim_start_t_o          <= false;
     tim_start_cnt_o        <= false;
     tim_stop_tcnt_o        <= false;
+    p0_write_p0_o          <= false;    -- MCS2x
+    p0_read_p0_o           <= false;    -- MCS2x
     p1_write_p1_o          <= false;
     p1_read_p1_o           <= false;
     p1_read_reg_o          <= false;
@@ -598,6 +626,9 @@ begin
     psw_write_aux_carry_o  <= false;
     psw_write_f0_o         <= false;
     psw_write_bs_o         <= false;
+    adc_sel_an0_o          <= false;    -- MCS22
+    adc_sel_an1_o          <= false;    -- MCS22
+    adc_read_adc_o         <= false;    -- MCS22
     jtf_executed_s         <= false;
     en_tcnti_s             <= false;
     dis_tcnti_s            <= false;
@@ -808,7 +839,8 @@ begin
               -- injected CALLS are not located in Program Memory,
               -- the PC points already to the instruction to be executed
               -- after the interrupt
-              if not int_pending_s then
+              -- 8021/8022 store unincremented program counter on stack for CALL
+              if not int_pending_s and is_mcs2x_g /= 1 then
                 add_inc_pc_s       <= true;
               end if;
 
@@ -1089,6 +1121,14 @@ begin
           alu_write_accu_o <= true;
 
           add_read_bus_s   <= true;
+        end if;
+
+      -- Mnemonic IN_P0 - MCS2x -----------------------------------------------
+      when MN_IN_P0 =>
+        -- read Port0 and store in Accumulator
+        if clk_second_cycle_i and clk_mstate_i = MSTATE2 then
+          alu_write_accu_o <= true;
+          p0_read_p0_o     <= true;
         end if;
 
       -- Mnemonic INS ---------------------------------------------------------
@@ -1793,8 +1833,23 @@ begin
 
         end if;
 
+      -- Mnemonic OUTL_P0 - MCS2x ---------------------------------------------
+      when MN_OUTL_P0 =>
+        -- read Accumulator and store in Port0
+        if not clk_second_cycle_i and clk_mstate_i = MSTATE4 then
+          alu_read_alu_o <= true;
+          p0_write_p0_o  <= true;
+        end if;
+
+      -- Mnemonic RAD - MCS22 -------------------------------------------------
+      when MN_RAD =>
+        if clk_second_cycle_i and clk_mstate_i = MSTATE3 then
+          adc_read_adc_o   <= true;
+          alu_write_accu_o <= true;
+        end if;
+
       -- Mnemonic RET ---------------------------------------------------------
-      when MN_RET =>
+      when MN_RET | MN_RETR | MN_RETI =>
         if not clk_second_cycle_i then
           case clk_mstate_i is
             -- decrement Stack Pointer
@@ -1826,12 +1881,21 @@ begin
             when MSTATE1 =>
               dm_read_dmem_o         <= true;
               pm_write_pch_o         <= true;
-              if opc_opcode_q(4) = '1' then
+              if opc_mnemonic_s = MN_RETR then
                 psw_write_psw_o      <= true;
+                retr_executed_s      <= true;
+              elsif opc_mnemonic_s = MN_RETI then
+                -- no psw in MCS22
                 retr_executed_s      <= true;
               end if;
 
             when MSTATE2 =>
+              -- MCS2x require increment of program counter for RET
+              if is_mcs2x_g = 1 and opc_mnemonic_s = MN_RET then
+                add_inc_pc_s         <= true;
+              end if;
+
+            when MSTATE3 =>
               add_write_pmem_addr_s  <= true;
 
             when others =>
@@ -1866,6 +1930,16 @@ begin
             psw_special_data_o <= alu_carry_i;
             psw_write_carry_o  <= true;
             alu_use_carry_o    <= true;
+          end if;
+        end if;
+
+      -- Mnemonic SEL_AN - MCS22 ----------------------------------------------
+      when MN_SEL_AN =>
+        if clk_mstate_i = MSTATE3 then
+          if opc_opcode_q(4) = '1' then
+            adc_sel_an0_o <= true;
+          else
+            adc_sel_an1_o <= true;
           end if;
         end if;
 

@@ -103,6 +103,75 @@ package t48_core_comp_pack is
     );
   end component;
 
+  component t21_core
+    generic (
+      xtal_div_3_g          : integer := 1;
+      register_mnemonic_g   : integer := 1;
+      sample_t1_state_g     : integer := 4
+    );
+
+    port (
+      xtal_i        : in  std_logic;
+      xtal_en_i     : in  std_logic;
+      reset_i       : in  std_logic;
+      ale_o         : out std_logic;
+      t1_i          : in  std_logic;
+      p2_i          : in  std_logic_vector( 3 downto 0);
+      p2_o          : out std_logic_vector( 3 downto 0);
+      p1_i          : in  std_logic_vector( 7 downto 0);
+      p1_o          : out std_logic_vector( 7 downto 0);
+      p0_i          : in  std_logic_vector( 7 downto 0);
+      p0_o          : out std_logic_vector( 7 downto 0);
+      prog_n_o      : out std_logic;
+      clk_i         : in  std_logic;
+      en_clk_i      : in  std_logic;
+      xtal3_o       : out std_logic;
+      dmem_addr_o   : out std_logic_vector( 7 downto 0);
+      dmem_we_o     : out std_logic;
+      dmem_data_i   : in  std_logic_vector( 7 downto 0);
+      dmem_data_o   : out std_logic_vector( 7 downto 0);
+      pmem_addr_o   : out std_logic_vector(11 downto 0);
+      pmem_data_i   : in  std_logic_vector( 7 downto 0)
+    );
+  end component;
+
+  component t22_core
+    generic (
+      xtal_div_3_g          : integer := 1;
+      register_mnemonic_g   : integer := 1;
+      sample_t1_state_g     : integer := 4
+    );
+
+    port (
+      xtal_i        : in  std_logic;
+      xtal_en_i     : in  std_logic;
+      reset_i       : in  std_logic;
+      ale_o         : out std_logic;
+      t0_i          : in  std_logic;
+      t1_i          : in  std_logic;
+      p2_i          : in  std_logic_vector( 7 downto 0);
+      p2_o          : out std_logic_vector( 7 downto 0);
+      p1_i          : in  std_logic_vector( 7 downto 0);
+      p1_o          : out std_logic_vector( 7 downto 0);
+      p0_i          : in  std_logic_vector( 7 downto 0);
+      p0_o          : out std_logic_vector( 7 downto 0);
+      prog_n_o      : out std_logic;
+      adc_sel_an_o  : out std_logic;
+      adc_sh_o      : out std_logic;
+      adc_sar_o     : out std_logic_vector( 7 downto 0);
+      adc_comp_i    : in  std_logic;
+      clk_i         : in  std_logic;
+      en_clk_i      : in  std_logic;
+      xtal3_o       : out std_logic;
+      dmem_addr_o   : out std_logic_vector( 7 downto 0);
+      dmem_we_o     : out std_logic;
+      dmem_data_i   : in  std_logic_vector( 7 downto 0);
+      dmem_data_o   : out std_logic_vector( 7 downto 0);
+      pmem_addr_o   : out std_logic_vector(11 downto 0);
+      pmem_data_i   : in  std_logic_vector( 7 downto 0)
+    );
+  end component;
+
   component generic_ram_ena
     generic (
       addr_width_g : integer := 10;

@@ -16,7 +16,7 @@
 	jnz	fail
 
 	inc	a
-	jb0	ok_0
+	jnz	ok_0
 	jmp	fail
 
 ok_0:	mov	a, #0FFH

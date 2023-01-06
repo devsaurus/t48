@@ -7,6 +7,14 @@
 	INCLUDE	"cpu.inc"
 	INCLUDE	"pass_fail.inc"
 
+decRx	MACRO	reg
+	mov	r7, a
+	mov	a, reg
+	dec	a
+	mov	reg, a
+	mov	a, r7
+	ENDM
+
 testR0R1	MACRO	pos
 	inc	r0
 	inc	r1
@@ -66,37 +74,37 @@ testR0R1	MACRO	pos
 	mov	@r0, a
 	mov	@r1, a
 
-	dec	r0
+	decRx	r0
 	xchd	a, @r0
-	dec	r0
+	decRx	r0
 	xchd	a, @r0
-	dec	r0
+	decRx	r0
 	xchd	a, @r0
-	dec	r0
+	decRx	r0
 	xchd	a, @r0
-	dec	r0
+	decRx	r0
 	xchd	a, @r0
-	dec	r0
+	decRx	r0
 	xchd	a, @r0
-	dec	r0
+	decRx	r0
 	xchd	a, @r0
 	mov	r0, #017H
 	xchd	a, @r0
 
 	mov	a, @r1
-	dec	r1
+	decRx	r1
 	xchd	a, @r1
-	dec	r1
+	decRx	r1
 	xchd	a, @r1
-	dec	r1
+	decRx	r1
 	xchd	a, @r1
-	dec	r1
+	decRx	r1
 	xchd	a, @r1
-	dec	r1
+	decRx	r1
 	xchd	a, @r1
-	dec	r1
+	decRx	r1
 	xchd	a, @r1
-	dec	r1
+	decRx	r1
 	xchd	a, @r1
 	mov	r1, #027H
 	xchd	a, @r1

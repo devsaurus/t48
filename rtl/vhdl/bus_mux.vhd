@@ -48,26 +48,27 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 use work.t48_pack.word_t;
+use work.t48_pack.bus_idle_level_c;
 
 entity t48_bus_mux is
 
   port (
-    alu_data_i : in  word_t;
-    bus_data_i : in  word_t;
-    dec_data_i : in  word_t;
-    dm_data_i  : in  word_t;
-    pm_data_i  : in  word_t;
-    p1_data_i  : in  word_t;
-    p2_data_i  : in  word_t;
-    psw_data_i : in  word_t;
-    tim_data_i : in  word_t;
+    alu_data_i : in  word_t := (others => bus_idle_level_c);
+    bus_data_i : in  word_t := (others => bus_idle_level_c);
+    dec_data_i : in  word_t := (others => bus_idle_level_c);
+    dm_data_i  : in  word_t := (others => bus_idle_level_c);
+    pm_data_i  : in  word_t := (others => bus_idle_level_c);
+    p0_data_i  : in  word_t := (others => bus_idle_level_c);
+    p1_data_i  : in  word_t := (others => bus_idle_level_c);
+    p2_data_i  : in  word_t := (others => bus_idle_level_c);
+    psw_data_i : in  word_t := (others => bus_idle_level_c);
+    tim_data_i : in  word_t := (others => bus_idle_level_c);
+    adc_data_i : in  word_t := (others => bus_idle_level_c);
     data_o     : out word_t
   );
 
 end t48_bus_mux;
 
-
-use work.t48_pack.bus_idle_level_c;
 
 architecture rtl of t48_bus_mux is
 
@@ -79,10 +80,12 @@ begin
               dec_data_i or
               dm_data_i  or
               pm_data_i  or
+              p0_data_i  or
               p1_data_i  or
               p2_data_i  or
               psw_data_i or
-              tim_data_i;
+              tim_data_i or
+              adc_data_i;
   end generate;
 
   and_tree: if bus_idle_level_c = '1' generate
@@ -91,10 +94,12 @@ begin
               dec_data_i and
               dm_data_i  and
               pm_data_i  and
+              p0_data_i  and
               p1_data_i  and
               p2_data_i  and
               psw_data_i and
-              tim_data_i;
+              tim_data_i and
+              adc_data_i;
   end generate;
 
 end rtl;
