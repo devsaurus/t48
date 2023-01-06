@@ -3,8 +3,6 @@
 -- The Program Status Word (PSW).
 -- Implements the PSW with its special bits.
 --
--- $Id$
---
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved

@@ -3,8 +3,6 @@
 -- The Program Memory control unit.
 -- All operations related to the Program Memory are managed here.
 --
--- $Id$
---
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved

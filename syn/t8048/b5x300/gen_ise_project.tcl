@@ -1,7 +1,5 @@
 ###############################################################################
 #
-# $Id$
-#
 # Based on
 # Created by Phil Hays, Xilinx
 # Setup Xilinx environment, then run from Unix with "xtclsh dice.tcl"

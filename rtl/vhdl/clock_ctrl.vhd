@@ -3,8 +3,6 @@
 -- The Clock Control unit.
 -- Clock States and Machine Cycles are generated here.
 --
--- $Id$
---
 -- Copyright (c) 2004, 2005, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved

@@ -3,8 +3,6 @@
 -- The Decoder unit.
 -- It decodes the instruction opcodes and executes them.
 --
--- $Id$
---
 -- Copyright (c) 2004-2023, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved

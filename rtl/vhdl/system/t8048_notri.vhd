@@ -3,8 +3,6 @@
 -- T8048 Microcontroller System
 -- 8048 toplevel without tri-states
 --
--- $Id$
---
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved

@@ -4,8 +4,6 @@
 #
 # run_regression.pl
 #
-# $Id$
-#
 # Copyright (c) 2004-2022, Arnim Laeuger (arniml@opencores.org)
 #
 # All rights reserved

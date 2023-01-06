@@ -2,8 +2,6 @@
 --
 -- The testbench for t8039.
 --
--- $Id$
---
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved

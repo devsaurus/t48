@@ -3,8 +3,6 @@
 -- The BUS unit.
 -- Implements the BUS port logic.
 --
--- $Id$
---
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved

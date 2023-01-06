@@ -3,8 +3,6 @@
 -- The Program Memory control unit.
 -- All operations related to the Program Memory are managed here.
 --
--- $Id$
---
 -- All rights reserved
 --
 -------------------------------------------------------------------------------

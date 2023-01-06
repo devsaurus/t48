@@ -2,8 +2,6 @@
 #
 # Generic project compile script
 #
-# $Id$
-#
 # Execute from within xtclsh.
 #
 # Environment variables:

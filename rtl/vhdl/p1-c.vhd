@@ -3,8 +3,6 @@
 -- The Port 1 unit.
 -- Implements the Port 1 logic.
 --
--- $Id$
---
 -- All rights reserved
 --
 -------------------------------------------------------------------------------

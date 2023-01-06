@@ -3,8 +3,6 @@
 -- The Data Memory control unit.
 -- All accesses to the Data Memory are managed here.
 --
--- $Id$
---
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved

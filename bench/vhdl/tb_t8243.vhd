@@ -2,8 +2,6 @@
 --
 -- The testbench for t8243 core.
 --
--- $Id$
---
 -- Copyright (c) 2006, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved

@@ -2,8 +2,6 @@
 #
 # Generic Makefile for ISE projects
 #
-# $Id$
-#
 # Execute with 'make <target>', where target is one of
 #   ise           : build ISE project from
 #                   - files in compile_list

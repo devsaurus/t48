@@ -9,8 +9,6 @@
  *    Adapted for the T48 uController project, 2004 by Arnim Laeuger        *
  *      See http://www.opencores.org/projects.cgi/web/t48/overview          *
  *                                                                          *
- * $Id$
- *                                                                          *
  *  **** Change Log ****                                                    *
  *                                                                          *
  *  TLP (19-Jun-2001)                                                       *

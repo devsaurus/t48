@@ -3,8 +3,6 @@
 -- The Conditional Branch Logic unit.
 -- Decisions whether to take a jump or not are made here.
 --
--- $Id$
---
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved

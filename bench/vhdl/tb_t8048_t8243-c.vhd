@@ -2,8 +2,6 @@
 --
 -- The testbench for t8048 driving a t8243.
 --
--- $Id$
---
 -- Copyright (c) 2006, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved

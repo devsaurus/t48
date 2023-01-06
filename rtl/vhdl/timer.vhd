@@ -2,8 +2,6 @@
 --
 -- The Timer/Counter unit.
 --
--- $Id$
---
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved

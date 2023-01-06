@@ -2,8 +2,6 @@
 --
 -- The T8243 asynchronous toplevel
 --
--- $Id$
---
 -- Copyright (c) 2006, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved

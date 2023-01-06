@@ -1,7 +1,6 @@
 
 README for the T48 uController project
 ======================================
-Version: $Id$
 
 
 Introduction
@@ -22,13 +21,9 @@ UPI-41A/41AH/42/42AH device family.
 Download
 --------
 
-Download the latest stable release from the project homepage at OpenCores.org:
+You can get the latest version of the design files from github:
 
-  https://opencores.org/projects/t48
-
-You can get the latest version of the design files from SVN:
-
-  https://opencores.org/websvn/listing/t48
+  https://github.com/devsaurus/t48
 
 Please keep in mind that this is work in progress and might contain smaller or
 bigger problems.

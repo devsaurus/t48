@@ -2,8 +2,6 @@
 --
 -- T8039 Microcontroller System
 --
--- $Id$
---
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved

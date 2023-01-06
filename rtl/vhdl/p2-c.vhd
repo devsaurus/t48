@@ -3,8 +3,6 @@
 -- The Port 2 unit.
 -- Implements the Port 2 logic.
 --
--- $Id$
---
 -- All rights reserved
 --
 -------------------------------------------------------------------------------

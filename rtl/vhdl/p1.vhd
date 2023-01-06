@@ -3,8 +3,6 @@
 -- The Port 1 unit.
 -- Implements the Port 1 logic.
 --
--- $Id$
---
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved

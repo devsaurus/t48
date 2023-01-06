@@ -3,8 +3,6 @@
 -- The Interrupt Controller.
 -- It collects the interrupt sources and notifies the decoder.
 --
--- $Id$
---
 -- All rights reserved
 --
 -------------------------------------------------------------------------------

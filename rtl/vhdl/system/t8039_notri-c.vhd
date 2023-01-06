@@ -3,8 +3,6 @@
 -- T8039 Microcontroller System
 -- 8039 toplevel without tri-states
 --
--- $Id$
---
 -- Copyright (c) 2004, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved

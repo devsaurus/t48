@@ -2,8 +2,6 @@
 --
 -- The Wishbone master module.
 --
--- $Id$
---
 -- Copyright (c) 2005, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved

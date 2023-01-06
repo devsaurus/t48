@@ -4,8 +4,6 @@
 -- This is the core module implementing all functionality of the
 -- original 8243 chip.
 --
--- $Id$
---
 -- Copyright (c) 2006, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved

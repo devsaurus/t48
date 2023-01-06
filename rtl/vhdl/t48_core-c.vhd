@@ -2,8 +2,6 @@
 --
 -- T48 Microcontroller Core
 --
--- $Id$
---
 -------------------------------------------------------------------------------
 
 configuration t48_core_struct_c0 of t48_core is

@@ -3,8 +3,6 @@
 -- T8048 Microcontroller System
 -- 8050 toplevel with Wishbone interface
 --
--- $Id$
---
 -- Copyright (c) 2005, Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved

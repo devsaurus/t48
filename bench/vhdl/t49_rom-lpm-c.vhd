@@ -3,8 +3,6 @@
 -- T8x49 ROM
 -- Wrapper for ROM model from the LPM library.
 --
--- $Id$
---
 -- Copyright (c) 2006 Arnim Laeuger (arniml@opencores.org)
 --
 -- All rights reserved
