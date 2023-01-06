@@ -1,7 +1,6 @@
 
 Compile list for the T48 uController project
 ============================================
-Version: $Id$
 
 bench/vhdl/if_timing.vhd
 bench/vhdl/if_timing-c.vhd
