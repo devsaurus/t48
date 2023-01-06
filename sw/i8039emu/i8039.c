@@ -7,7 +7,7 @@
  *        Please, notify me, if you make any changes to this file           *
  *                                                                          *
  *    Adapted for the T48 uController project, 2004 by Arnim Laeuger        *
- *      See http://www.opencores.org/projects.cgi/web/t48/overview          *
+ *             See https://opencores.org/projects/t48                       *
  *                                                                          *
  *  **** Change Log ****                                                    *
  *                                                                          *

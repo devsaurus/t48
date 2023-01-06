@@ -36,9 +36,6 @@
 -- make sure that this is not a derivative work and that
 -- you have the latest version of this file.
 --
--- The latest version of this file can be found at:
---      http://www.opencores.org/cvsweb.shtml/t48/
---
 --
 -- Short description:
 --   This design implements a simple Wishbone bus master. It connects to the

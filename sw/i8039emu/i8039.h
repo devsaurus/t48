@@ -7,9 +7,8 @@
  *        Please, notify me, if you make any changes to this file         *
  *                                                                        *
  *    Adapted for the T48 uController project, 2004 by Arnim Laeuger      *
- *      See http://www.opencores.org/projects.cgi/web/t48/overview        *
+ *            See https://opencores.org/projects/t48                      *
  *                                                                        *
- * $Id: i8039.h,v 1.2 2004-04-15 22:03:53 arniml Exp $
  **************************************************************************/
 
 #ifndef _I8039_H
