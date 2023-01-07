@@ -10,11 +10,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      PROJECT_DIR: $GITHUB_WORKSPACE
-      VERIF_DIR: $GITHUB_WORKSPACE/sw/verif
-      SIM_DIR: $GITHUB_WORKSPACE/sim/rtl_sim
-
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -22,6 +17,12 @@ jobs:
     - uses: ghdl/setup-ghdl-ci@nightly
       with:
         backend: llvm
+        
+    - name: Set env for project
+      run: |
+        echo "PROJECT_DIR=$GITHUB_WORKSPACE" >> $GITHUB_ENV
+        echo "VERIF_DIR=$GITHUB_WORKSPACE/sw/verif" >> $GITHUB_ENV
+        echo "SIM_DIR=$GITHUB_WORKSPACE/sim/rtl_sim" >> $GITHUB_ENV
 
     - name: Build test benches
       run: |
