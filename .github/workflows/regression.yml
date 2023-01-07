@@ -51,7 +51,7 @@ jobs:
       run: |
         cd $PROJECT_DIR/sw
         ./run_regression.pl >& regression.log
-        grep -E 'Processing|Executing|Result|stopped' regression.log | grep -q -v -E 'FAIL|stopped'
+        ! grep -E 'Processing|Executing|Result|stopped' regression.log | grep -q -E 'FAIL|stopped'
 
     - uses: actions/upload-artifact@v3
       with:
