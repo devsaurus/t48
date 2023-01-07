@@ -45,3 +45,9 @@ jobs:
         sed -i -e 's/all: binaries docs/all: binaries/' Makefile
         sed -e 's/\/usr\/local/~\/.asl/' Makefile.def.tmpl >> Makefile.def
         make install
+
+    - name: Run test benches
+      run: |
+        cd $VERIF_DIR
+        ./run_regression.pl >& regression.log
+        grep -E 'Processing|Executing|Result|stopped' regression.log | grep -q -v -E 'FAIL|stopped'
