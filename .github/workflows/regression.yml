@@ -1,10 +1,5 @@
 name: Run regression
 
-env:
-  PROJECT_DIR: ${{ env.GITHUB_WORKSPACE }}
-  VERIF_DIR: ${{ env.PROJECT_DIR }}/sw/verif
-  SIM_DIR: ${{ env.PROJECT_DIR }}/sim/rtl_sim
-
 on:
   push:
     branches: [ "master" ]
@@ -13,8 +8,12 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+
+    env:
+      PROJECT_DIR: ${{ env.GITHUB_WORKSPACE }}
+      VERIF_DIR: ${{ env.GITHUB_WORKSPACE }}/sw/verif
+      SIM_DIR: ${{ env.GITHUB_WORKSPACE }}/sim/rtl_sim
 
     steps:
     - name: Checkout
