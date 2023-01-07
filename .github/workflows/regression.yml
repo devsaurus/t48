@@ -42,5 +42,6 @@ jobs:
         wget http://john.ccac.rwth-aachen.de:8000/ftp/as/source/c_version/asl-current.tar.gz
         tar -xzf asl-current.tar.gz
         cd asl-current
+        sed -i -e 's/all: binaries docs/all: binaries/' Makefile
         sed -e 's/\/usr\/local/~\/.asl/' Makefile.def.tmpl >> Makefile.def
         make install
