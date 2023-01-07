@@ -23,7 +23,7 @@ jobs:
         echo "PROJECT_DIR=$GITHUB_WORKSPACE" >> $GITHUB_ENV
         echo "VERIF_DIR=$GITHUB_WORKSPACE/sw/verif" >> $GITHUB_ENV
         echo "SIM_DIR=$GITHUB_WORKSPACE/sim/rtl_sim" >> $GITHUB_ENV
-        echo "PATH=~/.asl/bin:$PATH" >> $GITHUB_ENV
+        echo "PATH=/home/runner/work/t48/t48/.asl/bin:$PATH" >> $GITHUB_ENV
 
     - name: Build test benches
       run: |
