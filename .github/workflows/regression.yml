@@ -11,9 +11,9 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      PROJECT_DIR: ${{ env.GITHUB_WORKSPACE }}
-      VERIF_DIR: ${{ env.GITHUB_WORKSPACE }}/sw/verif
-      SIM_DIR: ${{ env.GITHUB_WORKSPACE }}/sim/rtl_sim
+      PROJECT_DIR: $GITHUB_WORKSPACE
+      VERIF_DIR: $GITHUB_WORKSPACE/sw/verif
+      SIM_DIR: $GITHUB_WORKSPACE/sim/rtl_sim
 
     steps:
     - name: Checkout
