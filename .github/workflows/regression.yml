@@ -48,6 +48,11 @@ jobs:
 
     - name: Run test benches
       run: |
-        cd $VERIF_DIR
+        cd $PROJECT_DIR/sw
         ./run_regression.pl >& regression.log
         grep -E 'Processing|Executing|Result|stopped' regression.log | grep -q -v -E 'FAIL|stopped'
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: regression-log
+        path: sw/regression.log
