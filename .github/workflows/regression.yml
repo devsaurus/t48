@@ -23,7 +23,7 @@ jobs:
         echo "PROJECT_DIR=$GITHUB_WORKSPACE" >> $GITHUB_ENV
         echo "VERIF_DIR=$GITHUB_WORKSPACE/sw/verif" >> $GITHUB_ENV
         echo "SIM_DIR=$GITHUB_WORKSPACE/sim/rtl_sim" >> $GITHUB_ENV
-        echo "PATH=/home/runner/work/t48/t48/.asl/bin:$PATH" >> $GITHUB_ENV
+        echo "PATH=$GITHUB_WORKSPACE/.asl/bin:$PATH" >> $GITHUB_ENV
 
     - name: Build test benches
       run: |
@@ -34,7 +34,7 @@ jobs:
       id: cache-asl
       uses: actions/cache@v3
       with:
-        path: ~/.asl
+        path: ${{ GITHUB_WORKSPACE }}/.asl
         key: ${{ runner.os }}-asl
 
     - name: Build asl
@@ -44,7 +44,7 @@ jobs:
         tar -xzf asl-current.tar.gz
         cd asl-current
         sed -i -e 's/all: binaries docs/all: binaries/' Makefile
-        sed -e 's/\/usr\/local/~\/.asl/' Makefile.def.tmpl >> Makefile.def
+        sed -e 's/\/usr\/local/$(GITHUB_WORKSPACE)\/.asl/' Makefile.def.tmpl > Makefile.def
         make install
 
     - name: Run test benches
