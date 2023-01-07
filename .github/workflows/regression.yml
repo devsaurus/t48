@@ -34,7 +34,7 @@ jobs:
       id: cache-asl
       uses: actions/cache@v3
       with:
-        path: ${{ env.GITHUB_WORKSPACE }}/.asl
+        path: .asl
         key: ${{ runner.os }}-asl
 
     - name: Build asl
