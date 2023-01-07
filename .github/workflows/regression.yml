@@ -1,9 +1,9 @@
 name: Run regression
 
 env:
-  PROJECT_DIR: ${{env.GITHUB_WORKSPACE}}
-  VERIF_DIR: ${{env.PROJECT_DIR}}/sw/verif
-  SIM_DIR: ${{env.PROJECT_DIR}}/sim/rtl_sim
+  PROJECT_DIR: ${{ env.GITHUB_WORKSPACE }}
+  VERIF_DIR: ${{ env.PROJECT_DIR }}/sw/verif
+  SIM_DIR: ${{ env.PROJECT_DIR }}/sim/rtl_sim
 
 on:
   push:
