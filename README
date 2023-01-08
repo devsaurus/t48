@@ -128,18 +128,7 @@ simulator.
 
 Compilation is based on the make-utility, thus invocation looks like this:
 
-$ make -f Makefile.<simulator>
-
-where <simulator> denotes one of the supported simulators:
-
-  * Makefile.ghdl
-    Tristan Gingold's GHDL simulator/compiler, a VHDL front-end for gcc.
-    http://ghdl.free.fr/
-
-  * Makefile.simili
-    DISCONTINUED
-    VHDL Simili, a VHDL simulator by Symphony EDA
-    http://www.symphonyeda.com/
+$ make
 
 Make will analyze all VHDL files (RTL and testbench code) and elaborate all
 testbench top-levels if appropriate for the chosen simulator:
@@ -176,9 +165,9 @@ testbench top-levels if appropriate for the chosen simulator:
   * tb_t8022_behav_c0
     Testbench containing the t8022 sample system.
 
-Each Makefile has a 'clean' target to delete all intermediate data:
+The Makefile has a 'clean' target to delete all intermediate data:
 
-$ make -f Makefile.<simulator> clean
+$ make clean
 
 The basic simple sequence list can be found in COMPILE_LIST. This can be
 useful to quickly set up the analyze stage of any compiler or

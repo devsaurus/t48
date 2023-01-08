@@ -28,7 +28,7 @@ jobs:
     - name: Build test benches
       run: |
         cd $SIM_DIR
-        make -f Makefile.ghdl
+        make
 
     - name: Cache asl
       id: cache-asl
