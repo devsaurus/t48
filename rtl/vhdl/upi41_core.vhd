@@ -252,8 +252,7 @@ architecture struct of upi41_core is
 
 begin
 
-  -- TODO
-  sync_o <= '0';
+  sync_o <= to_stdLogic(ale_s);
 
   gnd_s <= '0';
 
