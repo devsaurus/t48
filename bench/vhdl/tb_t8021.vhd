@@ -46,9 +46,6 @@ entity tb_t8021 is
 end tb_t8021;
 
 
-use work.t48_core_comp_pack.generic_ram_ena;
-use work.t48_system_comp_pack.t8021;
-
 use work.t48_tb_pack.all;
 
 architecture behav of tb_t8021 is
@@ -97,7 +94,7 @@ begin
   p1_b   <= (others => 'H');
   p0_b   <= (others => 'H');
 
-  t8021_b : t8021
+  t8021_b : entity work.t8021
     port map (
       xtal_i    => xtal_s,
       reset_i   => res_s,

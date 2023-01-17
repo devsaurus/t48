@@ -45,9 +45,6 @@ entity tb_t8039 is
 
 end tb_t8039;
 
-use work.t48_core_comp_pack.generic_ram_ena;
-use work.t48_system_comp_pack.t8039;
-
 use work.t48_tb_pack.all;
 
 architecture behav of tb_t8039 is
@@ -129,7 +126,7 @@ begin
       q        => ext_rom_data_s
     );
 
-  ext_ram_b : generic_ram_ena
+  ext_ram_b : entity work.generic_ram_ena
     generic map (
       addr_width_g => 8,
       data_width_g => 8
@@ -143,7 +140,7 @@ begin
       d_o   => ext_ram_data_from_s
     );
 
-  t8039_b : t8039
+  t8039_b : entity work.t8039
     port map (
       xtal_i    => xtal_s,
       reset_n_i => res_n_s,

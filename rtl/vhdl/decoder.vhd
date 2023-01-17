@@ -175,8 +175,6 @@ use work.t48_pack.all;
 use work.t48_alu_pack.all;
 use work.t48_decoder_pack.all;
 
-use work.t48_comp_pack.t48_int;
-
 -- pragma translate_off
 use work.t48_tb_pack.tb_istrobe_s;
 -- pragma translate_on
@@ -351,7 +349,7 @@ begin
   -----------------------------------------------------------------------------
   -- Interrupt Controller.
   -----------------------------------------------------------------------------
-  int_b : t48_int
+  int_b : entity work.t48_int
     port map (
       clk_i             => clk_i,
       res_i             => res_i,

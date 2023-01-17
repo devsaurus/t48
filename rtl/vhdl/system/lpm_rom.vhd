@@ -283,7 +283,7 @@ begin
 	variable i, k, lineno : integer := 0;
 	variable buf: line ;
 	variable booval: boolean ;
-	FILE mem_data_file: TEXT IS IN LPM_FILE;
+	FILE mem_data_file: TEXT IS LPM_FILE;
 	variable base, byte, rec_type, datain, addr, checksum: string(2 downto 1);
 	variable startadd: string(4 downto 1);
 	variable ibase: integer := 0;

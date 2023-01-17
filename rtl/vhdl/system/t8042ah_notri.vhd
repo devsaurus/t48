@@ -78,10 +78,6 @@ end t8042ah_notri;
 library ieee;
 use ieee.numeric_std.all;
 
-use work.t48_core_comp_pack.upi41_core;
-use work.t48_core_comp_pack.t49_rom;
-use work.t48_core_comp_pack.generic_ram_ena;
-
 architecture struct of t8042ah_notri is
 
   -- Address width of internal ROM
@@ -116,7 +112,7 @@ begin
   -- pragma translate_on
 
 
-  upi41a_core_b : upi41_core
+  upi41a_core_b : entity work.upi41_core
     generic map (
       xtal_div_3_g        => 1,
       register_mnemonic_g => 1,
@@ -175,14 +171,14 @@ begin
   p2_o <= p2_out_s;
 
 
-  rom_2k_b : t49_rom
+  rom_2k_b : entity work.t49_rom
     port map (
       clk_i      => xtal_i,
       rom_addr_i => pmem_addr_s(rom_addr_width_c-1 downto 0),
       rom_data_o => pmem_data_s
     );
 
-  ram_256_b : generic_ram_ena
+  ram_256_b : entity work.generic_ram_ena
     generic map (
       addr_width_g => 8,
       data_width_g => 8

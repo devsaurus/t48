@@ -81,9 +81,6 @@ end t8039_notri;
 library ieee;
 use ieee.numeric_std.all;
 
-use work.t48_core_comp_pack.t48_core;
-use work.t48_core_comp_pack.generic_ram_ena;
-
 architecture struct of t8039_notri is
 
   signal xtal3_s          : std_logic;
@@ -118,7 +115,7 @@ begin
   pmem_data_s <= (others => '0');
 
 
-  t48_core_b : t48_core
+  t48_core_b : entity work.t48_core
     generic map (
       xtal_div_3_g        => 1,
       register_mnemonic_g => 1,
@@ -182,7 +179,7 @@ begin
   p2_o <= p2_out_s;
 
 
-  ram_128_b : generic_ram_ena
+  ram_128_b : entity work.generic_ram_ena
     generic map (
       addr_width_g => 7,
       data_width_g => 8

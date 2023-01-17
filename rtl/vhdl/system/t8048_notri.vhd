@@ -81,10 +81,6 @@ end t8048_notri;
 library ieee;
 use ieee.numeric_std.all;
 
-use work.t48_core_comp_pack.t48_core;
-use work.t48_core_comp_pack.t48_rom;
-use work.t48_core_comp_pack.generic_ram_ena;
-
 architecture struct of t8048_notri is
 
   -- Address width of internal ROM
@@ -121,7 +117,7 @@ begin
   -- pragma translate_on
 
 
-  t48_core_b : t48_core
+  t48_core_b : entity work.t48_core
     generic map (
       xtal_div_3_g        => 1,
       register_mnemonic_g => 1,
@@ -215,14 +211,14 @@ begin
   -----------------------------------------------------------------------------
 
 
-  rom_1k_b : t48_rom
+  rom_1k_b : entity work.t48_rom
     port map (
       clk_i      => xtal_i,
       rom_addr_i => pmem_addr_s(rom_addr_width_c-1 downto 0),
       rom_data_o => pmem_data_s
     );
 
-  ram_64_b : generic_ram_ena
+  ram_64_b : entity work.generic_ram_ena
     generic map (
       addr_width_g => 6,
       data_width_g => 8

@@ -46,10 +46,6 @@ entity tb_t8048_t8243 is
 end tb_t8048_t8243;
 
 
-use work.t48_core_comp_pack.generic_ram_ena;
-use work.t48_system_comp_pack.t8048;
-use work.t8243_comp_pack.t8243;
-
 use work.t48_tb_pack.all;
 
 architecture behav of tb_t8048_t8243 is
@@ -132,7 +128,7 @@ begin
       q        => ext_rom_data_s
     );
 
-  ext_ram_b : generic_ram_ena
+  ext_ram_b : entity work.generic_ram_ena
     generic map (
       addr_width_g => 8,
       data_width_g => 8
@@ -146,7 +142,7 @@ begin
       d_o   => ext_ram_data_from_s
     );
 
-  t8048_b : t8048
+  t8048_b : entity work.t8048
     port map (
       xtal_i    => xtal_s,
       reset_n_i => res_n_s,
@@ -164,7 +160,7 @@ begin
       prog_n_o  => prog_n_s
     );
 
-  t8243_b : t8243
+  t8243_b : entity work.t8243
     port map (
       cs_n_i   => zero_s,
       prog_n_i => prog_n_s,

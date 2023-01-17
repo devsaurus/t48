@@ -63,8 +63,6 @@ entity t8039 is
 end t8039;
 
 
-use work.t48_system_comp_pack.t8039_notri;
-
 architecture struct of t8039 is
 
   signal t0_s             : std_logic;
@@ -83,7 +81,7 @@ begin
 
   vdd_s <= '1';
 
-  t8039_notri_b : t8039_notri
+  t8039_notri_b : entity work.t8039_notri
     generic map (
       -- we don't need explicit gating of input ports
       -- this is done implicitely by the bidirectional pads

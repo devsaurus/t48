@@ -66,8 +66,6 @@ end t8048;
 library ieee;
 use ieee.numeric_std.all;
 
-use work.t48_system_comp_pack.t8048_notri;
-
 architecture struct of t8048 is
 
   signal t0_s             : std_logic;
@@ -86,7 +84,7 @@ begin
 
   vdd_s <= '1';
 
-  t8048_notri_b : t8048_notri
+  t8048_notri_b : entity work.t8048_notri
     generic map (
       -- we don't need explicit gating of input ports
       -- this is done implicitely by the bidirectional pads

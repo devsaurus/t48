@@ -46,8 +46,6 @@ entity tb is
 end tb;
 
 
-use work.t48_core_comp_pack.all;
-
 use work.t48_tb_pack.all;
 
 architecture behav of tb is
@@ -192,7 +190,7 @@ begin
   -----------------------------------------------------------------------------
   -- Internal RAM, 256 bytes
   -----------------------------------------------------------------------------
-  ram_256 : generic_ram_ena
+  ram_256 : entity work.generic_ram_ena
     generic map (
       addr_width_g => 8,
       data_width_g => 8
@@ -209,7 +207,7 @@ begin
   -----------------------------------------------------------------------------
   -- External RAM, 256 bytes
   -----------------------------------------------------------------------------
-  ext_ram_b : generic_ram_ena
+  ext_ram_b : entity work.generic_ram_ena
     generic map (
       addr_width_g => 8,
       data_width_g => 8
@@ -223,7 +221,7 @@ begin
       d_o   => ext_ram_data_from_s
     );
 
-  t48_core_b : t48_core
+  t48_core_b : entity work.t48_core
     generic map (
       xtal_div_3_g        => 1,
       register_mnemonic_g => 1,

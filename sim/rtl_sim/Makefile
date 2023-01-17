@@ -1,230 +1,50 @@
-##############################################################################
-#
-# Tool-specific Makefile for the GHDL compiler.
-#
-# It sets all variables needed for VHDL code compilation with Makefile.hier.
-#
-#
-# Copyright (c) 2004-2022 Arnim Laeuger (arniml@opencores.org)
-#
-# All rights reserved
-#
-##############################################################################
 
-# Generate diagnosis files for line coverage
-#GCOV = -Wc,-ftest-coverage -Wc,-fprofile-arcs
-GCOV =
+RTL_DIR   = $(PROJECT_DIR)/rtl/vhdl
+T8243_DIR = $(RTL_DIR)/t8243
+BENCH_DIR = $(PROJECT_DIR)/bench/vhdl
 
-# In case elaborating/linking throws error messages about undefined references
-#GCOV_LINK = -Wl,-lgcov
-GCOV_LINK =
+COMMONDEP=work
+WORKDIR=--workdir=work
 
-LIB_WORK  = ghdl-work
+ELABORATE = ghdl -m $(WORKDIR)
 
-CLEAN     = ghdl --clean --std=87 --workdir=$(LIB_WORK); \
-            rm -f tb_*_c0 *.gcno *.gcda *.gcov *.hex UNUSED
+testbenches = tb tb_t8048 
 
-ANALYZE   = ghdl -a --std=87 --workdir=$(LIB_WORK) $(GCOV)
-
-ELABORATE = ghdl -e -Wl,-s --std=87 --workdir=$(LIB_WORK) $(GCOV_LINK)
-
-MAKE_LIB  = mkdir -p $(LIB_WORK)
-
-
-##############################################################################
-# The analyze targets
-#
-t21_core_struct_c0 = $(LIB_WORK)/t21_core-c.o
-t21_core = $(LIB_WORK)/t21_core.o
-t8021_notri_struct_c0 = $(LIB_WORK)/t8021_notri-c.o
-t8021_notri = $(LIB_WORK)/t8021_notri.o
-t8021_struct_c0 = $(LIB_WORK)/t8021-c.o
-t8021 = $(LIB_WORK)/t8021.o
-tb_t8021_behav_c0 = $(LIB_WORK)/tb_t8021-c.o
-tb_t8021 = $(LIB_WORK)/tb_t8021.o
-adc_rtl_c0 = $(LIB_WORK)/adc-c.o
-adc = $(LIB_WORK)/adc.o
-t22_core_struct_c0 = $(LIB_WORK)/t22_core-c.o
-t22_core = $(LIB_WORK)/t22_core.o
-t8022_notri_struct_c0 = $(LIB_WORK)/t8022_notri-c.o
-t8022_notri = $(LIB_WORK)/t8022_notri.o
-t8022_struct_c0 = $(LIB_WORK)/t8022-c.o
-t8022 = $(LIB_WORK)/t8022.o
-tb_t8022_behav_c0 = $(LIB_WORK)/tb_t8022-c.o
-tb_t8022 = $(LIB_WORK)/tb_t8022.o
-
-upi41_db_bus_rtl_c0 = $(LIB_WORK)/upi41_db_bus-c.o
-upi41_db_bus = $(LIB_WORK)/upi41_db_bus.o
-upi41_core_struct_c0 = $(LIB_WORK)/upi41_core-c.o
-upi41_core = $(LIB_WORK)/upi41_core.o
-t8041_notri_struct_c0 = $(LIB_WORK)/t8041_notri-c.o
-t8041_notri = $(LIB_WORK)/t8041_notri.o
-t8041_struct_c0 = $(LIB_WORK)/t8041-c.o
-t8041 = $(LIB_WORK)/t8041.o
-upi_stim_behav_c0 = $(LIB_WORK)/upi_stim-c.o
-upi_stim = $(LIB_WORK)/upi_stim.o
-tb_t8041_behav_c0 = $(LIB_WORK)/tb_t8041-c.o
-tb_t8041 = $(LIB_WORK)/tb_t8041.o
-t8041a_notri_struct_c0 = $(LIB_WORK)/t8041a_notri-c.o
-t8041a_notri = $(LIB_WORK)/t8041a_notri.o
-t8041a_struct_c0 = $(LIB_WORK)/t8041a-c.o
-t8041a = $(LIB_WORK)/t8041a.o
-tb_t8041a_behav_c0 = $(LIB_WORK)/tb_t8041a-c.o
-tb_t8041a = $(LIB_WORK)/tb_t8041a.o
-t8042ah_notri_struct_c0 = $(LIB_WORK)/t8042ah_notri-c.o
-t8042ah_notri = $(LIB_WORK)/t8042ah_notri.o
-t8042ah_struct_c0 = $(LIB_WORK)/t8042ah-c.o
-t8042ah = $(LIB_WORK)/t8042ah.o
-tb_t8042ah_behav_c0 = $(LIB_WORK)/tb_t8042ah-c.o
-tb_t8042ah = $(LIB_WORK)/tb_t8042ah.o
-
-tb_t8243_behav_c0 = $(LIB_WORK)/tb_t8243-c.o
-tb_t8243 = $(LIB_WORK)/tb_t8243.o
-tb_t8048_t8243_behav_c0 = $(LIB_WORK)/tb_t8048_t8243-c.o
-tb_t8048_t8243 = $(LIB_WORK)/tb_t8048_t8243.o
-t8243_struct_c0 = $(LIB_WORK)/t8243-c.o
-t8243 = $(LIB_WORK)/t8243.o
-t8243_async_notri_struct_c0 = $(LIB_WORK)/t8243_async_notri-c.o
-t8243_async_notri = $(LIB_WORK)/t8243_async_notri.o
-t8243_sync_notri_struct_c0 = $(LIB_WORK)/t8243_sync_notri-c.o
-t8243_sync_notri = $(LIB_WORK)/t8243_sync_notri.o
-t8243_core_rtl_c0 = $(LIB_WORK)/t8243_core-c.o
-t8243_core = $(LIB_WORK)/t8243_core.o
-t8243_comp_pack = $(LIB_WORK)/t8243_comp_pack-p.o
-tb_t8039_behav_c0 = $(LIB_WORK)/tb_t8039-c.o
-tb_t8039 = $(LIB_WORK)/tb_t8039.o
-tb_t8048_behav_c0 = $(LIB_WORK)/tb_t8048-c.o
-tb_t8048 = $(LIB_WORK)/tb_t8048.o
-tb_behav_c0 = $(LIB_WORK)/tb-c.o
-tb = $(LIB_WORK)/tb.o
-if_timing_behav_c0 = $(LIB_WORK)/if_timing-c.o
-if_timing = $(LIB_WORK)/if_timing.o
-t8048_struct_c0 = $(LIB_WORK)/t8048-c.o
-t8048 = $(LIB_WORK)/t8048.o
-t8039_struct_c0 = $(LIB_WORK)/t8039-c.o
-t8039 = $(LIB_WORK)/t8039.o
-t48_system_comp_pack = $(LIB_WORK)/t48_system_comp_pack-p.o
-t8039_notri_struct_c0 = $(LIB_WORK)/t8039_notri-c.o
-t8039_notri = $(LIB_WORK)/t8039_notri.o
-t8048_notri_struct_c0 = $(LIB_WORK)/t8048_notri-c.o
-t8048_notri = $(LIB_WORK)/t8048_notri.o
-t48_tb_pack = $(LIB_WORK)/t48_tb_pack-p.o
-t48_pack = $(LIB_WORK)/t48_pack-p.o
-t48_core_struct_c0 = $(LIB_WORK)/t48_core-c.o
-t48_core = $(LIB_WORK)/t48_core.o
-t48_core_comp_pack = $(LIB_WORK)/t48_core_comp_pack-p.o
-t48_comp_pack = $(LIB_WORK)/t48_comp_pack-p.o
-lpm_rom = $(LIB_WORK)/lpm_rom.o
-t48_rom = $(LIB_WORK)/t48_rom-e.o
-t48_rom_lpm_a = $(LIB_WORK)/t48_rom-lpm-a.o
-t48_rom_lpm_c0 = $(LIB_WORK)/t48_rom-lpm-c.o
-t49_rom = $(LIB_WORK)/t49_rom-e.o
-t49_rom_lpm_a = $(LIB_WORK)/t49_rom-lpm-a.o
-t49_rom_lpm_c0 = $(LIB_WORK)/t49_rom-lpm-c.o
-generic_ram_ena = $(LIB_WORK)/generic_ram_ena.o
-generic_ram_ena_rtl_c0 = $(LIB_WORK)/generic_ram_ena-c.o
-lpm_ram_dq = $(LIB_WORK)/lpm_ram_dq.o
-psw_rtl_c0 = $(LIB_WORK)/psw-c.o
-psw = $(LIB_WORK)/psw.o
-pmem_ctrl_rtl_c0 = $(LIB_WORK)/pmem_ctrl-c.o
-pmem_ctrl_pack = $(LIB_WORK)/pmem_ctrl_pack-p.o
-pmem_ctrl = $(LIB_WORK)/pmem_ctrl.o
-p2_rtl_c0 = $(LIB_WORK)/p2-c.o
-p2 = $(LIB_WORK)/p2.o
-p1_rtl_c0 = $(LIB_WORK)/p1-c.o
-p1 = $(LIB_WORK)/p1.o
-timer_rtl_c0 = $(LIB_WORK)/timer-c.o
-timer = $(LIB_WORK)/timer.o
-int_rtl_c0 = $(LIB_WORK)/int-c.o
-int = $(LIB_WORK)/int.o
-dmem_ctrl_rtl_c0 = $(LIB_WORK)/dmem_ctrl-c.o
-dmem_ctrl_pack = $(LIB_WORK)/dmem_ctrl_pack-p.o
-dmem_ctrl = $(LIB_WORK)/dmem_ctrl.o
-decoder_rtl_c0 = $(LIB_WORK)/decoder-c.o
-decoder_pack = $(LIB_WORK)/decoder_pack-p.o
-decoder = $(LIB_WORK)/decoder.o
-db_bus_rtl_c0 = $(LIB_WORK)/db_bus-c.o
-db_bus = $(LIB_WORK)/db_bus.o
-cond_branch_rtl_c0 = $(LIB_WORK)/cond_branch-c.o
-cond_branch_pack = $(LIB_WORK)/cond_branch_pack-p.o
-cond_branch = $(LIB_WORK)/cond_branch.o
-clock_ctrl_rtl_c0 = $(LIB_WORK)/clock_ctrl-c.o
-clock_ctrl = $(LIB_WORK)/clock_ctrl.o
-bus_mux_rtl_c0 = $(LIB_WORK)/bus_mux-c.o
-bus_mux = $(LIB_WORK)/bus_mux.o
-alu_rtl_c0 = $(LIB_WORK)/alu-c.o
-alu_pack = $(LIB_WORK)/alu_pack-p.o
-alu = $(LIB_WORK)/alu.o
-#
-##############################################################################
-
-
-##############################################################################
-# The default target for elaboration
-#
 .PHONY: all
-all: elaborate
-#
-##############################################################################
+all: work
+	$(ELABORATE) tb
+	$(ELABORATE) tb_t8048
+	$(ELABORATE) tb_t8039
+	$(ELABORATE) tb_t8048_t8243
+	$(ELABORATE) tb_t8243
+	$(ELABORATE) tb_t8041
+	$(ELABORATE) tb_t8041a
+	$(ELABORATE) tb_t8042ah
+	$(ELABORATE) tb_t8021
+	$(ELABORATE) tb_t8022
+
+.PHONY: clean
+clean:
+	ghdl --clean $(WORKDIR)
+	rm -f *~ *.ghw
+
+.PHONY: veryclean
+veryclean: clean
+	rm -rf work
 
 
-##############################################################################
-# The elaboration targets
-#
-tb_elab             = tb_behav_c0
-tb_t8048_elab       = tb_t8048_behav_c0
-tb_t8039_elab       = tb_t8039_behav_c0
-tb_t8048_t8243_elab = tb_t8048_t8243_behav_c0
-tb_t8243_elab       = tb_t8243_behav_c0
-tb_t8041_elab       = tb_t8041_behav_c0
-tb_t8041a_elab      = tb_t8041a_behav_c0
-tb_t8042ah_elab     = tb_t8042ah_behav_c0
-tb_t8021_elab       = tb_t8021_behav_c0
-tb_t8022_elab       = tb_t8022_behav_c0
-#
-##############################################################################
+.PHONY: run_behav
+run_rom: $(COMMONDEP) work intel
+	ghdl -m $(WORKDIR) tb_rom behav
+	./tb_rom-behav --wave=tbrom.ghw
 
+work:
+	make import
 
-##############################################################################
-# Tool-specific elaboration rules
-#
-$(tb_elab) : $(tb_behav_c0)
-	$(ELABORATE) tb_behav_c0
-
-$(tb_t8048_elab) : $(tb_t8048_behav_c0)
-	$(ELABORATE) tb_t8048_behav_c0
-
-$(tb_t8039_elab) : $(tb_t8039_behav_c0)
-	$(ELABORATE) tb_t8039_behav_c0
-
-$(tb_t8048_t8243_elab) : $(tb_t8048_t8243_behav_c0)
-	$(ELABORATE) tb_t8048_t8243_behav_c0
-
-$(tb_t8243_elab) : $(tb_t8243_behav_c0)
-	$(ELABORATE) tb_t8243_behav_c0
-
-$(tb_t8041_elab) : $(tb_t8041_behav_c0)
-	$(ELABORATE) tb_t8041_behav_c0
-
-$(tb_t8041a_elab) : $(tb_t8041a_behav_c0)
-	$(ELABORATE) tb_t8041a_behav_c0
-
-$(tb_t8042ah_elab) : $(tb_t8042ah_behav_c0)
-	$(ELABORATE) tb_t8042ah_behav_c0
-
-$(tb_t8021_elab) : $(tb_t8021_behav_c0)
-	$(ELABORATE) tb_t8021_behav_c0
-
-$(tb_t8022_elab) : $(tb_t8022_behav_c0)
-	$(ELABORATE) tb_t8022_behav_c0
-
-.PHONY: elaborate
-elaborate: $(LIB_WORK) $(tb_elab) $(tb_t8048_elab) $(tb_t8039_elab) \
-           $(tb_t8048_t8243_elab) $(tb_t8243_elab) \
-	   $(tb_t8041_elab) $(tb_t8041a_elab) $(tb_t8042ah_elab) \
-	   $(tb_t8021_elab) $(tb_t8022_elab)
-#
-##############################################################################
-
-
-include Makefile.hier
+.PHONY: import
+import:
+	mkdir -p work
+	ghdl -i $(WORKDIR) $(RTL_DIR)/*.vhd
+	ghdl -i $(WORKDIR) $(RTL_DIR)/system/*.vhd
+	ghdl -i $(WORKDIR) $(T8243_DIR)/*.vhd
+	ghdl -i $(WORKDIR) $(BENCH_DIR)/*.vhd

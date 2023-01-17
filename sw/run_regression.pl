@@ -24,18 +24,18 @@
 # is started.
 #
 # Exceptions for a testcell are defined by additional files.
-#   no_gen   : don't execute the generic/default testbench tb_behav_c0
-#   no_t48   : don't execute the t8048 testbench tb_t8048_behav_c0
-#   no_t39   : don't execute the t8039 testbench tb_t8039_behav_c0
-#   no_t41   : don't execute the t8041 testbench tb_t8041_behav_c0
-#   no_t41a  : don't execute the t8041a testbench tb_t8041a_behav_c0
-#   no_t42ah : don't execute the t8042ah testbench tb_t8042ah_behav_c0
-#   no_t21   : don't execute the t8021 testbench tb_t8021_behav_c0
-#   no_t22   : don't execute the t8021 testbench tb_t8022_behav_c0
+#   no_gen   : don't execute the generic/default testbench tb
+#   no_t48   : don't execute the t8048 testbench tb_t8048
+#   no_t39   : don't execute the t8039 testbench tb_t8039
+#   no_t41   : don't execute the t8041 testbench tb_t8041
+#   no_t41a  : don't execute the t8041a testbench tb_t8041a
+#   no_t42ah : don't execute the t8042ah testbench tb_t8042ah
+#   no_t21   : don't execute the t8021 testbench tb_t8021
+#   no_t22   : don't execute the t8021 testbench tb_t8022
 #   no_dump_compare : don't include testcell when running dump compares
 #   io_exp : use the testbenches containing the t8243 IO expander
-#            tb_t8243_behav_c0
-#            tb_t8048_t8243_behav_c0
+#            tb_t8243
+#            tb_t8048_t8243
 #
 
 
@@ -67,18 +67,18 @@ my $io_exp_cell = 0;
 # Commands to call the different VHDL simulators.
 # 
 # GHDL
-my %ghdl_simulators    = ('gen'   => './tb_behav_c0',
-                          't48'   => './tb_t8048_behav_c0',
-                          't39'   => './tb_t8039_behav_c0',
-                          't41'   => './tb_t8041_behav_c0',
-                          't41a'  => './tb_t8041a_behav_c0',
-                          't42ah' => './tb_t8042ah_behav_c0',
-                          't21'   => './tb_t8021_behav_c0',
-                          't22'   => './tb_t8022_behav_c0');
-my %ghdl_io_expanders  = ('gen' => './tb_t8243_behav_c0',
-                          't48' => './tb_t8048_t8243_behav_c0');
+my %ghdl_simulators    = ('gen'   => './tb',
+                          't48'   => './tb_t8048',
+                          't39'   => './tb_t8039',
+                          't41'   => './tb_t8041',
+                          't41a'  => './tb_t8041a',
+                          't42ah' => './tb_t8042ah',
+                          't21'   => './tb_t8021',
+                          't22'   => './tb_t8022');
+my %ghdl_io_expanders  = ('gen' => './tb_t8243',
+                          't48' => './tb_t8048_t8243');
 my $ghdl_simulator_opt = '--assert-level=error --stop-time=20ms';
-my $ghdl_simulator_vcd = './tb_behav_c0 --assert-level=error --vcd=temp.vcd';
+my $ghdl_simulator_vcd = './tb --assert-level=error --vcd=temp.vcd';
 #
 # Choose simulator:
 my %vhdl_simulators    = %ghdl_simulators;

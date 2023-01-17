@@ -46,8 +46,6 @@ entity tb_t8041a is
 end tb_t8041a;
 
 
-use work.t48_system_comp_pack.t8041a;
-
 use work.t48_tb_pack.all;
 
 architecture behav of tb_t8041a is
@@ -73,19 +71,6 @@ architecture behav of tb_t8041a is
   signal zero_s : std_logic;
   signal one_s  : std_logic;
 
-  component upi_stim
-    port (
-      cs_n_o : out   std_logic;
-      rd_n_o : out   std_logic;
-      wr_n_o : out   std_logic;
-      a0_o   : out   std_logic;
-      db_b   : inout std_logic_vector(7 downto 0);
-      p1_b   : inout std_logic_vector(7 downto 0);
-      p2_b   : inout std_logic_vector(7 downto 0);
-      fail_o : out   boolean
-    );
-  end component;
-
 begin
 
   zero_s <= '0';
@@ -94,7 +79,7 @@ begin
   p2_b   <= (others => 'H');
   p1_b   <= (others => 'H');
 
-  t8041a_b : t8041a
+  t8041a_b : entity work.t8041a
     port map (
       xtal_i    => xtal_s,
       reset_n_i => res_n_s,
@@ -114,7 +99,7 @@ begin
   -----------------------------------------------------------------------------
   -- Generic UPI stimulus generator
   --
-  upi_stim_b: upi_stim
+  upi_stim_b: entity work.upi_stim
     port map (
       cs_n_o => cs_n_s,
       rd_n_o => rd_n_s,

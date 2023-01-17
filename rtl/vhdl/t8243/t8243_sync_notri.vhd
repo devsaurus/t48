@@ -76,8 +76,6 @@ entity t8243_sync_notri is
 end t8243_sync_notri;
 
 
-use work.t8243_comp_pack.t8243_core;
-
 architecture struct of t8243_sync_notri is
 
   signal prog_n_q       : std_logic;
@@ -117,7 +115,7 @@ begin
   -----------------------------------------------------------------------------
   -- The T8243 Core
   -----------------------------------------------------------------------------
-  t8243_core_b : t8243_core
+  t8243_core_b : entity work.t8243_core
     generic map (
       clk_fall_level_g => 1
     )

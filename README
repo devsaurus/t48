@@ -133,36 +133,36 @@ $ make
 Make will analyze all VHDL files (RTL and testbench code) and elaborate all
 testbench top-levels if appropriate for the chosen simulator:
 
-  * tb_behav_c0
+  * tb
     The main testbench for regression testing.
     Instantiates the plain t48_core and provides internal RAM (256 bytes) and
     ROM (2k bytes) plus 2k bytes of external ROM.
 
-  * tb_t8048_behav_c0
+  * tb_t8048
     The testbench for the t8048 sample system.
 
-  * tb_t8039_behav_c0
+  * tb_t8039
     The testbench for the 8039 sample system.
 
-  * tb_t8243_behav_c0
+  * tb_t8243
     Testbench containing the t48_core and the synchronous t8243 flavour.
 
-  * tb_t8048_t8243_behav_c0
+  * tb_t8048_t8243
     Testbench containing the t8048 and the asynchronous t8243 toplevel.
 
-  * tb_t8041_behav_c0
+  * tb_t8041
     Testbench containing the t8041 sample system.
 
-  * tb_t8041a_behav_c0
+  * tb_t8041a
     Testbench containing the t8041a sample system.
 
-  * tb_t8042ah_behav_c0
+  * tb_t8042ah
     Testbench containing the t8042ah sample system.
 
-  * tb_t8021_behav_c0
+  * tb_t8021
     Testbench containing the t8021 sample system.
 
-  * tb_t8022_behav_c0
+  * tb_t8022
     Testbench containing the t8022 sample system.
 
 The Makefile has a 'clean' target to delete all intermediate data:

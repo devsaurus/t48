@@ -60,8 +60,6 @@ end t8021;
 library ieee;
 use ieee.numeric_std.all;
 
-use work.t48_system_comp_pack.t8021_notri;
-
 architecture struct of t8021 is
 
   signal p2_s             : std_logic_vector( 3 downto 0);
@@ -74,7 +72,7 @@ begin
 
   vdd_s <= '1';
 
-  t8021_notri_b : t8021_notri
+  t8021_notri_b : entity work.t8021_notri
     generic map (
       -- we don't need explicit gating of input ports
       -- this is done implicitely by the bidirectional pads

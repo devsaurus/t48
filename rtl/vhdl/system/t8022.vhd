@@ -63,8 +63,6 @@ end t8022;
 library ieee;
 use ieee.numeric_std.all;
 
-use work.t48_system_comp_pack.t8022_notri;
-
 architecture struct of t8022 is
 
   signal p2_s             : std_logic_vector( 7 downto 0);
@@ -77,7 +75,7 @@ begin
 
   vdd_s <= '1';
 
-  t8022_notri_b : t8022_notri
+  t8022_notri_b : entity work.t8022_notri
     generic map (
       -- we don't need explicit gating of input ports
       -- this is done implicitely by the bidirectional pads

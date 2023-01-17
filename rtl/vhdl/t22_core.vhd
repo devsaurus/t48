@@ -95,7 +95,6 @@ use work.t48_cond_branch_pack.branch_conditions_t;
 use work.t48_cond_branch_pack.comp_value_t;
 use work.t48_dmem_ctrl_pack.dmem_addr_ident_t;
 use work.t48_pmem_ctrl_pack.pmem_addr_ident_t;
-use work.t48_comp_pack.all;
 use work.t48_pack.res_active_c;
 use work.t48_pack.clk_active_c;
 use work.t48_pack.bus_idle_level_c;
@@ -267,7 +266,7 @@ begin
   --
   xtal_en_s <= to_boolean(xtal_en_i) and xtal_mcs2x_q;
 
-  adc_b : t48_adc
+  adc_b : entity work.t48_adc
     port map (
       clk_i      => clk_i,
       res_i      => reset_i,
@@ -284,7 +283,7 @@ begin
       comp_i     => adc_comp_i
     );
 
-  alu_b : t48_alu
+  alu_b : entity work.t48_alu
     port map (
       clk_i              => clk_i,
       res_i              => reset_i,
@@ -307,7 +306,7 @@ begin
       p60_temp_reg_i     => alu_p60_temp_reg_s
     );
 
-  bus_mux_b : t48_bus_mux
+  bus_mux_b : entity work.t48_bus_mux
     port map (
       adc_data_i => adc_data_s,
       alu_data_i => alu_data_s,
@@ -322,7 +321,7 @@ begin
       data_o     => t48_data_s
     );
 
-  clock_ctrl_b : t48_clock_ctrl
+  clock_ctrl_b : entity work.t48_clock_ctrl
     generic map (
       xtal_div_3_g   => xtal_div_3_g
     )
@@ -348,7 +347,7 @@ begin
       wr_o           => open
     );
 
-  cond_branch_b : t48_cond_branch
+  cond_branch_b : entity work.t48_cond_branch
     port map (
       clk_i          => clk_i,
       res_i          => reset_i,
@@ -367,7 +366,7 @@ begin
       comp_value_i   => cnd_comp_value_s
     );
 
-  decoder_b : t48_decoder
+  decoder_b : entity work.t48_decoder
     generic map (
       register_mnemonic_g => register_mnemonic_g,
       is_mcs2x_g          => 1,
@@ -462,7 +461,7 @@ begin
       adc_read_adc_o         => adc_read_adc_s
     );
 
-  dmem_ctrl_b : t48_dmem_ctrl
+  dmem_ctrl_b : entity work.t48_dmem_ctrl
     port map (
       clk_i             => clk_i,
       res_i             => reset_i,
@@ -480,7 +479,7 @@ begin
       dmem_data_o       => dmem_data_o
     );
 
-  timer_b : t48_timer
+  timer_b : entity work.t48_timer
     generic map (
       sample_t1_state_g => sample_t1_state_g
     )
@@ -502,7 +501,7 @@ begin
 
   tim_overflow_s <= to_boolean(tim_of_s);
 
-  p0_b : t48_p1
+  p0_b : entity work.t48_p1
     port map (
       clk_i        => clk_i,
       res_i        => reset_i,
@@ -517,7 +516,7 @@ begin
       p1_low_imp_o => open
     );
 
-  p1_b : t48_p1
+  p1_b : entity work.t48_p1
     port map (
       clk_i        => clk_i,
       res_i        => reset_i,
@@ -532,7 +531,7 @@ begin
       p1_low_imp_o => open
     );
 
-  p2_b : t48_p2
+  p2_b : entity work.t48_p2
     port map (
       clk_i         => clk_i,
       res_i         => reset_i,
@@ -554,7 +553,7 @@ begin
       p2h_low_imp_o => open
     );
 
-  pmem_ctrl_b : t48_pmem_ctrl
+  pmem_ctrl_b : entity work.t48_pmem_ctrl
     port map (
       clk_i             => clk_i,
       res_i             => reset_i,
@@ -573,7 +572,7 @@ begin
       pmem_data_i       => pmem_data_i
     );
 
-  psw_b : t48_psw
+  psw_b : entity work.t48_psw
     port map (
       clk_i              => clk_i,
       res_i              => reset_i,

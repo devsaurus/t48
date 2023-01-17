@@ -62,8 +62,6 @@ entity t8243 is
 end t8243;
 
 
-use work.t8243_comp_pack.t8243_async_notri;
-
 architecture struct of t8243 is
 
   signal p2_s,
@@ -87,7 +85,7 @@ begin
   -----------------------------------------------------------------------------
   -- The asynchronous T8243
   -----------------------------------------------------------------------------
-  t8243_async_notri_b : t8243_async_notri
+  t8243_async_notri_b : entity work.t8243_async_notri
     port map (
       reset_n_i => vdd_s,               -- or generate power-on reset
       cs_n_i    => cs_n_i,

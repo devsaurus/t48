@@ -65,8 +65,6 @@ end t8042ah;
 library ieee;
 use ieee.numeric_std.all;
 
-use work.t48_system_comp_pack.t8042ah_notri;
-
 architecture struct of t8042ah is
 
   signal db_s             : std_logic_vector( 7 downto 0);
@@ -83,7 +81,7 @@ begin
 
   vdd_s <= '1';
 
-  t8042ah_notri_b : t8042ah_notri
+  t8042ah_notri_b : entity work.t8042ah_notri
     generic map (
       -- we don't need explicit gating of input ports
       -- this is done implicitely by the bidirectional pads

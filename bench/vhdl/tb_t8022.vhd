@@ -46,9 +46,6 @@ entity tb_t8022 is
 end tb_t8022;
 
 
-use work.t48_core_comp_pack.generic_ram_ena;
-use work.t48_system_comp_pack.t8022;
-
 use work.t48_tb_pack.all;
 
 architecture behav of tb_t8022 is
@@ -103,7 +100,7 @@ begin
   an0_s <= "01101001";
   an1_s <= "10010110";
 
-  t8022_b : t8022
+  t8022_b : entity work.t8022
     port map (
       xtal_i    => xtal_s,
       reset_i   => res_s,
