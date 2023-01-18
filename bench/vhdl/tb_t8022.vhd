@@ -85,13 +85,7 @@ architecture behav of tb_t8022 is
   signal an0_s : std_logic_vector( 7 downto 0);
   signal an1_s : std_logic_vector( 7 downto 0);
 
-  signal zero_s          : std_logic;
-  signal one_s           : std_logic;
-
 begin
-
-  zero_s <= '0';
-  one_s  <= '1';
 
   p2_b   <= (others => 'H');
   p1_b   <= (others => 'H');

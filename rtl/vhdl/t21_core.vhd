@@ -215,15 +215,7 @@ architecture struct of t21_core is
 
   signal xtal_mcs2x_q : boolean;
 
-  signal false_s : boolean;
-  signal vdd_s   : std_logic;
-  signal gnd_s   : std_logic;
-
 begin
-
-  false_s <= false;
-  vdd_s   <= '1';
-  gnd_s   <= '0';
 
   en_clk_s  <= to_boolean(en_clk_i);
 
@@ -327,7 +319,7 @@ begin
       accu_i         => alu_data_s,
       t0_i           => t0_s,
       t1_i           => t1_s,
-      int_n_i        => vdd_s,
+      int_n_i        => '1',
       f0_i           => psw_f0_s,
       f1_i           => cnd_f1_s,
       tf_i           => cnd_tf_s,
@@ -347,9 +339,9 @@ begin
       en_clk_i               => en_clk_s,
       xtal_i                 => xtal_i,
       xtal_en_i              => xtal_en_s,
-      ea_i                   => gnd_s,
+      ea_i                   => '0',
       ale_i                  => ale_s,
-      int_n_i                => vdd_s,
+      int_n_i                => '1',
       t0_dir_o               => open,
       data_i                 => t48_data_s,
       data_o                 => dec_data_s,
@@ -476,7 +468,7 @@ begin
       data_o       => p0_data_s,
       write_p1_i   => p0_write_p0_s,
       read_p1_i    => p0_read_p0_s,
-      read_reg_i   => false_s,          -- MCS21x always reads pins
+      read_reg_i   => false,          -- MCS21x always reads pins
       p1_i         => p0_i,
       p1_o         => p0_o,
       p1_low_imp_o => open
@@ -491,7 +483,7 @@ begin
       data_o       => p1_data_s,
       write_p1_i   => p1_write_p1_s,
       read_p1_i    => p1_read_p1_s,
-      read_reg_i   => false_s,          -- MCS21x always reads pins
+      read_reg_i   => false,          -- MCS21x always reads pins
       p1_i         => p1_i,
       p1_o         => p1_o,
       p1_low_imp_o => open
@@ -509,7 +501,7 @@ begin
       write_p2_i    => p2_write_p2_s,
       write_exp_i   => p2_write_exp_s,
       read_p2_i     => p2_read_p2_s,
-      read_reg_i    => false_s,          -- MCS21x always reads pins
+      read_reg_i    => false,          -- MCS21x always reads pins
       read_exp_i    => p2_read_exp_s,
       output_pch_i  => p2_output_pch_s,
       pch_i         => pmem_addr_s(11 downto 8),

@@ -69,11 +69,7 @@ architecture struct of t8022 is
   signal p1_s             : std_logic_vector( 7 downto 0);
   signal p0_s             : std_logic_vector( 7 downto 0);
 
-  signal vdd_s            : std_logic;
-
 begin
-
-  vdd_s <= '1';
 
   t8022_notri_b : entity work.t8022_notri
     generic map (
@@ -84,7 +80,7 @@ begin
 
     port map (
       xtal_i    => xtal_i,
-      xtal_en_i => vdd_s,
+      xtal_en_i => '1',
       reset_i   => reset_i,
       ale_o     => ale_o,
       t0_i      => t0_i,

@@ -96,11 +96,7 @@ architecture struct of t8041_notri is
   signal p2_in_s,
          p2_out_s         : std_logic_vector( 7 downto 0);
 
-  signal vdd_s            : std_logic;
-
 begin
-
-  vdd_s <= '1';
 
   -----------------------------------------------------------------------------
   -- Check generics for valid values.
@@ -187,7 +183,7 @@ begin
       clk_i => xtal_i,
       a_i   => dmem_addr_s(5 downto 0),
       we_i  => dmem_we_s,
-      ena_i => vdd_s,
+      ena_i => '1',
       d_i   => dmem_data_to_s,
       d_o   => dmem_data_from_s
     );

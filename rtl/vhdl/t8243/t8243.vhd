@@ -75,19 +75,14 @@ architecture struct of t8243 is
          p6_en_s,
          p7_en_s  : std_logic;
 
-  signal vdd_s    : std_logic;
-
 begin
-
-  vdd_s <= '1';
-
 
   -----------------------------------------------------------------------------
   -- The asynchronous T8243
   -----------------------------------------------------------------------------
   t8243_async_notri_b : entity work.t8243_async_notri
     port map (
-      reset_n_i => vdd_s,               -- or generate power-on reset
+      reset_n_i => '1',               -- or generate power-on reset
       cs_n_i    => cs_n_i,
       prog_n_i  => prog_n_i,
       p2_i      => p2_b,

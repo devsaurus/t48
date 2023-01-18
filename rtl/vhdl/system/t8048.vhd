@@ -78,11 +78,7 @@ architecture struct of t8048 is
   signal p1_s             : std_logic_vector( 7 downto 0);
   signal p1_low_imp_s     : std_logic;
 
-  signal vdd_s            : std_logic;
-
 begin
-
-  vdd_s <= '1';
 
   t8048_notri_b : entity work.t8048_notri
     generic map (
@@ -93,7 +89,7 @@ begin
 
     port map (
       xtal_i        => xtal_i,
-      xtal_en_i     => vdd_s,
+      xtal_en_i     => '1',
       reset_n_i     => reset_n_i,
       t0_i          => t0_b,
       t0_o          => t0_s,

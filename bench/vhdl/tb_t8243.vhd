@@ -142,15 +142,7 @@ architecture behav of tb_t8243 is
          p6_en_s,
          p7_en_s         : std_logic;
 
-  signal zero_s          : std_logic;
-  signal one_s           : std_logic;
-  signal zero_byte_s     : std_logic_vector( 7 downto 0);
-
 begin
-
-  zero_s      <= '0';
-  one_s       <= '1';
-  zero_byte_s <= (others => '0');
 
   -----------------------------------------------------------------------------
   -- Internal ROM, 2k bytes
@@ -170,8 +162,8 @@ begin
     port map (
       address  => rom_addr_s(10 downto 0),
       inclock  => xtal_s,
-      outclock => zero_s,               -- unused
-      memenab  => one_s,
+      outclock => '0',               -- unused
+      memenab  => '1',
       q        => rom_data_s
     );
 
@@ -195,8 +187,8 @@ begin
     port map (
       address  => ext_rom_addr_s(10 downto 0),
       inclock  => xtal_s,
-      outclock => zero_s,               -- unused
-      memenab  => one_s,
+      outclock => '0',               -- unused
+      memenab  => '1',
       q        => ext_rom_data_s
     );
 
@@ -212,7 +204,7 @@ begin
       clk_i => xtal_s,
       a_i   => ram_addr_s,
       we_i  => ram_we_s,
-      ena_i => one_s,
+      ena_i => '1',
       d_i   => ram_data_to_s,
       d_o   => ram_data_from_s
     );
@@ -229,7 +221,7 @@ begin
       clk_i => xtal_s,
       a_i   => ext_mem_addr_q,
       we_i  => ext_ram_we_q,
-      ena_i => one_s,
+      ena_i => '1',
       d_i   => bus_s,
       d_o   => ext_ram_data_from_s
     );
@@ -246,7 +238,7 @@ begin
     )
     port map (
       xtal_i        => xtal_s,
-      xtal_en_i     => one_s,
+      xtal_en_i     => '1',
       reset_i       => res_n_s,
       t0_i          => p1_s(0),
       t0_o          => open,
@@ -296,9 +288,9 @@ begin
   t8243_sync_notri_b : entity work.t8243_sync_notri
     port map (
       clk_i     => xtal_s,
-      clk_en_i  => one_s,
-      reset_n_i => one_s,
-      cs_n_i    => zero_s,
+      clk_en_i  => '1',
+      reset_n_i => '1',
+      cs_n_i    => '0',
       prog_n_i  => prog_n_s,
       p2_i      => t48_p2_s(3 downto 0),
       p2_o      => t8243_p2_s,

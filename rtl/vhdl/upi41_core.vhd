@@ -247,14 +247,9 @@ architecture struct of upi41_core is
   signal tim_stop_tcnt_s   : boolean;
   signal tim_data_s        : word_t;
 
-  signal gnd_s : std_logic;
-
 begin
 
   sync_o <= to_stdLogic(ale_s);
-
-  gnd_s <= '0';
-
 
   xtal_en_s <= to_boolean(xtal_en_i);
   en_clk_s  <= to_boolean(en_clk_i);
@@ -404,7 +399,7 @@ begin
       en_clk_i               => en_clk_s,
       xtal_i                 => xtal_i,
       xtal_en_i              => xtal_en_s,
-      ea_i                   => gnd_s,
+      ea_i                   => '0',
       ale_i                  => ale_s,
       int_n_i                => bus_int_n_s,
       t0_dir_o               => open,

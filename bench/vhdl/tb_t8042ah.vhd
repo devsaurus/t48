@@ -68,13 +68,7 @@ architecture behav of tb_t8042ah is
 
   signal fail_s : boolean;
 
-  signal zero_s : std_logic;
-  signal one_s  : std_logic;
-
 begin
-
-  zero_s <= '0';
-  one_s  <= '1';
 
   p2_b   <= (others => 'H');
   p1_b   <= (others => 'H');

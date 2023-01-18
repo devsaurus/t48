@@ -76,12 +76,7 @@ end t8243_async_notri;
 
 architecture struct of t8243_async_notri is
 
-  signal vdd_s : std_logic;
-
 begin
-
-  vdd_s <= '1';
-
 
   -----------------------------------------------------------------------------
   -- The T8243 Core
@@ -92,8 +87,8 @@ begin
     )
     port map (
       clk_i         => prog_n_i,
-      clk_rise_en_i => vdd_s,
-      clk_fall_en_i => vdd_s,
+      clk_rise_en_i => '1',
+      clk_fall_en_i => '1',
       reset_n_i     => reset_n_i,
       cs_n_i        => cs_n_i,
       prog_n_i      => prog_n_i,

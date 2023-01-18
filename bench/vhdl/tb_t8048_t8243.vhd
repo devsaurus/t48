@@ -94,13 +94,7 @@ architecture behav of tb_t8048_t8243 is
   signal rd_n_s              : std_logic;
   signal wr_n_s              : std_logic;
 
-  signal zero_s          : std_logic;
-  signal one_s           : std_logic;
-
 begin
-
-  zero_s <= '0';
-  one_s  <= '1';
 
   p2_b   <= (others => 'H');
   p1_b   <= (others => 'H');
@@ -123,8 +117,8 @@ begin
     port map (
       address  => ext_mem_addr_s,
       inclock  => xtal_s,
-      outclock => zero_s,               -- unused
-      memenab  => one_s,
+      outclock => '0',               -- unused
+      memenab  => '1',
       q        => ext_rom_data_s
     );
 
@@ -137,7 +131,7 @@ begin
       clk_i => xtal_s,
       a_i   => ext_mem_addr_s(7 downto 0),
       we_i  => ext_ram_we_s,
-      ena_i => one_s,
+      ena_i => '1',
       d_i   => db_b,
       d_o   => ext_ram_data_from_s
     );
@@ -148,7 +142,7 @@ begin
       reset_n_i => res_n_s,
       t0_b      => p1_b(0),
       int_n_i   => int_n_s,
-      ea_i      => zero_s,
+      ea_i      => '0',
       rd_n_o    => rd_n_s,
       psen_n_o  => psen_n_s,
       wr_n_o    => wr_n_s,
@@ -162,7 +156,7 @@ begin
 
   t8243_b : entity work.t8243
     port map (
-      cs_n_i   => zero_s,
+      cs_n_i   => '0',
       prog_n_i => prog_n_s,
       p2_b     => p2_b(3 downto 0),
       p4_b     => p4_b,

@@ -82,13 +82,7 @@ architecture behav of tb_t8021 is
   signal p1_b : std_logic_vector( 7 downto 0);
   signal p2_b : std_logic_vector( 3 downto 0);
 
-  signal zero_s          : std_logic;
-  signal one_s           : std_logic;
-
 begin
-
-  zero_s <= '0';
-  one_s  <= '1';
 
   p2_b   <= (others => 'H');
   p1_b   <= (others => 'H');
