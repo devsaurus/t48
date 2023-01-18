@@ -26,7 +26,7 @@ all: work
 .PHONY: clean
 clean:
 	ghdl --clean $(WORKDIR)
-	rm -f *~ *.ghw
+	rm -f *~ *.ghw *.hex
 
 .PHONY: veryclean
 veryclean: clean
