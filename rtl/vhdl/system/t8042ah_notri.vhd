@@ -155,7 +155,7 @@ begin
 
 
   -----------------------------------------------------------------------------
-  -- Gate port 1 and 2 input bus with respetive output value
+  -- Gate port 1 and 2 input bus with respective output value
   -----------------------------------------------------------------------------
   gate_ports: if gate_port_input_g = 1 generate
     p1_in_s <= p1_i and p1_out_s;
