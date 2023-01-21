@@ -51,7 +51,7 @@ fail:	FAIL
 	ORG	0800H
 program_memory_bank_1:
 	;; spend some time and wait for interrupt
-	mov	r2, #020h
+	mov	r2, #01dh
 	djnz	r2, $
 
 	ret
