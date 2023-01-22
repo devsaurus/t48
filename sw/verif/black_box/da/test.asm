@@ -10,6 +10,10 @@
 	;; Start of test
 	mov	r7, #000H
 
+	mov	a, psw
+	anl	a, #03FH		; clear C and AC
+	mov	psw, a
+
 	;; testcase from "Single Component MCS-48 System"
 	mov	a, #09BH
 	da	a

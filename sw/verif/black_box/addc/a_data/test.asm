@@ -8,7 +8,7 @@
 	ORG	0
 
 	;; Start of test
-	jc	fail
+	clr	c	; C bit is not affected by reset
 	mov	a, #000H
 
 	addc	a, #055H

@@ -8,6 +8,8 @@
 	ORG	0
 
 	;; Start of test
+	clr	c	; C bit is not affected by reset
+
 	mov	r0, #008H
 	call	recursive
 
@@ -20,22 +22,24 @@ ok_1:
 	;; check stack contents
 	mov	r0, #008H
 	mov	a, @r0
-	add	a, #(~(call1+2 & 0FFH) + 1) & 0FFH
+	xrl	a, #(call1+2 & 0FFH) & 0FFH
 	jnz	fail
 
 	inc	r0
 	mov	a, @r0
-	add	a, #(~((call1+2) >> 8) + 1) & 0FFH
+	xrl	a, #((call1+2) >> 8) & 0FFH
+	anl	a, #0BFH			; don't test AC
 	jnz	fail
 
 	inc	r0
 	mov	a, @r0
-	add	a, #(~(call2+2 & 0FFH) + 1) & 0FFH
+	xrl	a, #(call2+2 & 0FFH) & 0FFH
 	jnz	fail
 
 	inc	r0
 	mov	a, @r0
-	add	a, #(~((call2+2) >> 8 | 0A0H) + 1) & 0FFH
+	xrl	a, #((call2+2) >> 8 | 0A0H) & 0FFH
+	anl	a, #0BFH				; don't test AC
 	jnz	fail
 
 

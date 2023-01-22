@@ -39,6 +39,8 @@ start:	mov	a, #0FEH
 
 	;; apply falling edge on T1 -> T = 000H
 	anl	P1, #0FDH
+	nop
+	nop
 	jtf	goon
 	jmp	fail
 goon:	mov	a, r0
@@ -86,6 +88,8 @@ goon:	mov	a, r0
 
 	;; apply falling edge on T1 -> T = 000H
 	anl	P1, #0FDH
+	nop
+	nop
 	jtf	goon2
 	jmp	fail
 goon2:	mov	a, r0

@@ -9,7 +9,7 @@
 
 	;; Start of test
 	mov	a, psw
-	anl	a, #0F7H
+	anl	a, #037H
 	jnz	fail
 
 	dec	a

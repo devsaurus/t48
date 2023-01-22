@@ -8,6 +8,8 @@
 	ORG	0
 
 	;; Start of test
+	clr	c	; C bit is not affected by reset
+
 	jnc	ok_1
 	jmp	fail
 

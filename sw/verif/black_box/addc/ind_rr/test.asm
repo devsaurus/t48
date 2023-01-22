@@ -40,6 +40,8 @@ pass:
 	ORG	0
 
 	;; Start of test
+	clr	c	; C bit is not affected by reset
+
 	mov	r0, #010H
 	mov	r1, #020H
 	mov	a, #0FEH

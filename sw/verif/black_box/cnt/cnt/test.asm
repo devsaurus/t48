@@ -17,6 +17,7 @@
 	;; apply falling edge on T1
 	mov	a, #0FDH
 	outl	P1, a
+	nop
 	jtf	fail
 	mov	a, t
 	cpl	a
@@ -27,11 +28,13 @@
 	;; apply rising edge on T1
 	mov	a, #0FFH
 	outl	P1, a
+	nop
 	jtf	fail
 
 	;; apply falling edge on T1
 	mov	a, #0FDH
 	outl	P1, a
+	nop
 	jtf	goon
 	jmp	fail
 goon:	jtf	fail
@@ -41,11 +44,13 @@ goon:	jtf	fail
 	;; apply rising edge on T1
 	mov	a, #0FFH
 	outl	P1, a
+	nop
 	jtf	fail
 
 	;; apply falling edge on T1
 	mov	a, #0FDH
 	outl	P1, a
+	nop
 	jtf	fail
 	mov	a, t
 	dec	a
@@ -59,28 +64,34 @@ goon:	jtf	fail
 	;; apply rising edge on T1
 	mov	a, #0FFH
 	outl	P1, a
+	nop
 	jtf	fail
 	;; apply falling edge on T1
 	mov	a, #0FDH
 	outl	P1, a
+	nop
 	jtf	fail
 	;; apply rising edge on T1
 	mov	a, #0FFH
 	outl	P1, a
+	nop
 	jtf	fail
 	;; apply falling edge on T1
 	mov	a, #0FDH
 	outl	P1, a
+	nop
 	jtf	fail
 
 	strt	cnt
 	;; apply rising edge on T1
 	mov	a, #0FFH
 	outl	P1, a
+	nop
 	jtf	fail
 	;; apply falling edge on T1
 	mov	a, #0FDH
 	outl	P1, a
+	nop
 	jtf	goon2
 	jmp	fail
 
