@@ -497,9 +497,13 @@ begin
   int_gen: process
   begin
     int_n_s <= '1';
-    wait for 750 * period_c;
+    for cnt in 1 to 750 / (3*5) loop
+      wait until falling_edge(ale_s);
+    end loop;
     int_n_s <= '0';
-    wait for  45 * period_c;
+    for cnt in 1 to 45 / (3*5) loop
+      wait until falling_edge(ale_s);
+    end loop;
   end process int_gen;
   --
   -----------------------------------------------------------------------------
