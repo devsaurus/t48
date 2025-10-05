@@ -53,7 +53,7 @@ jobs:
         ./run_regression.pl >& regression.log
         ! grep -E 'Processing|Executing|Result|stopped' regression.log | grep -q -E 'FAIL|stopped'
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: regression-log
         path: sw/regression.log
