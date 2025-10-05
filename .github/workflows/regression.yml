@@ -8,14 +8,15 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - uses: ghdl/setup-ghdl-ci@nightly
+    - uses: ghdl/setup-ghdl@v1
       with:
+        version: nighly
         backend: llvm
         
     - name: Set env for project
