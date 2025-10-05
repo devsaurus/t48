@@ -16,7 +16,7 @@ jobs:
 
     - uses: ghdl/setup-ghdl@v1
       with:
-        version: nighly
+        version: latest
         backend: llvm
         
     - name: Set env for project
