@@ -6,6 +6,7 @@
 	INCLUDE	"pass_fail.inc"
 
 testADDC	MACRO	val,reg
+	clr	c
 	mov	a, #val
 	addc	a, reg
 	jnz	fail_p3
